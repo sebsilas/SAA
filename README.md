@@ -37,14 +37,14 @@ MST(aws_credentials = list("api_url" = "your_url",
                            "bucket_name" = "your_bucket_name",
                            "bucket_region" = "your_bucket_region",
                            "identity_pool_id" = "your_identity_pool_id",
-                           "destination_bucket" = "your_destination_bucet"))
+                           "destination_bucket" = "your_destination_bucket"))
 
 # Change the default parameters e.g by using fewer trials and a different item bank
 MST(aws_credentials = list("api_url" = "your_url",
                            "bucket_name" = "your_bucket_name",
                            "bucket_region" = "your_bucket_region",
                            "identity_pool_id" = "your_identity_pool_id",
-                           "destination_bucket" = "your_destination_bucet"),
+                           "destination_bucket" = "your_destination_bucket"),
     num_items = list("long_tones" = 4L,
                      "arrhythmic" = 5L,
                       "rhythmic" = 5L), 
