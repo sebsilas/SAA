@@ -5,7 +5,7 @@ The MST is a test of melody singing ability.
  
 ## Installation
 
-The Melody Singing Task (MST) uses the [`musicassessr`](https://github.com/syntheso/musicassessr) R package, which in turn relies on an Amazon Web Services (AWS) architecture which cannot be directly setup within R. [`musicassessr`](https://github.com/syntheso/musicassessr) provides some scripts to setup this architecture for you. After running these scripts, you provide the credentials outputted into the MST (or any other [`musicassessr`](https://github.com/syntheso/musicassessr) functionality you would like to use). You will only need to do this once.
+The Melody Singing Task (MST) uses the [`musicassessr`](https://github.com/syntheso/musicassessr) R package, which in turn relies on an Amazon Web Services (AWS) architecture, to record and process audio, which cannot be directly setup within R. As described in the steps below, [`musicassessr`](https://github.com/syntheso/musicassessr) provides some scripts to setup this architecture for you. After running these scripts, you will receive some credentials which you input into the MST (or other relevant [`musicassessr`](https://github.com/syntheso/musicassessr) functionality you would like to use). You will only need to do this once.
 
 ### Instructions
 
