@@ -19,10 +19,10 @@ The MST is a test of melody singing ability.
 
 ## Usage
 
-You can demo the JAJ at the R console, as follows:
+You can demo the MST at the R console, as follows:
 
 ``` r
-# Load the JAJ package
+# Load the MST package
 library(MST)
 
 # Run a test with default parameters (6 long note trials, 10 arrhythmic melody trials, 10 rhythmic melody trials and the Berkowitz item bank).
