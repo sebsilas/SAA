@@ -5,13 +5,17 @@ The MST is a test of melody singing ability.
  
 ## Installation
 
-The Melody Singing Task (MST) uses the [`musicassessr`](https://github.com/syntheso/musicassessr) R package, which in turn relies on an Amazon Web Services (AWS) architecture, to record and process audio, which cannot be directly setup within R. In step 1, you run some scripts to setup this architecture for you. You will receive some credentials which you input into the MST R function (or other relevant [`musicassessr`](https://github.com/syntheso/musicassessr) functionality you would like to use). You will only need to do this once.
+The Melody Singing Task (MST) uses the [`musicassessr`](https://github.com/syntheso/musicassessr) R package, which in turn relies on an Amazon Web Services (AWS) architecture, to record and process audio, which cannot be directly setup within R. In step 1, you will be referred to another repository to run some scripts to setup this architecture for you. You will receive some credentials which you input into the MST R function (or other relevant [`musicassessr`](https://github.com/syntheso/musicassessr) functionality you would like to use). You will only need to do this once. There are also instructions to deploy the MST on a server. To avoid security warnings associated with accessing a user's microphone (required to complete the test), you will need your own domain name.
 
 ### Instructions
 
-1. Setup your AWS architecture: https://github.com/mcetn/shiny-app-aws
+- Setup your AWS architecture by following step 1) Setup AWS architecture in the following repository: https://github.com/mcetn/shiny-app-aws and make a note of the credentials outputted
+- If you are ready to deploy the MST on a server, accessible by URL, proceed with steps 2 and 3 on the previous link.
+- To use locally, follow the instructions below
 
-2. If you don't have R installed, install it from here: https://cloud.r-project.org/
+## Local Testing
+
+1. If you don't have R installed, install it from here: https://cloud.r-project.org/
 
 3. Open R.
 
