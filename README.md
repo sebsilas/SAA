@@ -3,19 +3,26 @@
 The MST is a test of melody singing ability.
 
  
-## Installation instructions
+## Installation
 
-1. If you don't have R installed, install it from here: https://cloud.r-project.org/
+The Melody Singing Task (MST) uses the musicassessr R package, which in turn relies on an Amazon Web Services (AWS) architecture which cannot be directly setup within R. But don’t worry, we have created some scripts to setup this architecture for you. You then provide the credentials outputted by this script into MST (or any other musicassessr functionality you would like to use). You will only need to do this once.
 
-2. Open R.
+### Instructions
 
-3. Install the ‘devtools’ package with the following command:
+1. Setup your AWS architecture: https://github.com/mcetn/shiny-app-aws
+
+2. If you don't have R installed, install it from here: https://cloud.r-project.org/
+
+3. Open R.
+
+4. Install the ‘devtools’ package with the following command:
 
 `install.packages('devtools')`
 
-4. Install the MST:
+5. Install the MST:
 
 `devtools::install_github('syntheso/MST')`
+
 
 ## Usage
 
@@ -25,13 +32,23 @@ You can demo the MST at the R console, as follows:
 # Load the MST package
 library(MST)
 
-# Run a test with default parameters (6 long note trials, 10 arrhythmic melody trials, 10 rhythmic melody trials and the Berkowitz item bank).
-MST()
+# Inputting your AWS parameters generated above, run a test with default parameters (6 long note trials, 10 arrhythmic melody trials, 10 rhythmic melody trials and the Berkowitz item bank).
+MST(aws_credentials = list("api_url" = "your_url",
+                           "bucket_name" = "your_bucket_name",
+                           "bucket_region" = "your_bucket_region",
+                           "identity_pool_id" = "your_identity_pool_id",
+                           "destination_bucket" = "your_destination_bucet"))
 
 # Change the default parameters e.g by using fewer trials and a different item bank
-MST(num_items = list("long_tones" = 4L,
-                      "arrhythmic" = 5L,
-                      "rhythmic" = 5L), item_bank = itembankr::WJD)
+MST(aws_credentials = list("api_url" = "your_url",
+                           "bucket_name" = "your_bucket_name",
+                           "bucket_region" = "your_bucket_region",
+                           "identity_pool_id" = "your_identity_pool_id",
+                           "destination_bucket" = "your_destination_bucet"),
+    num_items = list("long_tones" = 4L,
+                     "arrhythmic" = 5L,
+                      "rhythmic" = 5L), 
+    item_bank = itembankr::WJD)
 ```
 
 ## Usage notes
@@ -52,7 +69,7 @@ library(psychTestR)
 library(psychTestRCAT)
 if (!require(devtools)) install.packages("devtools")
 x <- devtools::session_info()
-x$packages[x$packages$package %in% c("JAJ", "psychTestR", "psychTestRCAT"), ]
+x$packages[x$packages$package %in% c("MST", "psychTestR", "psychTestRCAT"), ]
 ```
 
 ## References:
