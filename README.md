@@ -53,14 +53,13 @@ MST(aws_credentials = list("api_url" = "your_url",
 
 ## Usage notes
 
-- The MST runs in your web browser.
-- By default, some image files are hosted online on our servers.
-The test therefore requires internet connectivity.
+- The MST runs in your web browser. It is only recommended to run the test in Google Chrome. 
+- The test requires internet connectivity. 
 
 ## Citation
 
 We advise mentioning the software versions you used,
-in particular the versions of the `MST`, `psychTestR`, and `psychTestRCAT` packages.
+in particular the versions of the `MST`, `musicassessr`, `psychTestR`, and `psychTestRCAT` packages.
 You can find these version numbers from R by running the following commands:
 
 ``` r
@@ -73,6 +72,4 @@ x$packages[x$packages$package %in% c("MST", "psychTestR", "psychTestRCAT"), ]
 ```
 
 ## References:
-
-D. Müllensiefen, K. Frieler, S. Silas, E.  Tsigeman, M.  Likhanov, Y. Kovas (submitted). *Jack and Jill: construction, calibration and validation of an adaptive visuospatial working memory test*
  
