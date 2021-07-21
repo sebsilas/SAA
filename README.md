@@ -60,7 +60,7 @@ The test therefore requires internet connectivity.
 ## Citation
 
 We advise mentioning the software versions you used,
-in particular the versions of the `JAJ`, `psychTestR`, and `psychTestRCAT` packages.
+in particular the versions of the `MST`, `psychTestR`, and `psychTestRCAT` packages.
 You can find these version numbers from R by running the following commands:
 
 ``` r
