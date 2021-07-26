@@ -2,7 +2,7 @@
 
 The MST is a test of melody singing ability.
 
-# NB: this is being launched on 31.07.2021. Please refrain from using before then whilst final updates are made.
+### NB: this is being launched on 31.07.2021. Please refrain from using before then whilst final updates are made.
 
 
  
