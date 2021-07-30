@@ -1,2 +1,4 @@
 ^MST\.Rproj$
 ^\.Rproj\.user$
+^data-raw$
+^output$

@@ -1,36 +1,41 @@
-MST_intro <- function() {
-  list(
-    psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("title")),
+MST_intro <- function(aws_credentials = list("api_url" = "api url",
+                                             "bucket_name" = "bucket name",
+                                             "bucket_region" = "bucket region",
+                                              "identity_pool_id" = "identity pool id",
+                                             "destination_bucket" = "destination bucket"),
+                      demo = FALSE,
+                      SNR_test = TRUE,
+                      get_range = TRUE) {
+
+  musicassessr::make_aws_credentials_global(aws_credentials)
+
+  c(
+
+    # introduction page
+    psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("mst_welcome")),
                                            shiny::tags$img(src = 'custom-assets/img/intro.png', height = 100, width = 100),
-                                           shiny::tags$p(psychTestR::i18n("welcome_message"),
-                                  musicassessr::musicassessr_js_scripts(api_url = api_url,
-                                                                        bucket_name = bucket_name,
-                                                                        bucket_region = bucket_region,
-                                                                        identity_pool_id = identity_pool_id,
-                                                                        destination_bucket = destination_bucket)
-                               )
-    ),
-    button_text = psychTestR::i18n("Next")
-    ),
+                                           shiny::tags$p(psychTestR::i18n("mst_welcome_1")),
+                                           shiny::tags$p(psychTestR::i18n("mst_welcome_2")),
+                                  musicassessr::musicassessr_js_scripts(api_url = aws_credentials$api_url,
+                                                                        bucket_name = aws_credentials$bucket_name,
+                                                                        bucket_region = aws_credentials$bucket_region,
+                                                                        identity_pool_id = aws_credentials$identity_pool_id,
+                                                                        destination_bucket = aws_credentials$destination_bucket)),
+                                  button_text = psychTestR::i18n("Next")),
 
-    psychTestR::NAFC_page(label = "headphones_and_microphone_check",
-              choices = c(psychTestR::i18n("Yes"), psychTestR::i18n("No")),
-              prompt = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("requirements")),
-                           shiny::tags$ul(class = "roman",
-                                   shiny::tags$li(psychTestR::i18n("requirements_1")),
-                                   shiny::tags$li(psychTestR::i18n("requirements_2")),
-                                   shiny::tags$li(psychTestR::i18n("requirements_3")),
-                                   shiny::tags$ul(class = "square",
-                                           shiny::tags$li(psychTestR::i18n("requirements_4"), shiny::tags$em(psychTestR::i18n("requirements_5"))),
-                                           shiny::tags$li(psychTestR::i18n("requirements_6"))
-                                   )),
-                           shiny::tags$p(psychTestR::i18n("requirements_final"))),
-              on_complete = musicassessr::have_requirements
-    ),
-
-    # volume calibration
-    musicassessr::test_headphones_page()
+    musicassessr::setup_pages(demo = demo, get_instrument_range = get_range, SNR_test = SNR_test),
+    # instructions
+    MST_instructions()
   )
 
+}
+
+MST_instructions <- function() {
+
+  psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("mst_instructions1")),
+                                                     shiny::tags$p(psychTestR::i18n("mst_instructions2")),
+                                                     shiny::tags$p(psychTestR::i18n("mst_instructions3")),
+                                                     shiny::tags$p(psychTestR::i18n("mst_instructions4"))),
+                              button_text = psychTestR::i18n("Next"))
 }
 
