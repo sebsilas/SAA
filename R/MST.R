@@ -8,8 +8,7 @@ MST <- function(aws_credentials,
                 feedback = FALSE,
                 admin_password = "demo",
                 SNR_test = TRUE,
-                get_range = TRUE
-                ) {
+                get_range = TRUE) {
 
   if(demo) warning('Running MST in demo mode!')
 
@@ -60,6 +59,17 @@ MST <- function(aws_credentials,
                          css = system.file('www/css/style.css', package = "musicassessr")
                          ),
                        languages = c("en")
-    )#, custom_admin_panel = musicassessr::aws_admin_panel
-    )
+    ))
+}
+
+
+.onLoad <- function(...) {
+  shiny::addResourcePath(
+    prefix = "custom-assets", # custom prefix that will be used to reference your directory
+    directoryPath = system.file("www", package = "MST") # path to resource in your package
+  )
+  shiny::addResourcePath(
+    prefix = "item_banks", # custom prefix that will be used to reference your directory
+    directoryPath = system.file("item_banks", package = "itembankr") # path to resource in your package
+  )
 }
