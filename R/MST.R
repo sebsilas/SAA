@@ -1,3 +1,19 @@
+#' Deploy the MST
+#'
+#' @param aws_credentials
+#' @param num_items
+#' @param item_bank
+#' @param demographics
+#' @param demo
+#' @param feedback
+#' @param admin_password
+#' @param SNR_test
+#' @param get_range
+#'
+#' @return
+#' @export
+#'
+#' @examples
 MST <- function(aws_credentials,
                 num_items = list("long_tones" = 6L,
                               "arrhythmic" = 10L,
