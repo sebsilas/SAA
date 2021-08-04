@@ -2,6 +2,8 @@
 
 The MST is a test of melody singing ability which can be launched in R/Shiny via the [`psychTestR`](https://github.com/pmcharrison/psychTestR) package.
 
+We recommend using the latest version of Google Chrome to run this test.
+
 # Author
 Seb Silas, silass@stud.hmtm-hannover.de
 
