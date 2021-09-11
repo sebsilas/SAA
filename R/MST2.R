@@ -37,7 +37,7 @@ MST2 <- function(aws_credentials,
                            MST_intro(aws_credentials, demo, SNR_test, get_range),
 
                            # long tone trials
-                           #musicassessr::long_tone_trials(num_items$long_tones, num_examples = 2, feedback = feedback),
+                           musicassessr::long_tone_trials(num_items$long_tones, num_examples = 2, feedback = feedback),
 
                            # arrhythmic
                            musicassessr::arrhythmic_melody_trials(item_bank = item_bank,
@@ -62,7 +62,6 @@ MST2 <- function(aws_credentials,
     psychTestR::elt_save_results_to_disk(complete = TRUE),
     psychTestR::final_page("You have completed the Melody Singing Task!")
   )
-
 
   # run the test
   psychTestR::make_test(
