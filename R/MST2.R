@@ -38,7 +38,7 @@ MST2 <- function(aws_credentials,
 
         psychTestR::module("MST",
                            # introduction, same for all users
-                           MST_intro(aws_credentials, demo, SNR_test, get_range),
+                           MST_intro(aws_credentials, demo, SNR_test, get_range, absolute_url = absolute_url),
 
                            # long tone trials
                            musicassessr::long_tone_trials(num_items$long_tones, num_examples = 2, feedback = feedback),
