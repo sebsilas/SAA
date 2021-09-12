@@ -5,7 +5,8 @@ MST_intro <- function(aws_credentials = list("api_url" = "api url",
                                              "destination_bucket" = "destination bucket"),
                       demo = FALSE,
                       SNR_test = TRUE,
-                      get_range = TRUE) {
+                      get_range = TRUE,
+                      absolute_url) {
 
   musicassessr::make_aws_credentials_global(aws_credentials)
 
@@ -23,7 +24,7 @@ MST_intro <- function(aws_credentials = list("api_url" = "api url",
                                                                         destination_bucket = aws_credentials$destination_bucket)),
                                   button_text = psychTestR::i18n("Next")),
 
-    musicassessr::setup_pages(demo = demo, get_instrument_range = get_range, SNR_test = SNR_test),
+    musicassessr::setup_pages(demo = demo, get_instrument_range = get_range, SNR_test = SNR_test, absolute_url = absolute_url),
     # instructions
     MST_instructions()
   )

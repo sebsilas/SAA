@@ -1,4 +1,5 @@
-#' Deploy the MST2
+
+#'  Deploy the MST2
 #'
 #' @param aws_credentials
 #' @param num_items
@@ -9,6 +10,7 @@
 #' @param admin_password
 #' @param SNR_test
 #' @param get_range
+#' @param absolute_url
 #'
 #' @return
 #' @export
@@ -24,7 +26,9 @@ MST2 <- function(aws_credentials,
                 feedback = FALSE,
                 admin_password = "demo",
                 SNR_test = TRUE,
-                get_range = TRUE) {
+                get_range = TRUE,
+                absolute_url
+                ) {
 
   if(demo) warning('Running MST2 in demo mode!')
 
