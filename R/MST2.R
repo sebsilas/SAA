@@ -1,5 +1,6 @@
 
-#'  Deploy the MST2
+
+#' Deploy the MST2
 #'
 #' @param aws_credentials
 #' @param num_items
@@ -11,6 +12,7 @@
 #' @param SNR_test
 #' @param get_range
 #' @param absolute_url
+#' @param examples
 #'
 #' @return
 #' @export
@@ -27,7 +29,8 @@ MST2 <- function(aws_credentials,
                 admin_password = "demo",
                 SNR_test = TRUE,
                 get_range = TRUE,
-                absolute_url
+                absolute_url,
+                examples = 2
                 ) {
 
   if(demo) warning('Running MST2 in demo mode!')
@@ -41,18 +44,18 @@ MST2 <- function(aws_credentials,
                            MST_intro(aws_credentials, demo, SNR_test, get_range, absolute_url = absolute_url),
 
                            # long tone trials
-                           musicassessr::long_tone_trials(num_items$long_tones, num_examples = 2, feedback = feedback),
+                           musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback),
 
                            # arrhythmic
                            musicassessr::arrhythmic_melody_trials(item_bank = item_bank,
                                                                   num_items = num_items$arrhythmic,
-                                                                  num_examples = 2,
+                                                                  num_examples = examples,
                                                                   feedback = feedback),
 
                            # rhythmic
                            musicassessr::rhythmic_melody_trials(item_bank = item_bank,
                                                                 num_items = num_items$rhythmic,
-                                                                num_examples = 2,
+                                                                num_examples = examples,
                                                                 feedback = feedback),
 
                            psychTestR::elt_save_results_to_disk(complete = FALSE)

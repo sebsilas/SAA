@@ -13,11 +13,13 @@ MST2(
   feedback = FALSE,
   admin_password = "demo",
   SNR_test = TRUE,
-  get_range = TRUE
+  get_range = TRUE,
+  absolute_url,
+  examples = 2
 )
 }
 \arguments{
-\item{get_range}{}
+\item{examples}{}
 }
 \value{
 
