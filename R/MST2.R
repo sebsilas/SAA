@@ -1,5 +1,6 @@
 
 
+
 #' Deploy the MST2
 #'
 #' @param aws_credentials
@@ -13,6 +14,7 @@
 #' @param get_range
 #' @param absolute_url
 #' @param examples
+#' @param final_results
 #'
 #' @return
 #' @export
@@ -30,7 +32,8 @@ MST2 <- function(aws_credentials,
                 SNR_test = TRUE,
                 get_range = TRUE,
                 absolute_url,
-                examples = 2
+                examples = 2,
+                final_results = TRUE
                 ) {
 
   if(demo) warning('Running MST2 in demo mode!')
@@ -58,7 +61,9 @@ MST2 <- function(aws_credentials,
                                                                 num_examples = examples,
                                                                 feedback = feedback),
 
-                           psychTestR::elt_save_results_to_disk(complete = FALSE)
+                           psychTestR::elt_save_results_to_disk(complete = FALSE),
+
+                           if(final_results) musicassessr::final_results()
 
         )
       ),
