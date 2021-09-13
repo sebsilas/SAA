@@ -15,11 +15,12 @@ MST2(
   SNR_test = TRUE,
   get_range = TRUE,
   absolute_url,
-  examples = 2
+  examples = 2,
+  final_results = TRUE
 )
 }
 \arguments{
-\item{examples}{}
+\item{final_results}{}
 }
 \value{
 
