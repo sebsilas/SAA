@@ -59,7 +59,8 @@ MST2 <- function(aws_credentials,
                            musicassessr::rhythmic_melody_trials(item_bank = item_bank,
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = examples,
-                                                                feedback = feedback, sound = "voice_doo"),
+                                                                feedback = feedback,
+                                                                sound = "voice_doo"),
 
                            psychTestR::elt_save_results_to_disk(complete = FALSE),
 
