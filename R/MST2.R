@@ -33,8 +33,7 @@ MST2 <- function(aws_credentials,
                 get_range = TRUE,
                 absolute_url,
                 examples = 2,
-                final_results = TRUE
-                ) {
+                final_results = TRUE) {
 
   if(demo) warning('Running MST2 in demo mode!')
 
@@ -53,13 +52,15 @@ MST2 <- function(aws_credentials,
                            musicassessr::arrhythmic_melody_trials(item_bank = item_bank,
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
-                                                                  feedback = feedback),
+                                                                  feedback = feedback,
+                                                                  sound = "voice_doo"),
 
                            # rhythmic
                            musicassessr::rhythmic_melody_trials(item_bank = item_bank,
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = examples,
-                                                                feedback = feedback),
+                                                                feedback = feedback,
+                                                                sound = "voice_doo"),
 
                            psychTestR::elt_save_results_to_disk(complete = FALSE),
 
