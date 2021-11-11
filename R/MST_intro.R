@@ -6,11 +6,14 @@ MST_intro <- function(aws_credentials = list("api_url" = "api url",
                       demo = FALSE,
                       SNR_test = TRUE,
                       get_range = TRUE,
-                      absolute_url) {
+                      absolute_url,
+                      test_username = NULL,
+                      store_results_in_db = FALSE) {
 
   musicassessr::make_aws_credentials_global(aws_credentials)
 
   c(
+    musicassessr::musicassessr_init(test = "MST", test_username = test_username, store_results_in_db),
 
     # introduction page
     psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("mst_welcome")),
@@ -24,7 +27,7 @@ MST_intro <- function(aws_credentials = list("api_url" = "api url",
                                                                         destination_bucket = aws_credentials$destination_bucket)),
                                   button_text = psychTestR::i18n("Next")),
 
-    musicassessr::setup_pages(demo = demo, get_instrument_range = get_range, SNR_test = SNR_test, absolute_url = absolute_url),
+    musicassessr::setup_pages(input = "microphone", demo = demo, get_instrument_range = get_range, SNR_test = SNR_test, absolute_url = absolute_url),
     # instructions
     MST_instructions()
   )

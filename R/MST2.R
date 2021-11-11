@@ -49,22 +49,23 @@ MST2 <- function(aws_credentials,
                            musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback),
 
                            # arrhythmic
-                           musicassessr::arrhythmic_melody_trials(item_bank = item_bank,
+                           musicassessr::arrhythmic_melody_trials(item_bank = item_bank("main"),
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
                                                                   feedback = feedback,
                                                                   sound = "voice_doo"),
 
                            # rhythmic
-                           musicassessr::rhythmic_melody_trials(item_bank = item_bank,
+                           musicassessr::rhythmic_melody_trials(item_bank = item_bank("phrases"),
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = examples,
                                                                 feedback = feedback,
                                                                 sound = "voice_doo"),
 
-                           psychTestR::elt_save_results_to_disk(complete = FALSE),
+                           psychTestR::elt_save_results_to_disk(complete = TRUE),
 
-                           if(final_results) musicassessr::final_results()
+                           if(final_results) musicassessr::final_results(test_name = "Melody Singing Task",
+                                                                         url = "https://adaptiveeartraining.com/MST")
 
         )
       ),
