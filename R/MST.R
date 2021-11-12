@@ -11,6 +11,25 @@
 
 
 
+#' Deploy the MST
+#'
+#' @param aws_credentials
+#' @param num_items
+#' @param item_bank
+#' @param demographics
+#' @param demo
+#' @param feedback
+#' @param admin_password
+#' @param SNR_test
+#' @param get_range
+#' @param absolute_url
+#' @param examples
+#' @param final_results
+#'
+#' @return
+#' @export
+#'
+#' @examples
 MST <- function(aws_credentials,
                 num_items = list("long_tones" = 6L,
                                  "arrhythmic" = 10L,
@@ -70,7 +89,25 @@ MST <- function(aws_credentials,
 
 }
 
-
+#' Deploy MST as standalone test
+#'
+#' @param aws_credentials
+#' @param num_items
+#' @param item_bank
+#' @param demographics
+#' @param demo
+#' @param feedback
+#' @param admin_password
+#' @param SNR_test
+#' @param get_range
+#' @param absolute_url
+#' @param examples
+#' @param final_results
+#'
+#' @return
+#' @export
+#'
+#' @examples
 MST_standalone <- function(aws_credentials,
                            num_items = list("long_tones" = 6L,
                                             "arrhythmic" = 10L,
