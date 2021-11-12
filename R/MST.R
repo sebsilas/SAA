@@ -50,7 +50,7 @@ MST <- function(aws_credentials,
   timeline <- psychTestR::join(
 
         psychTestR::module("MST",
-                           # introduction, same for all users
+                           # introduction; same for all users
                            MST_intro(aws_credentials, demo, SNR_test, get_range, absolute_url = absolute_url),
 
                            # long tone trials
