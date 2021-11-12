@@ -48,9 +48,11 @@ MST <- function(aws_credentials,
   if(demo) warning('Running MST2 in demo mode!')
 
   timeline <- psychTestR::join(
+    psychTestR::new_timeline(
+      psychTestR::join(
 
         psychTestR::module("MST",
-                           # introduction; same for all users
+                           # introduction, same for all users
                            MST_intro(aws_credentials, demo, SNR_test, get_range, absolute_url = absolute_url),
 
                            # long tone trials
@@ -75,7 +77,10 @@ MST <- function(aws_credentials,
                            if(final_results) musicassessr::final_results(test_name = "Melody Singing Task",
                                                                          url = "https://adaptiveeartraining.com/MST")
 
-        ),
+        )
+      ),
+      dict = MST_dict
+    ),
     psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),
     psychTestR::elt_save_results_to_disk(complete = TRUE),
@@ -83,6 +88,8 @@ MST <- function(aws_credentials,
   )
 
 }
+
+
 
 #' Deploy MST as standalone test
 #'
