@@ -17,11 +17,14 @@ MST_standalone(
   absolute_url,
   examples = 2,
   final_results = TRUE,
-  state = "production"
+  state = "production",
+  store_results_in_db = FALSE,
+  test_username = NULL,
+  gold_msi = TRUE
 )
 }
 \arguments{
-\item{state}{}
+\item{test_username}{}
 }
 \value{
 

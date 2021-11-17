@@ -17,11 +17,15 @@ MST(
   absolute_url,
   examples = 2,
   final_results = TRUE,
-  state = "production"
+  state = "production",
+  store_results_in_db = FALSE,
+  test_username = NULL,
+  gold_msi = TRUE,
+  with_final_page = TRUE
 )
 }
 \arguments{
-\item{state}{}
+\item{with_final_page}{}
 }
 \value{
 

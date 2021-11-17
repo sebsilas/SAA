@@ -11,9 +11,6 @@
 
 
 
-
-
-
 #' Deploy the MST
 #'
 #' @param aws_credentials
@@ -31,6 +28,8 @@
 #' @param state
 #' @param store_results_in_db
 #' @param test_username
+#' @param gold_msi
+#' @param with_final_page
 #'
 #' @return
 #' @export
