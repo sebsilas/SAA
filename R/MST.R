@@ -11,6 +11,9 @@
 
 
 
+
+
+
 #' Deploy the MST
 #'
 #' @param aws_credentials
@@ -25,6 +28,9 @@
 #' @param absolute_url
 #' @param examples
 #' @param final_results
+#' @param state
+#' @param store_results_in_db
+#' @param test_username
 #'
 #' @return
 #' @export
@@ -43,9 +49,14 @@ MST <- function(aws_credentials,
                 get_range = TRUE,
                 absolute_url,
                 examples = 2,
-                final_results = TRUE) {
+                final_results = TRUE,
+                state = "production",
+                store_results_in_db = FALSE,
+                test_username = NULL,
+                gold_msi = TRUE,
+                with_final_page = TRUE) {
 
-  if(demo) warning('Running MST2 in demo mode!')
+  if(demo) warning('Running MST in demo mode!')
 
   timeline <- psychTestR::join(
     psychTestR::new_timeline(
@@ -53,7 +64,10 @@ MST <- function(aws_credentials,
 
         psychTestR::module("MST",
                            # introduction, same for all users
-                           MST_intro(aws_credentials, demo, SNR_test, get_range, absolute_url = absolute_url),
+                           MST_intro(aws_credentials, demo, SNR_test,
+                                     get_range, absolute_url = absolute_url, state = state,
+                                     store_results_in_db = store_results_in_db,
+                                     test_username = test_username),
 
                            # long tone trials
                            musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback),
@@ -75,16 +89,19 @@ MST <- function(aws_credentials,
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
 
                            if(final_results) musicassessr::final_results(test_name = "Melody Singing Task",
-                                                                         url = "https://adaptiveeartraining.com/MST")
+                                                                         url = "https://adaptiveeartraining.com/MST",
+                                                                         num_items$long_tones,
+                                                                         num_items$arrhythmic,
+                                                                         num_items$rhythmic)
 
         )
       ),
       dict = MST_dict
     ),
-    psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
+    if(gold_msi) psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),
     psychTestR::elt_save_results_to_disk(complete = TRUE),
-    psychTestR::final_page("You have completed the Melody Singing Task!")
+    musicassessr::final_page_or_continue_to_new_text(final = with_final_page, task_name = "Melody Singing Task")
   )
 
 }
@@ -105,6 +122,9 @@ MST <- function(aws_credentials,
 #' @param absolute_url
 #' @param examples
 #' @param final_results
+#' @param state
+#' @param store_results_in_db
+#' @param test_username
 #'
 #' @return
 #' @export
@@ -123,7 +143,11 @@ MST_standalone <- function(aws_credentials,
                            get_range = TRUE,
                            absolute_url,
                            examples = 2,
-                           final_results = TRUE) {
+                           final_results = TRUE,
+                           state = "production",
+                           store_results_in_db = FALSE,
+                           test_username = NULL,
+                           gold_msi = TRUE) {
 
   timeline <- MST(aws_credentials,
                   num_items,
@@ -136,7 +160,10 @@ MST_standalone <- function(aws_credentials,
                   get_range,
                   absolute_url,
                   examples,
-                  final_results)
+                  final_results,
+                  state,
+                  store_results_in_db,
+                  test_username)
 
   # run the test
   psychTestR::make_test(
@@ -163,7 +190,8 @@ MST_intro <- function(aws_credentials = list("api_url" = "api url",
                       get_range = TRUE,
                       absolute_url,
                       test_username = NULL,
-                      store_results_in_db = FALSE) {
+                      store_results_in_db = FALSE,
+                      state = "production") {
 
   musicassessr::make_aws_credentials_global(aws_credentials)
 
@@ -179,7 +207,8 @@ MST_intro <- function(aws_credentials = list("api_url" = "api url",
                                                                                              bucket_name = aws_credentials$bucket_name,
                                                                                              bucket_region = aws_credentials$bucket_region,
                                                                                              identity_pool_id = aws_credentials$identity_pool_id,
-                                                                                             destination_bucket = aws_credentials$destination_bucket)),
+                                                                                             destination_bucket = aws_credentials$destination_bucket,
+                                                                                             musicassessr_state = state)),
                                 button_text = psychTestR::i18n("Next")),
 
     musicassessr::setup_pages(input = "microphone", demo = demo, get_instrument_range = get_range, SNR_test = SNR_test, absolute_url = absolute_url),
