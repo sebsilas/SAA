@@ -21,11 +21,12 @@ MST(
   store_results_in_db = FALSE,
   test_username = NULL,
   gold_msi = TRUE,
-  with_final_page = TRUE
+  with_final_page = TRUE,
+  item_length = c(3, 15)
 )
 }
 \arguments{
-\item{with_final_page}{}
+\item{item_length}{}
 }
 \value{
 

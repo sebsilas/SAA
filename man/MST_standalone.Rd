@@ -20,11 +20,12 @@ MST_standalone(
   state = "production",
   store_results_in_db = FALSE,
   test_username = NULL,
-  gold_msi = TRUE
+  gold_msi = TRUE,
+  item_length = c(3, 17)
 )
 }
 \arguments{
-\item{test_username}{}
+\item{item_length}{}
 }
 \value{
 

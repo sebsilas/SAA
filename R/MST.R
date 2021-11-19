@@ -11,6 +11,7 @@
 
 
 
+
 #' Deploy the MST
 #'
 #' @param aws_credentials
@@ -30,6 +31,7 @@
 #' @param test_username
 #' @param gold_msi
 #' @param with_final_page
+#' @param item_length
 #'
 #' @return
 #' @export
@@ -53,7 +55,8 @@ MST <- function(aws_credentials,
                 store_results_in_db = FALSE,
                 test_username = NULL,
                 gold_msi = TRUE,
-                with_final_page = TRUE) {
+                with_final_page = TRUE,
+                item_length = c(3,15)) {
 
   if(demo) warning('Running MST in demo mode!')
 
@@ -72,14 +75,14 @@ MST <- function(aws_credentials,
                            musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback),
 
                            # arrhythmic
-                           musicassessr::arrhythmic_melody_trials(item_bank = item_bank("main"),
+                           musicassessr::arrhythmic_melody_trials(itembankr::subset_item_bank(item_bank("main"), item_length),
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
                                                                   feedback = feedback,
                                                                   sound = "voice_doo"),
 
                            # rhythmic
-                           musicassessr::rhythmic_melody_trials(item_bank = item_bank("phrases"),
+                           musicassessr::rhythmic_melody_trials(item_bank = itembankr::subset_item_bank(item_bank("phrases"), item_length),
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = examples,
                                                                 feedback = feedback,
@@ -107,6 +110,7 @@ MST <- function(aws_credentials,
 
 
 
+
 #' Deploy MST as standalone test
 #'
 #' @param aws_credentials
@@ -124,6 +128,8 @@ MST <- function(aws_credentials,
 #' @param state
 #' @param store_results_in_db
 #' @param test_username
+#' @param gold_msi
+#' @param item_length
 #'
 #' @return
 #' @export
@@ -146,7 +152,8 @@ MST_standalone <- function(aws_credentials,
                            state = "production",
                            store_results_in_db = FALSE,
                            test_username = NULL,
-                           gold_msi = TRUE) {
+                           gold_msi = TRUE,
+                           item_length = c(3,17)) {
 
   timeline <- MST(aws_credentials,
                   num_items,
