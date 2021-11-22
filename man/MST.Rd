@@ -22,11 +22,12 @@ MST(
   test_username = NULL,
   gold_msi = TRUE,
   with_final_page = TRUE,
-  item_length = c(3, 15)
+  item_length = c(3, 15),
+  melody_sound = "piano"
 )
 }
 \arguments{
-\item{item_length}{}
+\item{melody_sound}{}
 }
 \value{
 

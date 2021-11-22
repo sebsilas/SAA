@@ -12,6 +12,7 @@
 
 
 
+
 #' Deploy the MST
 #'
 #' @param aws_credentials
@@ -32,6 +33,7 @@
 #' @param gold_msi
 #' @param with_final_page
 #' @param item_length
+#' @param melody_sound
 #'
 #' @return
 #' @export
@@ -56,7 +58,8 @@ MST <- function(aws_credentials,
                 test_username = NULL,
                 gold_msi = TRUE,
                 with_final_page = TRUE,
-                item_length = c(3,15)) {
+                item_length = c(3,15),
+                melody_sound = "piano") {
 
   if(demo) warning('Running MST in demo mode!')
 
@@ -79,14 +82,14 @@ MST <- function(aws_credentials,
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
                                                                   feedback = feedback,
-                                                                  sound = "voice_doo"),
+                                                                  sound = melody_sound),
 
                            # rhythmic
                            musicassessr::rhythmic_melody_trials(item_bank = itembankr::subset_item_bank(item_bank("phrases"), item_length),
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = examples,
                                                                 feedback = feedback,
-                                                                sound = "voice_doo"),
+                                                                sound = melody_sound),
 
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
 
