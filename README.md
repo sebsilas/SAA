@@ -6,11 +6,6 @@ We recommend using the latest version of Google Chrome to run this test.
 
 # Author
 Seb Silas, silass@stud.hmtm-hannover.de
-
-Short Demo (with feedback, not usually shown to participant): https://adaptiveeartraining.com/MST-v2-demo
-Super Short Demo (with feedback, not usually shown to participant): https://adaptiveeartraining.com/MST-v2-demo-short/
-
-NB. the super short demo does not include some setup steps e.g, computing the user's range at test time, their SNR etc. Hence, error is likely to be higher (e.g, because the user's range is not computed at test time, so melodies could be presented outside of their vocal range).
  
 ## Installation
 
