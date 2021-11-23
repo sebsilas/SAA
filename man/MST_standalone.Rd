@@ -15,17 +15,19 @@ MST_standalone(
   SNR_test = TRUE,
   get_range = TRUE,
   absolute_url,
-  examples = 2,
+  examples = 2L,
   final_results = TRUE,
   state = "production",
   store_results_in_db = FALSE,
   test_username = NULL,
   gold_msi = TRUE,
-  item_length = c(3, 17)
+  with_final_page = TRUE,
+  item_length = c(3, 15),
+  melody_sound = "piano"
 )
 }
 \arguments{
-\item{item_length}{}
+\item{melody_sound}{}
 }
 \value{
 

@@ -78,7 +78,7 @@ MST <- function(aws_credentials,
                            musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback),
 
                            # arrhythmic
-                           musicassessr::arrhythmic_melody_trials(itembankr::subset_item_bank(item_bank("main"), item_length),
+                           musicassessr::arrhythmic_melody_trials(itembankr::subset_item_bank(item_bank("main"), item_length = item_length),
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
                                                                   feedback = feedback,
@@ -114,6 +114,8 @@ MST <- function(aws_credentials,
 
 
 
+
+
 #' Deploy MST as standalone test
 #'
 #' @param aws_credentials
@@ -132,7 +134,9 @@ MST <- function(aws_credentials,
 #' @param store_results_in_db
 #' @param test_username
 #' @param gold_msi
+#' @param with_final_page
 #' @param item_length
+#' @param melody_sound
 #'
 #' @return
 #' @export
@@ -150,13 +154,15 @@ MST_standalone <- function(aws_credentials,
                            SNR_test = TRUE,
                            get_range = TRUE,
                            absolute_url,
-                           examples = 2,
+                           examples = 2L,
                            final_results = TRUE,
                            state = "production",
                            store_results_in_db = FALSE,
                            test_username = NULL,
                            gold_msi = TRUE,
-                           item_length = c(3,17)) {
+                           with_final_page = TRUE,
+                           item_length = c(3,15),
+                           melody_sound = "piano") {
 
   timeline <- MST(aws_credentials,
                   num_items,
@@ -172,7 +178,11 @@ MST_standalone <- function(aws_credentials,
                   final_results,
                   state,
                   store_results_in_db,
-                  test_username)
+                  test_username,
+                  gold_msi,
+                  with_final_page,
+                  item_length,
+                  melody_sound)
 
   # run the test
   psychTestR::make_test(
