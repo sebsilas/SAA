@@ -5,5 +5,6 @@ MST_dict_df$de <- "a"
 
 MST_dict <- musicassessr::dict(additional_dict = MST_dict_df)
 
+da <- MST_dict$as.data.frame()
 
 usethis::use_data(MST_dict_df, MST_dict, overwrite = TRUE, internal = TRUE)
