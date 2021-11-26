@@ -1,21 +1,5 @@
-.onLoad <- function(...) {
-  shiny::addResourcePath(
-    prefix = "custom-assets", # custom prefix that will be used to reference your directory
-    directoryPath = system.file("www", package = "MST") # path to resource in your package
-  )
-  # shiny::addResourcePath(
-  #   prefix = "item_banks", # custom prefix that will be used to reference your directory
-  #   directoryPath = system.file("item_banks", package = "itembankr") # path to resource in your package
-  # )
-}
-
-
-
-
-
 #' Deploy the MST
 #'
-#' @param aws_credentials
 #' @param num_items
 #' @param item_bank
 #' @param demographics
@@ -39,8 +23,7 @@
 #' @export
 #'
 #' @examples
-MST <- function(aws_credentials,
-                num_items = list("long_tones" = 6L,
+MST <- function(num_items = list("long_tones" = 6L,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
                 item_bank = itembankr::Berkowitz,
@@ -69,7 +52,7 @@ MST <- function(aws_credentials,
 
         psychTestR::module("MST",
                            # introduction, same for all users
-                           MST_intro(aws_credentials, demo, SNR_test,
+                           MST_intro(demo, SNR_test,
                                      get_range, absolute_url = absolute_url, state = state,
                                      store_results_in_db = store_results_in_db,
                                      test_username = test_username),
@@ -115,10 +98,8 @@ MST <- function(aws_credentials,
 
 
 
-
 #' Deploy MST as standalone test
 #'
-#' @param aws_credentials
 #' @param num_items
 #' @param item_bank
 #' @param demographics
@@ -142,8 +123,7 @@ MST <- function(aws_credentials,
 #' @export
 #'
 #' @examples
-MST_standalone <- function(aws_credentials,
-                           num_items = list("long_tones" = 6L,
+MST_standalone <- function(num_items = list("long_tones" = 6L,
                                             "arrhythmic" = 10L,
                                             "rhythmic" = 10L),
                            item_bank = itembankr::Berkowitz,
@@ -164,8 +144,7 @@ MST_standalone <- function(aws_credentials,
                            item_length = c(3,15),
                            melody_sound = "piano") {
 
-  timeline <- MST(aws_credentials,
-                  num_items,
+  timeline <- MST(num_items,
                   item_bank,
                   demographics,
                   demo,
@@ -199,20 +178,13 @@ MST_standalone <- function(aws_credentials,
 }
 
 
-MST_intro <- function(aws_credentials = list("api_url" = "api url",
-                                             "bucket_name" = "bucket name",
-                                             "bucket_region" = "bucket region",
-                                             "identity_pool_id" = "identity pool id",
-                                             "destination_bucket" = "destination bucket"),
-                      demo = FALSE,
+MST_intro <- function(demo = FALSE,
                       SNR_test = TRUE,
                       get_range = TRUE,
                       absolute_url,
                       test_username = NULL,
                       store_results_in_db = FALSE,
                       state = "production") {
-
-  musicassessr::make_aws_credentials_global(aws_credentials)
 
   c(
     musicassessr::musicassessr_init(test = "MST", test_username = test_username, store_results_in_db),
@@ -222,12 +194,7 @@ MST_intro <- function(aws_credentials = list("api_url" = "api url",
                                                        shiny::tags$img(src = 'custom-assets/img/intro.png', height = 100, width = 100),
                                                        shiny::tags$p(psychTestR::i18n("mst_welcome_1")),
                                                        shiny::tags$p(psychTestR::i18n("mst_welcome_2")),
-                                                       musicassessr::musicassessr_js_scripts(api_url = aws_credentials$api_url,
-                                                                                             bucket_name = aws_credentials$bucket_name,
-                                                                                             bucket_region = aws_credentials$bucket_region,
-                                                                                             identity_pool_id = aws_credentials$identity_pool_id,
-                                                                                             destination_bucket = aws_credentials$destination_bucket,
-                                                                                             musicassessr_state = state)),
+                                                       musicassessr::musicassessr_js_scripts(musicassessr_state = state)),
                                 button_text = psychTestR::i18n("Next")),
 
     musicassessr::setup_pages(input = "microphone", demo = demo, get_instrument_range = get_range, SNR_test = SNR_test, absolute_url = absolute_url),
@@ -244,6 +211,20 @@ MST_instructions <- function() {
                                                      shiny::tags$p(psychTestR::i18n("mst_instructions3")),
                                                      shiny::tags$p(psychTestR::i18n("mst_instructions4"))),
                               button_text = psychTestR::i18n("Next"))
+}
+
+
+
+
+.onLoad <- function(...) {
+  shiny::addResourcePath(
+    prefix = "custom-assets", # custom prefix that will be used to reference your directory
+    directoryPath = system.file("www", package = "MST") # path to resource in your package
+  )
+  # shiny::addResourcePath(
+  #   prefix = "item_banks", # custom prefix that will be used to reference your directory
+  #   directoryPath = system.file("item_banks", package = "itembankr") # path to resource in your package
+  # )
 }
 
 

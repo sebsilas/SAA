@@ -5,7 +5,6 @@
 \title{Deploy MST as standalone test}
 \usage{
 MST_standalone(
-  aws_credentials,
   num_items = list(long_tones = 6L, arrhythmic = 10L, rhythmic = 10L),
   item_bank = itembankr::Berkowitz,
   demographics = TRUE,
