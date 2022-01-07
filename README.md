@@ -5,14 +5,11 @@ The SAA is a test of melody singing ability which can be launched in R/Shiny via
 We recommend using the latest version of Google Chrome to run this test.
 
 # Author
-<<<<<<< HEAD
+
 Seb Silas, sebsilas@gmail.com
 
 Short Demo: https://adaptiveeartraining.com/SAA-demo/
-=======
-Seb Silas, silass@stud.hmtm-hannover.de
->>>>>>> 5a4bef12f6f4bde167ad9eb90de84bef1fd6e23e
- 
+
 ## Installation
 
 The Singing Ability Assessment (SAA) uses the [`musicassessr`](https://github.com/syntheso/musicassessr) R package, which in turn relies on an Amazon Web Services (AWS) architecture, to record and process audio, and cannot be directly setup within R. In step 1, you will be referred to another repository to run some scripts to setup this architecture for you. You will receive some credentials which you must input into the SAA R function (or other relevant [`musicassessr`](https://github.com/syntheso/musicassessr) functionality you would like to use). You will only need to do this once, and you will be able to use the same credentials for different `musicassessr` tests. 
