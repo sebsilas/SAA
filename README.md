@@ -1,22 +1,22 @@
-# Melody Singing Task (MST)
+# Singing Ability Assessment (SAA)
 
-The MST is a test of melody singing ability which can be launched in R/Shiny via the [`psychTestR`](https://github.com/pmcharrison/psychTestR) package.
+The SAA is a test of melody singing ability which can be launched in R/Shiny via the [`psychTestR`](https://github.com/pmcharrison/psychTestR) package.
 
 We recommend using the latest version of Google Chrome to run this test.
 
 # Author
-Seb Silas, silass@stud.hmtm-hannover.de
+Seb Silas, sebsilas@gmail.com
 
-Short Demo: https://adaptiveeartraining.com/MST-demo/
+Short Demo: https://adaptiveeartraining.com/SAA-demo/
  
 ## Installation
 
-The Melody Singing Task (MST) uses the [`musicassessr`](https://github.com/syntheso/musicassessr) R package, which in turn relies on an Amazon Web Services (AWS) architecture, to record and process audio, and cannot be directly setup within R. In step 1, you will be referred to another repository to run some scripts to setup this architecture for you. You will receive some credentials which you must input into the MST R function (or other relevant [`musicassessr`](https://github.com/syntheso/musicassessr) functionality you would like to use). You will only need to do this once, and you will be able to use the same credentials for different `musicassessr` tests. 
+The Singing Ability Assessment (SAA) uses the [`musicassessr`](https://github.com/syntheso/musicassessr) R package, which in turn relies on an Amazon Web Services (AWS) architecture, to record and process audio, and cannot be directly setup within R. In step 1, you will be referred to another repository to run some scripts to setup this architecture for you. You will receive some credentials which you must input into the SAA R function (or other relevant [`musicassessr`](https://github.com/syntheso/musicassessr) functionality you would like to use). You will only need to do this once, and you will be able to use the same credentials for different `musicassessr` tests. 
 
 ### Instructions
 
 - Setup your AWS architecture by following step 1) Setup AWS architecture in the following repository: https://github.com/mcetn/musicassessr-aws and make a note of the credentials outputted
-- If you are ready to deploy the MST on a server, accessible by URL, proceed with steps 2 and 3 on the previous link. When deploying on a public URL, to avoid security warnings associated with accessing a user's microphone (required to complete the test), you will need your own domain name.
+- If you are ready to deploy the SAA on a server, accessible by URL, proceed with steps 2 and 3 on the previous link. When deploying on a public URL, to avoid security warnings associated with accessing a user's microphone (required to complete the test), you will need your own domain name.
 - Otherwise, to use locally, follow the instructions below: 
 
 ## Local Testing
@@ -29,28 +29,28 @@ The Melody Singing Task (MST) uses the [`musicassessr`](https://github.com/synth
 
 `install.packages('devtools')`
 
-5. Install the MST:
+5. Install the SAA:
 
-`devtools::install_github('syntheso/MST')`
+`devtools::install_github('syntheso/SAA')`
 
 
 ## Usage
 
-Once you have completed the above steps, you can run the MST using the code below. Make sure to replace the credentials with those you yielded in Step 1.
+Once you have completed the above steps, you can run the SAA using the code below. Make sure to replace the credentials with those you yielded in Step 1.
 
 ``` r
-# Load the MST package
-library(MST)
+# Load the SAA package
+library(SAA)
 
 # Inputting your AWS parameters generated above, run a test with default parameters (6 long note trials, 10 arrhythmic melody trials, 10 rhythmic melody trials and the Berkowitz item bank).
-MST(aws_credentials = list("api_url" = "your_url",
+SAA(aws_credentials = list("api_url" = "your_url",
                            "bucket_name" = "your_bucket_name",
                            "bucket_region" = "your_bucket_region",
                            "identity_pool_id" = "your_identity_pool_id",
                            "destination_bucket" = "your_destination_bucket"))
 
 # Change the default parameters e.g by using fewer trials and a different item bank
-MST(aws_credentials = list("api_url" = "your_url",
+SAA(aws_credentials = list("api_url" = "your_url",
                            "bucket_name" = "your_bucket_name",
                            "bucket_region" = "your_bucket_region",
                            "identity_pool_id" = "your_identity_pool_id",
@@ -63,22 +63,22 @@ MST(aws_credentials = list("api_url" = "your_url",
 
 ## Usage notes
 
-- The MST runs in your web browser. It is only recommended to run the test in Google Chrome. 
+- The SAA runs in your web browser. It is only recommended to run the test in Google Chrome. 
 - The test requires internet connectivity. 
 
 ## Citation
 
 We advise mentioning the software versions you used,
-in particular the versions of the `MST`, `musicassessr`, `psychTestR`, and `psychTestRCAT` packages.
+in particular the versions of the `SAA`, `musicassessr`, `psychTestR`, and `psychTestRCAT` packages.
 You can find these version numbers from R by running the following commands:
 
 ``` r
-library(MST)
+library(SAA)
 library(psychTestR)
 library(psychTestRCAT)
 if (!require(devtools)) install.packages("devtools")
 x <- devtools::session_info()
-x$packages[x$packages$package %in% c("MST", "psychTestR", "psychTestRCAT"), ]
+x$packages[x$packages$package %in% c("SAA", "psychTestR", "psychTestRCAT"), ]
 ```
 
 ## References:

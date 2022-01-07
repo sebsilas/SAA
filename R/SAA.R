@@ -1,4 +1,5 @@
-#' Deploy the MST
+
+#' Deploy the SAA
 #'
 #' @param num_items
 #' @param item_bank
@@ -18,12 +19,14 @@
 #' @param with_final_page
 #' @param item_length
 #' @param melody_sound
+#' @param adjust_range
+#' @param test_name
 #'
 #' @return
 #' @export
 #'
 #' @examples
-MST <- function(num_items = list("long_tones" = 6L,
+SAA <- function(num_items = list("long_tones" = 6L,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
                 item_bank = itembankr::Berkowitz,
@@ -42,20 +45,26 @@ MST <- function(num_items = list("long_tones" = 6L,
                 gold_msi = TRUE,
                 with_final_page = TRUE,
                 item_length = c(3,15),
-                melody_sound = "piano") {
+                melody_sound = "piano",
+                adjust_range = TRUE,
+                test_name = "Melody Singing Task") {
 
-  if(demo) warning('Running MST in demo mode!')
+  if(demo) warning('Running SAA in demo mode!')
+
 
   timeline <- psychTestR::join(
     psychTestR::new_timeline(
       psychTestR::join(
 
-        psychTestR::module("MST",
+        psychTestR::module("SAA",
                            # introduction, same for all users
-                           MST_intro(demo, SNR_test,
-                                     get_range, absolute_url = absolute_url, state = state,
+                           SAA_intro(demo,
+                                     SNR_test,
+                                     get_range, absolute_url = absolute_url,
+                                     state = state,
                                      store_results_in_db = store_results_in_db,
-                                     test_username = test_username),
+                                     test_username = test_username,
+                                     adjust_range = adjust_range),
 
                            # long tone trials
                            musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback),
@@ -76,15 +85,15 @@ MST <- function(num_items = list("long_tones" = 6L,
 
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
 
-                           if(final_results) musicassessr::final_results(test_name = "Melody Singing Task",
-                                                                         url = "https://adaptiveeartraining.com/MST",
+                           if(final_results) musicassessr::final_results(test_name = test_name,
+                                                                         url = absolute_url,
                                                                          num_items$long_tones,
                                                                          num_items$arrhythmic,
                                                                          num_items$rhythmic)
 
         )
       ),
-      dict = MST_dict
+      dict = SAA_dict
     ),
     if(gold_msi) psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),
@@ -98,7 +107,8 @@ MST <- function(num_items = list("long_tones" = 6L,
 
 
 
-#' Deploy MST as standalone test
+
+#' Deploy SAA as standalone test
 #'
 #' @param num_items
 #' @param item_bank
@@ -118,12 +128,14 @@ MST <- function(num_items = list("long_tones" = 6L,
 #' @param with_final_page
 #' @param item_length
 #' @param melody_sound
+#' @param adjust_range
+#' @param test_name
 #'
 #' @return
 #' @export
 #'
 #' @examples
-MST_standalone <- function(num_items = list("long_tones" = 6L,
+SAA_standalone <- function(num_items = list("long_tones" = 6L,
                                             "arrhythmic" = 10L,
                                             "rhythmic" = 10L),
                            item_bank = itembankr::Berkowitz,
@@ -142,9 +154,11 @@ MST_standalone <- function(num_items = list("long_tones" = 6L,
                            gold_msi = TRUE,
                            with_final_page = TRUE,
                            item_length = c(3,15),
-                           melody_sound = "piano") {
+                           melody_sound = "piano",
+                           adjust_range = TRUE,
+                           test_name = "Melody Singing Task") {
 
-  timeline <- MST(num_items,
+  timeline <- SAA(num_items,
                   item_bank,
                   demographics,
                   demo,
@@ -161,7 +175,9 @@ MST_standalone <- function(num_items = list("long_tones" = 6L,
                   gold_msi,
                   with_final_page,
                   item_length,
-                  melody_sound)
+                  melody_sound,
+                  adjust_range,
+                  test_name = test_name)
 
   # run the test
   psychTestR::make_test(
@@ -178,38 +194,43 @@ MST_standalone <- function(num_items = list("long_tones" = 6L,
 }
 
 
-MST_intro <- function(demo = FALSE,
+SAA_intro <- function(demo = FALSE,
                       SNR_test = TRUE,
                       get_range = TRUE,
                       absolute_url,
                       test_username = NULL,
                       store_results_in_db = FALSE,
-                      state = "production") {
+                      state = "production",
+                      adjust_range = TRUE) {
 
   c(
-    musicassessr::musicassessr_init(test = "MST", test_username = test_username, store_results_in_db),
+    musicassessr::musicassessr_init(test = "SAA", test_username = test_username, store_results_in_db),
 
     # introduction page
-    psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("mst_welcome")),
+    psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("SAA_welcome")),
                                                        shiny::tags$img(src = 'custom-assets/img/intro.png', height = 100, width = 100),
-                                                       shiny::tags$p(psychTestR::i18n("mst_welcome_1")),
-                                                       shiny::tags$p(psychTestR::i18n("mst_welcome_2")),
-                                                       musicassessr::musicassessr_js_scripts(musicassessr_state = state)),
+                                                       shiny::tags$p(psychTestR::i18n("SAA_welcome_1")),
+                                                       shiny::tags$p(psychTestR::i18n("SAA_welcome_2"))),
                                 button_text = psychTestR::i18n("Next")),
 
-    musicassessr::setup_pages(input = "microphone", demo = demo, get_instrument_range = get_range, SNR_test = SNR_test, absolute_url = absolute_url),
+    musicassessr::setup_pages(input = "microphone",
+                              demo = demo,
+                              get_instrument_range = get_range,
+                              SNR_test = SNR_test,
+                              absolute_url = absolute_url,
+                              adjust_range = adjust_range),
     # instructions
-    MST_instructions()
+    SAA_instructions()
   )
 
 }
 
-MST_instructions <- function() {
+SAA_instructions <- function() {
 
-  psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("mst_instructions1")),
-                                                     shiny::tags$p(psychTestR::i18n("mst_instructions2")),
-                                                     shiny::tags$p(psychTestR::i18n("mst_instructions3")),
-                                                     shiny::tags$p(psychTestR::i18n("mst_instructions4"))),
+  psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("SAA_instructions1")),
+                                                     shiny::tags$p(psychTestR::i18n("SAA_instructions2")),
+                                                     shiny::tags$p(psychTestR::i18n("SAA_instructions3")),
+                                                     shiny::tags$p(psychTestR::i18n("SAA_instructions4"))),
                               button_text = psychTestR::i18n("Next"))
 }
 
@@ -219,7 +240,7 @@ MST_instructions <- function() {
 .onLoad <- function(...) {
   shiny::addResourcePath(
     prefix = "custom-assets", # custom prefix that will be used to reference your directory
-    directoryPath = system.file("www", package = "MST") # path to resource in your package
+    directoryPath = system.file("www", package = "SAA") # path to resource in your package
   )
   # shiny::addResourcePath(
   #   prefix = "item_banks", # custom prefix that will be used to reference your directory
