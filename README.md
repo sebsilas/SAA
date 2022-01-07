@@ -5,9 +5,13 @@ The SAA is a test of melody singing ability which can be launched in R/Shiny via
 We recommend using the latest version of Google Chrome to run this test.
 
 # Author
+<<<<<<< HEAD
 Seb Silas, sebsilas@gmail.com
 
 Short Demo: https://adaptiveeartraining.com/SAA-demo/
+=======
+Seb Silas, silass@stud.hmtm-hannover.de
+>>>>>>> 5a4bef12f6f4bde167ad9eb90de84bef1fd6e23e
  
 ## Installation
 
