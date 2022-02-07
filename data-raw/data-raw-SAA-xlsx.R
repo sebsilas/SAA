@@ -1,10 +1,11 @@
 ## code to prepare `data-raw/MST.xlsx` dataset goes here
 
-MST_dict_df <- readxl::read_excel("data-raw/MST.xlsx")
-MST_dict_df$de <- "a"
+SAA_dict_df <- readxl::read_excel("data-raw/SAA.xlsx")
+SAA_dict_df$de <- "a"
 
-MST_dict <- musicassessr::dict(additional_dict = MST_dict_df)
+SAA_dict <- musicassessr::dict(additional_dict = SAA_dict_df)
 
-da <- MST_dict$as.data.frame()
+da <- SAA_dict$as.data.frame()
 
-usethis::use_data(MST_dict_df, MST_dict, overwrite = TRUE, internal = TRUE)
+usethis::use_data(SAA_dict_df, SAA_dict, overwrite = TRUE, internal = TRUE)
+
