@@ -1,6 +1,7 @@
 
 
 
+
 #' Deploy SAA as standalone test
 #'
 #' @param num_items
@@ -30,6 +31,7 @@
 #' @param get_user_info
 #' @param microphone_test
 #' @param copy_audio_to_location
+#' @param allow_repeat_SNR_tests
 #'
 #' @return
 #' @export
@@ -63,7 +65,8 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                            headphones_test = TRUE,
                            get_user_info = TRUE,
                            microphone_test = TRUE,
-                           copy_audio_to_location = NULL) {
+                           copy_audio_to_location = NULL,
+                           allow_repeat_SNR_tests = TRUE) {
 
   timeline <- SAA(num_items,
                   item_bank,
@@ -91,7 +94,8 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                   headphones_test,
                   get_user_info,
                   microphone_test,
-                  copy_audio_to_location)
+                  copy_audio_to_location,
+                  allow_repeat_SNR_tests)
 
 
   # run the test
@@ -108,6 +112,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                                    additional_script = musicassessr::musicassessr_js(state = musicassessr_state)
     ))
 }
+
 
 
 #' Deploy the SAA
@@ -139,6 +144,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
 #' @param get_user_info
 #' @param microphone_test
 #' @param copy_audio_to_location
+#' @param allow_repeat_SNR_tests
 #'
 #' @return
 #' @export
@@ -172,7 +178,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
                 headphones_test = TRUE,
                 get_user_info = TRUE,
                 microphone_test = TRUE,
-                copy_audio_to_location = NULL) {
+                copy_audio_to_location = NULL,
+                allow_repeat_SNR_tests = TRUE) {
 
   stopifnot(
     is.list(num_items),
@@ -201,7 +208,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
     is.logical(headphones_test),
     is.logical(get_user_info),
     is.logical(microphone_test),
-    is.null(copy_audio_to_location) | is.character(copy_audio_to_location) & length(copy_audio_to_location) == 1
+    is.null(copy_audio_to_location) | is.character(copy_audio_to_location) & length(copy_audio_to_location) == 1,
+    is.logical(allow_repeat_SNR_tests)
     )
 
   if(demo) warning('Running SAA in demo mode!')
@@ -226,7 +234,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                      headphones_test,
                                      get_user_info,
                                      microphone_test,
-                                     copy_audio_to_location),
+                                     copy_audio_to_location,
+                                     allow_repeat_SNR_tests),
 
                            # long tone trials
                            musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback),
@@ -295,7 +304,8 @@ SAA_intro <- function(demo = FALSE,
                       headphones_test,
                       get_user_info,
                       microphone_test,
-                      copy_audio_to_location) {
+                      copy_audio_to_location,
+                      allow_repeat_SNR_tests) {
 
   c(
     musicassessr::musicassessr_init(test = "SAA",
@@ -320,7 +330,8 @@ SAA_intro <- function(demo = FALSE,
                               adjust_range = adjust_range,
                               get_user_info = get_user_info,
                               headphones = headphones_test,
-                              microphone_test = microphone_test),
+                              microphone_test = microphone_test,
+                              allow_repeat_SNR_tests = allow_repeat_SNR_tests),
     # instructions
     SAA_instructions()
   )
@@ -341,8 +352,6 @@ SAA_instructions <- function() {
 
 present_scores_saa <- function(res, num_items_long_tone, num_items_arrhythmic, num_items_rhythmic) {
 
-  print('present_scores')
-
   if(num_items_long_tone > 0) {
     # long tones
     long_tones <- as.data.frame(lapply(res$SAA.long_note_trials$long_tone_, paste0, collapse = ","))
@@ -359,8 +368,6 @@ present_scores_saa <- function(res, num_items_long_tone, num_items_arrhythmic, n
 
     # arrhythmic
     arrhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.arrhythmic_melodies)
-    print('arrhythmic_melodies')
-    print(arrhythmic_melodies)
 
     if(is.null(arrhythmic_melodies$error)) {
 
@@ -380,8 +387,6 @@ present_scores_saa <- function(res, num_items_long_tone, num_items_arrhythmic, n
   if(num_items_rhythmic > 0) {
     # rhythmic
     rhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.rhythmic_melodies)
-    print('rhythmic_melodies')
-    print(rhythmic_melodies)
 
     if(is.null(rhythmic_melodies$error)) {
 
@@ -396,9 +401,6 @@ present_scores_saa <- function(res, num_items_long_tone, num_items_arrhythmic, n
       rhythmic_melody_summary <- data.frame(opti3 = 0)
     }
   }
-
-  print('just before summary...')
-  print(arrhythmic_melody_summary)
 
   list("long_note" = ifelse(is.null(long_tone_summary), data.frame(mean_note_accuracy = 1, note_precision = 1, mean_dtw_distance = 1), long_tone_summary),
        "arrhythmic" = ifelse(is.null(arrhythmic_melody_summary), data.frame(opti3 = 0), arrhythmic_melody_summary),
@@ -425,19 +427,7 @@ final_results_saa <- function(test_name,
 
       processed_results <- present_scores_saa(res, num_items_long_tone, num_items_arrhythmic, num_items_rhythmic)
 
-      print('processed_results')
-
-      print(processed_results)
-
-      print('opti33...')
-      print(processed_results$arrhythmic[[1]])
-      print(processed_results$rhythmic[[1]])
-
       final_score <- 1 + processed_results$arrhythmic[[1]] + processed_results$rhythmic[[1]] * 1000
-
-      print('final_score...')
-
-      print(final_score)
 
       psychTestR::set_local("final_score", final_score, state) # leave this in; it gets used by musicassessr
 

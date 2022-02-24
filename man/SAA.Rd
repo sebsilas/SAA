@@ -31,11 +31,12 @@ SAA(
   headphones_test = TRUE,
   get_user_info = TRUE,
   microphone_test = TRUE,
-  copy_audio_to_location = NULL
+  copy_audio_to_location = NULL,
+  allow_repeat_SNR_tests = TRUE
 )
 }
 \arguments{
-\item{copy_audio_to_location}{}
+\item{allow_repeat_SNR_tests}{}
 }
 \value{
 
