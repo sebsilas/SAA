@@ -109,7 +109,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                                      css = system.file('www/css/style.css', package = "musicassessr")
                                    ),
                                    languages = c("en"),
-                                   additional_script = musicassessr::musicassessr_js(state = musicassessr_state)
+                                   additional_scripts = musicassessr::musicassessr_js(state = musicassessr_state)
     ))
 }
 
