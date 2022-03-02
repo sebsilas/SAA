@@ -106,7 +106,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                                    display = psychTestR::display_options(
                                      left_margin = 1L,
                                      right_margin = 1L,
-                                     css = system.file('www/css/style.css', package = "musicassessr")
+                                     css = system.file('www/css/musicassessr.css', package = "musicassessr")
                                    ),
                                    languages = c("en"),
                                    additional_scripts = musicassessr::musicassessr_js(state = musicassessr_state)
