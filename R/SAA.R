@@ -2,6 +2,8 @@
 
 
 
+
+
 #' Deploy SAA as standalone test
 #'
 #' @param num_items
@@ -32,6 +34,14 @@
 #' @param microphone_test
 #' @param copy_audio_to_location
 #' @param allow_repeat_SNR_tests
+#' @param append_trial_block_before
+#' @param append_trial_block_after
+#' @param stop_recording_after
+#' @param max_goes
+#' @param max_goes_forced
+#' @param long_tone_trials_as_screening
+#' @param long_tone_trials_as_screening_failure_page
+#' @param success_on_completion_page
 #'
 #' @return
 #' @export
@@ -66,7 +76,15 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                            get_user_info = TRUE,
                            microphone_test = TRUE,
                            copy_audio_to_location = NULL,
-                           allow_repeat_SNR_tests = TRUE) {
+                           allow_repeat_SNR_tests = TRUE,
+                           append_trial_block_before = psychTestR::module("before"),
+                           append_trial_block_after = psychTestR::module("after"),
+                           stop_recording_after = 30,
+                           max_goes = 3L,
+                           max_goes_forced = FALSE,
+                           long_tone_trials_as_screening = FALSE,
+                           long_tone_trials_as_screening_failure_page = "http://www.google.com",
+                           success_on_completion_page = character()) {
 
   timeline <- SAA(num_items,
                   item_bank,
@@ -95,7 +113,15 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                   get_user_info,
                   microphone_test,
                   copy_audio_to_location,
-                  allow_repeat_SNR_tests)
+                  allow_repeat_SNR_tests,
+                  append_trial_block_before,
+                  append_trial_block_after,
+                  stop_recording_after,
+                  max_goes,
+                  max_goes_forced,
+                  long_tone_trials_as_screening,
+                  long_tone_trials_as_screening_failure_page,
+                  success_on_completion_page)
 
 
   # run the test
@@ -112,6 +138,9 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                                    additional_scripts = musicassessr::musicassessr_js(state = musicassessr_state)
     ))
 }
+
+
+
 
 
 
@@ -145,6 +174,14 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
 #' @param microphone_test
 #' @param copy_audio_to_location
 #' @param allow_repeat_SNR_tests
+#' @param append_trial_block_before
+#' @param append_trial_block_after
+#' @param stop_recording_after
+#' @param max_goes
+#' @param max_goes_forced
+#' @param long_tone_trials_as_screening
+#' @param long_tone_trials_as_screening_failure_page
+#' @param success_on_completion_page
 #'
 #' @return
 #' @export
@@ -179,7 +216,15 @@ SAA <- function(num_items = list("long_tones" = 6L,
                 get_user_info = TRUE,
                 microphone_test = TRUE,
                 copy_audio_to_location = NULL,
-                allow_repeat_SNR_tests = TRUE) {
+                allow_repeat_SNR_tests = TRUE,
+                append_trial_block_before = psychTestR::module("before"),
+                append_trial_block_after = psychTestR::module("after"),
+                stop_recording_after = 30,
+                max_goes = 3L,
+                max_goes_forced = FALSE,
+                long_tone_trials_as_screening = FALSE,
+                long_tone_trials_as_screening_failure_page = "http://www.google.com",
+                success_on_completion_page = character()) {
 
   stopifnot(
     is.list(num_items),
@@ -209,7 +254,15 @@ SAA <- function(num_items = list("long_tones" = 6L,
     is.logical(get_user_info),
     is.logical(microphone_test),
     is.null(copy_audio_to_location) | is.character(copy_audio_to_location) & length(copy_audio_to_location) == 1,
-    is.logical(allow_repeat_SNR_tests)
+    is.logical(allow_repeat_SNR_tests),
+    is.list(append_trial_block_before),
+    is.list(append_trial_block_after),
+    is.numeric(stop_recording_after) & length(stop_recording_after) == 1,
+    is.numeric(max_goes) & length(max_goes) == 1,
+    is.logical(max_goes_forced),
+    is.logical(long_tone_trials_as_screening),
+    is.character(long_tone_trials_as_screening_failure_page),
+    is.character(success_on_completion_page)
     )
 
   if(demo) warning('Running SAA in demo mode!')
@@ -237,8 +290,14 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                      copy_audio_to_location,
                                      allow_repeat_SNR_tests),
 
+                           # arbitrary and optional trial block to go first
+                           append_trial_block_before,
+
+
                            # long tone trials
-                           musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback),
+                           musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback,
+                                                          long_tone_trials_as_screening = long_tone_trials_as_screening,
+                                                          long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page),
 
                            # arrhythmic
                            musicassessr::arrhythmic_melody_trials(itembankr::subset_item_bank(item_bank("main"), item_length = item_length),
@@ -248,7 +307,9 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                                                   sound = melody_sound,
                                                                   page_text = "Click below to hear the melody. Sing back the melody. Click Stop when finished.",
                                                                   page_title = "Sing the melody",
-                                                                  instruction_text = "Now you will hear some melodies. Please try and sing the melodies."),
+                                                                  instruction_text = "Now you will hear some melodies. Please try and sing the melodies.",
+                                                                  max_goes = max_goes,
+                                                                  max_goes_forced = max_goes_forced),
 
                            # rhythmic
                            musicassessr::rhythmic_melody_trials(item_bank = itembankr::subset_item_bank(item_bank("phrases"), item_length),
@@ -258,7 +319,13 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                                                 sound = melody_sound,
                                                                 page_text = "Click below to hear the melody. Sing back the melody. Click Stop when finished.",
                                                                 page_title = "Sing the melody plus rhythm",
-                                                                instruction_text = "Now you will hear melodies with rhythms. Please try and sing the melodies with the correct rhythm."),
+                                                                instruction_text = "Now you will hear melodies with rhythms. Please try and sing the melodies with the correct rhythm.",
+                                                                max_goes = max_goes,
+                                                                max_goes_forced = max_goes_forced),
+
+                           # arbitrary and optional trial block to go after
+                           append_trial_block_after,
+
 
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
 

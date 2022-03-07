@@ -32,11 +32,19 @@ SAA_standalone(
   get_user_info = TRUE,
   microphone_test = TRUE,
   copy_audio_to_location = NULL,
-  allow_repeat_SNR_tests = TRUE
+  allow_repeat_SNR_tests = TRUE,
+  append_trial_block_before = psychTestR::module("before"),
+  append_trial_block_after = psychTestR::module("after"),
+  stop_recording_after = 30,
+  max_goes = 3L,
+  max_goes_forced = FALSE,
+  long_tone_trials_as_screening = FALSE,
+  long_tone_trials_as_screening_failure_page = "http://www.google.com",
+  success_on_completion_page = character()
 )
 }
 \arguments{
-\item{allow_repeat_SNR_tests}{}
+\item{success_on_completion_page}{}
 }
 \value{
 
