@@ -1,9 +1,5 @@
 
 
-
-
-
-
 #' Deploy SAA as standalone test
 #'
 #' @param num_items
@@ -42,6 +38,7 @@
 #' @param long_tone_trials_as_screening
 #' @param long_tone_trials_as_screening_failure_page
 #' @param success_on_completion_page
+#' @param concise_wording
 #'
 #' @return
 #' @export
@@ -84,7 +81,8 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                            max_goes_forced = FALSE,
                            long_tone_trials_as_screening = FALSE,
                            long_tone_trials_as_screening_failure_page = "http://www.google.com",
-                           success_on_completion_page = character()) {
+                           success_on_completion_page = character(),
+                           concise_wording = TRUE) {
 
   timeline <- SAA(num_items,
                   item_bank,
@@ -121,7 +119,8 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                   max_goes_forced,
                   long_tone_trials_as_screening,
                   long_tone_trials_as_screening_failure_page,
-                  success_on_completion_page)
+                  success_on_completion_page,
+                  concise_wording)
 
 
   # run the test
@@ -138,6 +137,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                                    additional_scripts = musicassessr::musicassessr_js(state = musicassessr_state)
     ))
 }
+
 
 
 
@@ -182,6 +182,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
 #' @param long_tone_trials_as_screening
 #' @param long_tone_trials_as_screening_failure_page
 #' @param success_on_completion_page
+#' @param concise_wording
 #'
 #' @return
 #' @export
@@ -224,7 +225,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
                 max_goes_forced = FALSE,
                 long_tone_trials_as_screening = FALSE,
                 long_tone_trials_as_screening_failure_page = "http://www.google.com",
-                success_on_completion_page = character()) {
+                success_on_completion_page = character(),
+                concise_wording = TRUE) {
 
   stopifnot(
     is.list(num_items),
@@ -262,7 +264,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
     is.logical(max_goes_forced),
     is.logical(long_tone_trials_as_screening),
     is.character(long_tone_trials_as_screening_failure_page),
-    is.character(success_on_completion_page)
+    is.character(success_on_completion_page),
+    is.logical(concise_wording)
     )
 
   if(demo) warning('Running SAA in demo mode!')
@@ -288,7 +291,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                      get_user_info,
                                      microphone_test,
                                      copy_audio_to_location,
-                                     allow_repeat_SNR_tests),
+                                     allow_repeat_SNR_tests,
+                                     concise_wording),
 
                            # arbitrary and optional trial block to go first
                            append_trial_block_before,
@@ -372,9 +376,10 @@ SAA_intro <- function(demo = FALSE,
                       get_user_info,
                       microphone_test,
                       copy_audio_to_location,
-                      allow_repeat_SNR_tests) {
+                      allow_repeat_SNR_tests,
+                      concise_wording = TRUE) {
 
-  c(
+  psychTestR::join(
     musicassessr::musicassessr_init(test = "SAA",
                                     test_username = test_username,
                                     store_results_in_db,
@@ -398,7 +403,8 @@ SAA_intro <- function(demo = FALSE,
                               get_user_info = get_user_info,
                               headphones = headphones_test,
                               microphone_test = microphone_test,
-                              allow_repeat_SNR_tests = allow_repeat_SNR_tests),
+                              allow_repeat_SNR_tests = allow_repeat_SNR_tests,
+                              concise_wording = concise_wording),
     # instructions
     SAA_instructions()
   )

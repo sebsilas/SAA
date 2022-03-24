@@ -40,11 +40,12 @@ SAA_standalone(
   max_goes_forced = FALSE,
   long_tone_trials_as_screening = FALSE,
   long_tone_trials_as_screening_failure_page = "http://www.google.com",
-  success_on_completion_page = character()
+  success_on_completion_page = character(),
+  concise_wording = TRUE
 )
 }
 \arguments{
-\item{success_on_completion_page}{}
+\item{concise_wording}{}
 }
 \value{
 
