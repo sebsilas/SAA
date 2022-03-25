@@ -39,6 +39,7 @@
 #' @param long_tone_trials_as_screening_failure_page
 #' @param success_on_completion_page
 #' @param concise_wording
+#' @param ...
 #'
 #' @return
 #' @export
@@ -82,7 +83,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                            long_tone_trials_as_screening = FALSE,
                            long_tone_trials_as_screening_failure_page = "http://www.google.com",
                            success_on_completion_page = character(),
-                           concise_wording = TRUE) {
+                           concise_wording = TRUE, ...) {
 
   timeline <- SAA(num_items,
                   item_bank,
@@ -134,8 +135,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                                      css = system.file('www/css/musicassessr.css', package = "musicassessr")
                                    ),
                                    languages = c("en"),
-                                   additional_scripts = musicassessr::musicassessr_js(state = musicassessr_state)
-    ))
+                                   additional_scripts = musicassessr::musicassessr_js(state = musicassessr_state), ...))
 }
 
 
@@ -236,7 +236,7 @@ SAA <- function(num_items = list("long_tones" = 6L,
     is.logical(feedback),
     is.character(admin_password) & length(admin_password) == 1L,
     is.logical(SNR_test),
-    is.logical(get_range),
+    is.logical(get_range) | is.character(get_range) & length(get_range) == 1,
     is.character(absolute_url) & length(absolute_url) == 1L,
     is.numeric(examples) & length(examples) == 1L,
     is.logical(final_results),
