@@ -127,7 +127,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
   # run the test
   psychTestR::make_test(
     elts = timeline,
-    opt = psychTestR::test_options(title = "Singing Ability Assessment",
+    opt = psychTestR::test_options(title = test_name,
                                    admin_password = admin_password,
                                    display = psychTestR::display_options(
                                      left_margin = 1L,
@@ -347,7 +347,7 @@ SAA <- function(num_items = list("long_tones" = 6L,
     if(gold_msi) psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),
     psychTestR::elt_save_results_to_disk(complete = TRUE),
-    musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = "Singing Ability Assessment")
+    musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name)
   )
 
 }
