@@ -292,7 +292,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                      microphone_test,
                                      copy_audio_to_location,
                                      allow_repeat_SNR_tests,
-                                     concise_wording),
+                                     concise_wording,
+                                     test_name),
 
                            # arbitrary and optional trial block to go first
                            append_trial_block_before,
@@ -377,7 +378,8 @@ SAA_intro <- function(demo = FALSE,
                       microphone_test,
                       copy_audio_to_location,
                       allow_repeat_SNR_tests,
-                      concise_wording = TRUE) {
+                      concise_wording = TRUE,
+                      test_name = "Singing Ability Assessment") {
 
   psychTestR::join(
     musicassessr::musicassessr_init(test = "SAA",
@@ -388,7 +390,7 @@ SAA_intro <- function(demo = FALSE,
                                     copy_audio_to_location = copy_audio_to_location),
 
     # introduction page
-    psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("SAA_welcome")),
+    psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(paste0(psychTestR::i18n("SAA_welcome"), ' ', test_name, "!")),
                                                        shiny::tags$img(src = 'https://adaptiveeartraining.com/magmaGold/img/intro.png', height = 100, width = 100),
                                                        shiny::tags$p(psychTestR::i18n("SAA_welcome_1")),
                                                        shiny::tags$p(psychTestR::i18n("SAA_welcome_2"))),
