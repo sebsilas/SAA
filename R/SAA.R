@@ -293,7 +293,9 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                      copy_audio_to_location,
                                      allow_repeat_SNR_tests,
                                      concise_wording,
-                                     test_name),
+                                     test_name,
+                                     max_goes_forced,
+                                     max_goes),
 
                            # arbitrary and optional trial block to go first
                            append_trial_block_before,
@@ -311,7 +313,7 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                                                   feedback = feedback,
                                                                   sound = melody_sound,
                                                                   page_text = "Click below to hear the melody. Sing back the melody. Click Stop when finished.",
-                                                                  page_title = "Sing the melody",
+                                                                  page_title = "Sing The Melody",
                                                                   instruction_text = "Now you will hear some melodies. Please try and sing the melodies.",
                                                                   max_goes = max_goes,
                                                                   max_goes_forced = max_goes_forced),
@@ -323,7 +325,7 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                                                 feedback = feedback,
                                                                 sound = melody_sound,
                                                                 page_text = "Click below to hear the melody. Sing back the melody. Click Stop when finished.",
-                                                                page_title = "Sing the melody plus rhythm",
+                                                                page_title = "Sing This Melody Plus Rhythm",
                                                                 instruction_text = "Now you will hear melodies with rhythms. Please try and sing the melodies with the correct rhythm.",
                                                                 max_goes = max_goes,
                                                                 max_goes_forced = max_goes_forced),
@@ -379,7 +381,9 @@ SAA_intro <- function(demo = FALSE,
                       copy_audio_to_location,
                       allow_repeat_SNR_tests,
                       concise_wording = TRUE,
-                      test_name = "Singing Ability Assessment") {
+                      test_name = "Singing Ability Assessment",
+                      max_goes_forced,
+                      max_goes) {
 
   psychTestR::join(
     musicassessr::musicassessr_init(test = "SAA",
@@ -418,10 +422,14 @@ SAA_instructions <- function(max_goes_forced, max_goes) {
 
   if(max_goes_forced) {
     SAA_instructions_5.1 <- "SAA_instructions_5.1.forced"
-    SAA_instructions_5.2 <- "SAA_instructions_5.2.forced"
   } else {
     SAA_instructions_5.1 <- "SAA_instructions_5.1"
-    SAA_instructions_5.2 <- "SAA_instructions_5.2"
+  }
+
+  if(max_goes_forced > 1) {
+    SAA_instructions_5.2 <- "SAA_instructions_5.2.multiple"
+  } else {
+    SAA_instructions_5.2 <- "SAA_instructions_5.2.singular"
   }
 
   c(
@@ -433,8 +441,11 @@ SAA_instructions <- function(max_goes_forced, max_goes) {
                               button_text = psychTestR::i18n("Next")),
 
   psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2("Instructions"),
-                                                     shiny::tags$p(paste0(psychTestR::i18n(SAA_instructions_5.1), " ", max_goes, " ", psychTestR::i18n(SAA_instructions_5.2))),
-                                                     if(!max_goes_forced & max_goes > 1) shiny::tags$p(psychTestR::i18n("SAA_instructions_5.3.multiple"))),
+                                                     shiny::tags$p(paste0(psychTestR::i18n(SAA_instructions_5.1), " "),
+                                                                   shiny::tags$strong(max_goes),
+                                                                   paste0(" ", psychTestR::i18n(SAA_instructions_5.2))),
+                                                     if(!max_goes_forced & max_goes > 1) shiny::tags$p(psychTestR::i18n("SAA_instructions_5.3"))
+                                                     ),
                               button_text = psychTestR::i18n("Next"))
 
   )
