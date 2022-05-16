@@ -25,8 +25,6 @@ SAA(
   melody_sound = "piano",
   adjust_range = TRUE,
   test_name = "Singing Ability Assessment",
-  local_app_file_dir = "/Users/sebsilas/aws-musicassessr-local-file-upload/files/",
-  sonic_annotator_local_location = "/Users/sebsilas/sonic-annotator",
   show_socials = FALSE,
   headphones_test = TRUE,
   get_user_info = TRUE,

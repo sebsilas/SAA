@@ -22,8 +22,6 @@
 #' @param melody_sound
 #' @param adjust_range
 #' @param test_name
-#' @param local_app_file_dir
-#' @param sonic_annotator_local_location
 #' @param show_socials
 #' @param headphones_test
 #' @param get_user_info
@@ -67,8 +65,6 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                            melody_sound = "piano",
                            adjust_range = TRUE,
                            test_name = "Singing Ability Assessment",
-                           local_app_file_dir = "/Users/sebsilas/aws-musicassessr-local-file-upload/files/",
-                           sonic_annotator_local_location = "/Users/sebsilas/sonic-annotator",
                            show_socials = FALSE,
                            headphones_test = TRUE,
                            get_user_info = TRUE,
@@ -105,8 +101,6 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                   melody_sound,
                   adjust_range,
                   test_name,
-                  local_app_file_dir,
-                  sonic_annotator_local_location,
                   show_socials,
                   headphones_test,
                   get_user_info,
@@ -166,8 +160,6 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
 #' @param melody_sound
 #' @param adjust_range
 #' @param test_name
-#' @param local_app_file_dir
-#' @param sonic_annotator_local_location
 #' @param show_socials
 #' @param headphones_test
 #' @param get_user_info
@@ -210,8 +202,6 @@ SAA <- function(num_items = list("long_tones" = 6L,
                 melody_sound = "piano",
                 adjust_range = TRUE,
                 test_name = "Singing Ability Assessment",
-                local_app_file_dir = "/Users/sebsilas/aws-musicassessr-local-file-upload/files/",
-                sonic_annotator_local_location = "/Users/sebsilas/sonic-annotator",
                 show_socials = FALSE,
                 headphones_test = TRUE,
                 get_user_info = TRUE,
@@ -249,8 +239,6 @@ SAA <- function(num_items = list("long_tones" = 6L,
     is.character(melody_sound) & length(melody_sound) == 1L,
     is.logical(adjust_range),
     is.character(test_name) & length(test_name) == 1L,
-    is.character(local_app_file_dir) & length(local_app_file_dir) == 1L,
-    is.character(sonic_annotator_local_location) & length(sonic_annotator_local_location) == 1L,
     is.logical(show_socials),
     is.logical(headphones_test),
     is.logical(get_user_info),
@@ -285,8 +273,6 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                      store_results_in_db,
                                      musicassessr_state,
                                      adjust_range,
-                                     local_app_file_dir,
-                                     sonic_annotator_local_location,
                                      headphones_test,
                                      get_user_info,
                                      microphone_test,
@@ -373,8 +359,6 @@ SAA_intro <- function(demo = FALSE,
                       store_results_in_db = FALSE,
                       musicassessr_state = "production",
                       adjust_range = TRUE,
-                      local_app_file_dir,
-                      sonic_annotator_local_location,
                       headphones_test,
                       get_user_info,
                       microphone_test,
@@ -389,8 +373,6 @@ SAA_intro <- function(demo = FALSE,
     musicassessr::musicassessr_init(test = "SAA",
                                     test_username = test_username,
                                     store_results_in_db,
-                                    local_app_file_dir,
-                                    sonic_annotator_local_location,
                                     copy_audio_to_location = copy_audio_to_location),
 
     # introduction page
@@ -600,7 +582,7 @@ final_results_saa <- function(test_name,
 }
 
 
-
 # SAA_standalone(num_items = list(long_tones = 1L, arrhythmic = 2L, rhythmic = 2L),
-#                SNR_test = F, get_range = F,  musicassessr_state = "test", examples = 0)
+#                SNR_test = F, get_range = F,  musicassessr_state = "test", examples = 0,
+#                copy_audio_to_location = "/Users/sebsilas/Desktop/audio_test")
 
