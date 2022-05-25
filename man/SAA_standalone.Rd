@@ -13,10 +13,10 @@ SAA_standalone(
   admin_password = "demo",
   SNR_test = TRUE,
   get_range = TRUE,
-  absolute_url = "https://adaptiveeartraining.com",
+  absolute_url = character(),
   examples = 2L,
   final_results = TRUE,
-  musicassessr_state = "production",
+  musicassessr_aws = FALSE,
   store_results_in_db = FALSE,
   test_username = character(),
   gold_msi = TRUE,
@@ -29,7 +29,7 @@ SAA_standalone(
   headphones_test = TRUE,
   get_user_info = TRUE,
   microphone_test = TRUE,
-  copy_audio_to_location = NULL,
+  copy_audio_to_location = character(),
   allow_repeat_SNR_tests = TRUE,
   append_trial_block_before = psychTestR::module("before"),
   append_trial_block_after = psychTestR::module("after"),
@@ -44,6 +44,76 @@ SAA_standalone(
 )
 }
 \arguments{
+\item{num_items}{The number of items as a list.}
+
+\item{item_bank}{The item bank (created with itembankr) to deployed with the test.}
+
+\item{demographics}{Deploy demographic form?}
+
+\item{demo}{Is demo?}
+
+\item{feedback}{Give feedback after trials?}
+
+\item{admin_password}{psychTestR admin password.}
+
+\item{SNR_test}{Deploy signal-to-noise ratio test?}
+
+\item{get_range}{Deploy a test to get the users range at test time and present stimuli accordingly?}
+
+\item{absolute_url}{If using online, absolute URL?}
+
+\item{examples}{No of examples.}
+
+\item{final_results}{Display final results?}
+
+\item{musicassessr_aws}{Is this being deployed on AWS via the musicassessr setup?}
+
+\item{store_results_in_db}{Store results in a database?}
+
+\item{test_username}{Is there a username for the user? This is different from a p_id.}
+
+\item{gold_msi}{Deploy Gold-MSI form?}
+
+\item{with_final_page}{Should there be a final page? FALSE if there will be more pages in the timeline.}
+
+\item{item_length}{What melody lengths should the test be constrained to?}
+
+\item{melody_sound}{Sound of melody? e.g, piano.}
+
+\item{adjust_range}{Should the range of the user, recorded at test time, be adjusted based on heuristics?}
+
+\item{test_name}{Custom name of the test.}
+
+\item{show_socials}{Should social media sharing options be shown at the end?}
+
+\item{headphones_test}{Should there be a headphone test?}
+
+\item{get_user_info}{Grab user info via the browser?}
+
+\item{microphone_test}{Deploy a microphone test?}
+
+\item{copy_audio_to_location}{Where would you like the audio to be copied to?}
+
+\item{allow_repeat_SNR_tests}{Logical. TRUE if participant can fail the SNR test threshold and try again.}
+
+\item{append_trial_block_before}{A list of pages to go before the test.}
+
+\item{append_trial_block_after}{A list of pages to go after the test.}
+
+\item{stop_recording_after}{Stop recording after a certain amount of time.}
+
+\item{max_goes}{How many goes can the user have per melody?}
+
+\item{max_goes_forced}{Is this forced or optional?}
+
+\item{long_tone_trials_as_screening}{Should long tone trials be used as a screening mechanism?}
+
+\item{long_tone_trials_as_screening_failure_page}{Where should users be directed to if they fail the long tone screening?}
+
+\item{success_on_completion_page}{Where should users be directed to when they complete successfully?}
+
+\item{concise_wording}{TRUE for more detailed (but longer) instructions.}
+
 \item{...}{}
 }
 \value{
