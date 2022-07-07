@@ -566,10 +566,6 @@ final_results_saa <- function(test_name,
     prefix = "custom-assets", # custom prefix that will be used to reference your directory
     directoryPath = system.file("www", package = "SAA") # path to resource in your package
   )
-  shiny::addResourcePath(
-    prefix = "tmp_files", # custom prefix that will be used to reference your directory
-    directoryPath = 'tmp'
-  )
   # shiny::addResourcePath(
   #   prefix = "item_banks", # custom prefix that will be used to reference your directory
   #   directoryPath = system.file("item_banks", package = "itembankr") # path to resource in your package
