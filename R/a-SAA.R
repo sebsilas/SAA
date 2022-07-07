@@ -43,7 +43,7 @@
 #'
 #' @examples
 aSAA_standalone <- function(num_items = list("long_tones" = 6L,
-                                            "arrhythmic" = 20L,
+                                            "arrhythmic" = 15L,
                                             "rhythmic" = 10L),
                            demographics = TRUE,
                            demo = FALSE,
@@ -287,32 +287,32 @@ aSAA <- function(num_items = list("long_tones" = 6L,
 
 
                           adaptive_arrhythmic_melody_trials(num_items$arrhythmic,
-                                                            Berk_arr,
-                                                            Berkowitz::lm2.2,
+                                                            Berk_arr_scaled,
+                                                            Berkowitz::lm2.2_scaled,
                               fixed_effects = c("N",
                                                  "step.cont.loc.var",
                                                  "tonalness",
-                                                 "log_freq")),
+                                                 "log_freq"))
 
-                           adaptive_arrhythmic_melody_trials(num_items$arrhythmic,
-                                                             Berk_arr_length_only,
-                                                             Berkowitz::lm_arrhythmic_length_only,
-                                                             fixed_effects = "N"),
+                           # adaptive_arrhythmic_melody_trials(num_items$arrhythmic,
+                           #                                   Berk_arr_length_only,
+                           #                                   Berkowitz::lm_arrhythmic_length_only,
+                           #                                   fixed_effects = "N"),
 
 
 
                            # arbitrary and optional trial block to go after
-                           append_trial_block_after,
-
-
-                           psychTestR::elt_save_results_to_disk(complete = TRUE),
-
-                           if(final_results) final_results_saa(test_name = test_name,
-                                                               url = absolute_url,
-                                                               num_items$long_tones,
-                                                               num_items$arrhythmic,
-                                                               num_items$rhythmic,
-                                                               show_socials)
+                           # append_trial_block_after,
+                           #
+                           #
+                           # psychTestR::elt_save_results_to_disk(complete = TRUE),
+                           #
+                           # if(final_results) final_results_saa(test_name = test_name,
+                           #                                     url = absolute_url,
+                           #                                     num_items$long_tones,
+                           #                                     num_items$arrhythmic,
+                           #                                     num_items$rhythmic,
+                           #                                     show_socials)
 
         )
       ),
@@ -357,6 +357,10 @@ Berk_arr <- Berkowitz::Berkowitz_IRT_arrhythmic %>%
   dplyr::rename(answer = melody) %>%
   dplyr::mutate(discrimination = 1, guessing = 1, inattention = 1)
 
+Berk_arr_scaled <- Berkowitz::Berkowitz_IRT_arrhythmic_scaled %>%
+  dplyr::rename(answer = melody) %>%
+  dplyr::mutate(discrimination = 1, guessing = 1, inattention = 1)
+
 Berk_arr_length_only <- Berkowitz::Berkowitz_IRT_arrhythmic_length_only %>%
   dplyr::rename(answer = melody) %>%
   dplyr::mutate(discrimination = 1, guessing = 1, inattention = 1)
@@ -374,13 +378,12 @@ adaptive_arrhythmic_melody_trials <- function(num_items, item_bank, model, fixed
                                 next_item.estimator = "BM",
                                 final_ability.estimator = "WL",
                             mixed_effects_model = model,
-                            eligible_first_items = which(dplyr::between(Berk_arr$difficulty,
-                                                                 mean(Berk_arr$difficulty)-.01,
-                                                                 mean(Berk_arr$difficulty)+.01
-                                                                 )),
+                            eligible_first_items = which(dplyr::between(Berk_arr_scaled$difficulty,-.01, .01)
+                                                         & dplyr::between(Berk_arr_scaled$N, -1.5, -0.5)),
                             continuous_response = TRUE,
                             dv_name = "opti3",
-                            fixed_effects = fixed_effects))
+                            fixed_effects = fixed_effects,
+                            demo = TRUE))
 }
 
 
@@ -388,6 +391,5 @@ adaptive_arrhythmic_melody_trials <- function(num_items, item_bank, model, fixed
 
 # aSAA_standalone(copy_audio_to_location = '/Users/sebsilas/Desktop/audio_test',
 #                 SNR_test = F,
-#                 get_range = F)
-
+#                 get_range = F, final_results = FALSE, demographics = F, gold_msi = F)
 

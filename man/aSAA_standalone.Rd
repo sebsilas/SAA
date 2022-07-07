@@ -5,7 +5,7 @@
 \title{Deploy aSAA as standalone test}
 \usage{
 aSAA_standalone(
-  num_items = list(long_tones = 6L, arrhythmic = 20L, rhythmic = 10L),
+  num_items = list(long_tones = 6L, arrhythmic = 15L, rhythmic = 10L),
   demographics = TRUE,
   demo = FALSE,
   feedback = FALSE,
@@ -28,7 +28,7 @@ aSAA_standalone(
   headphones_test = TRUE,
   get_user_info = TRUE,
   microphone_test = TRUE,
-  copy_audio_to_location,
+  copy_audio_to_location = "audio",
   allow_repeat_SNR_tests = TRUE,
   append_trial_block_before = psychTestR::module("before"),
   append_trial_block_after = psychTestR::module("after"),
