@@ -69,7 +69,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                            headphones_test = TRUE,
                            get_user_info = TRUE,
                            microphone_test = TRUE,
-                           copy_audio_to_location = character(),
+                           copy_audio_to_location,
                            allow_repeat_SNR_tests = TRUE,
                            append_trial_block_before = psychTestR::module("before"),
                            append_trial_block_after = psychTestR::module("after"),
@@ -572,11 +572,20 @@ final_results_saa <- function(test_name,
   # )
 }
 
-
+#
 # SAA_standalone(num_items = list(long_tones = 1L, arrhythmic = 2L, rhythmic = 2L),
 #                SNR_test = F, get_range = F,  musicassessr_aws = FALSE, examples = 0,
 #                copy_audio_to_location = "/Users/sebsilas/Desktop/audio_test")
 
 
 # musicassessr::musicassessr_js(musicassessr_aws = FALSE, copy_audio_to_location = "/Users/sebsilas/Desktop/audio_test")
+
+
+
+
+# SAA_standalone(copy_audio_to_location = "/Users/sebsilas/Desktop/audio_test",
+#                get_range = F, SNR_test = F,
+#                num_items = list("long_tones" = 0L,
+#                                 "arrhythmic" = 10L,
+#                                 "rhythmic" = 10L))
 

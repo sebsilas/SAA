@@ -2,23 +2,11 @@
 
 The SAA is a test of melody singing ability which can be launched in R/Shiny via the [`psychTestR`](https://github.com/pmcharrison/psychTestR) package.
 
-We recommend using the latest version of Google Chrome to run this test.
-
 # Author
 
 Seb Silas, sebsilas@gmail.com
 
-Short Demo: https://adaptiveeartraining.com/SAA-demo/
-
 ## Installation
-
-The Singing Ability Assessment (SAA) uses the [`musicassessr`](https://github.com/syntheso/musicassessr) R package, which in turn relies on an Amazon Web Services (AWS) architecture, to record and process audio, and cannot be directly setup within R. In step 1, you will be referred to another repository to run some scripts to setup this architecture for you. You will receive some credentials which you must input into the SAA R function (or other relevant [`musicassessr`](https://github.com/syntheso/musicassessr) functionality you would like to use). You will only need to do this once, and you will be able to use the same credentials for different `musicassessr` tests. 
-
-### Instructions
-
-- Setup your AWS architecture by following step 1) Setup AWS architecture in the following repository: https://github.com/mcetn/musicassessr-aws and make a note of the credentials outputted
-- If you are ready to deploy the SAA on a server, accessible by URL, proceed with steps 2 and 3 on the previous link. When deploying on a public URL, to avoid security warnings associated with accessing a user's microphone (required to complete the test), you will need your own domain name.
-- Otherwise, to use locally, follow the instructions below: 
 
 ## Local Testing
 
@@ -40,32 +28,86 @@ The Singing Ability Assessment (SAA) uses the [`musicassessr`](https://github.co
 Once you have completed the above steps, you can run the SAA using the code below. Make sure to replace the credentials with those you yielded in Step 1.
 
 ``` r
+
 # Load the SAA package
+
 library(SAA)
 
-# Inputting your AWS parameters generated above, run a test with default parameters (6 long note trials, 10 arrhythmic melody trials, 10 rhythmic melody trials and the Berkowitz item bank).
-SAA(aws_credentials = list("api_url" = "your_url",
-                           "bucket_name" = "your_bucket_name",
-                           "bucket_region" = "your_bucket_region",
-                           "identity_pool_id" = "your_identity_pool_id",
-                           "destination_bucket" = "your_destination_bucket"))
+# Run a short test:
 
-# Change the default parameters e.g by using fewer trials and a different item bank
-SAA(aws_credentials = list("api_url" = "your_url",
-                           "bucket_name" = "your_bucket_name",
-                           "bucket_region" = "your_bucket_region",
-                           "identity_pool_id" = "your_identity_pool_id",
-                           "destination_bucket" = "your_destination_bucket"),
-    num_items = list("long_tones" = 4L,
-                     "arrhythmic" = 5L,
-                      "rhythmic" = 5L), 
-    item_bank = itembankr::WJD)
+# SAA_standalone(num_items = list(long_tones = 1L, arrhythmic = 2L, rhythmic = 2L),
+                 SNR_test = FALSE, get_range = FALSE, examples = 0)
+
+
+# Run the test with default length, but different item bank
+
+# SAA_standalone(item_bank = itembankr::WJD)
+
 ```
 
 ## Usage notes
 
 - The SAA runs in your web browser. It is only recommended to run the test in Google Chrome. 
 - The test requires internet connectivity. 
+
+
+## Online testing
+
+To test online, you will need your own domain name. You can use our scripts which setup an Amazon server with everything required for you:
+
+- Follow steps 1-3 [here](https://github.com/sebsilas/musicassessr_aws). Be sure to make a note of the credentials outputted in step 1.
+
+Once your server is setup, to run the app, log into your server (via Command Prompt or Terminal) using your ssh command e.g.,
+
+```
+ssh  -i your_key.pem ubuntu@ec2-1-23-45-67.eu-central-1.compute.amazonaws.com
+
+```
+
+Navigate to the Shiny apps folder:
+
+```
+cd  /srv/shiny-server
+
+```
+
+Create a new folder for your app (NB. Avoid underscores in app names):
+
+```
+sudo mkdir my-app-name
+
+```
+
+Go into that folder and create a file for your app (NB. must be called *app.R*)
+
+```
+cd my-app-name
+sudo nano app.R
+
+```
+
+Load R:
+
+```
+sudo R
+```
+
+Install the SAA:
+
+```{r}
+
+
+
+```
+
+
+
+
+
+
+Please note, you don't have to use AWS to host your experiment. You could host the application on another server. To do that, you would need to install Shiny Server and NodeJS on your server. For the former, we recommend Anthony Chimiel's [guide](https://s3-eu-west-1.amazonaws.com/research.pmcharrison.com/psychTestR/psychTestR-server-docs-latest.pdf
+).
+
 
 ## Citation
 

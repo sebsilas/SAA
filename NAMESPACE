@@ -3,4 +3,6 @@
 export("%>%")
 export(SAA)
 export(SAA_standalone)
+export(aSAA)
+export(aSAA_standalone)
 importFrom(magrittr,"%>%")

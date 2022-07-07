@@ -16,14 +16,17 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
     Berkowitz (>= 0.1.0),
+    dplyr,
     magrittr,
     musicassessr (>= 0.0.0.9000),
     psychTestR (>= 2.23.0),
+    psychTestRCATME (>= 1.6.2),
     readxl
 Depends: 
     R (>= 2.10),
     musicassessr (>= 0.0.0.9000)
-Remotes:  
+Remotes: 
     sebsilas/musicassessr,
     sebsilas/psychTestR,
-    sebsilas/Berkowitz
+    sebsilas/Berkowitz,
+    sebsilas/psychTestRCATME
