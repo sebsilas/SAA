@@ -40,11 +40,12 @@ SAA(
   long_tone_trials_as_screening_failure_page = "http://www.google.com",
   success_on_completion_page = character(),
   concise_wording = TRUE,
-  skip_setup = FALSE
+  skip_setup = FALSE,
+  app_name
 )
 }
 \arguments{
-\item{skip_setup}{}
+\item{app_name}{}
 }
 \value{
 

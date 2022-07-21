@@ -179,6 +179,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
 #' @param success_on_completion_page
 #' @param concise_wording
 #' @param skip_setup
+#' @param app_name
 #'
 #' @return
 #' @export
@@ -221,7 +222,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
                 long_tone_trials_as_screening_failure_page = "http://www.google.com",
                 success_on_completion_page = character(),
                 concise_wording = TRUE,
-                skip_setup = FALSE) {
+                skip_setup = FALSE,
+                app_name) {
 
   stopifnot(
     is.list(num_items),
@@ -259,7 +261,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
     is.character(long_tone_trials_as_screening_failure_page),
     is.character(success_on_completion_page),
     is.logical(concise_wording),
-    is.logical(skip_setup)
+    is.logical(skip_setup),
+    assertthat::is.string(app_name)
     )
 
   if(demo) warning('Running SAA in demo mode!')
@@ -287,7 +290,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                      test_name,
                                      max_goes_forced,
                                      max_goes,
-                                     skip_setup),
+                                     skip_setup,
+                                     app_name),
 
                            # arbitrary and optional trial block to go first
                            append_trial_block_before,
@@ -373,7 +377,7 @@ SAA_intro <- function(demo = FALSE,
     musicassessr::musicassessr_init(test = "SAA",
                                     test_username = test_username,
                                     store_results_in_db,
-                                    copy_audio_to_location = copy_audio_to_location),
+                                    app_name),
 
     # introduction page
     psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(paste0(psychTestR::i18n("SAA_welcome"), ' ', test_name, "!")),
@@ -593,8 +597,7 @@ final_results_saa <- function(test_name,
 
 
 
-# SAA_standalone(copy_audio_to_location = "/Users/sebsilas/Desktop/audio_test",
-#                get_range = F, SNR_test = F,
+# SAA_standalone(get_range = F, SNR_test = F,
 #                num_items = list("long_tones" = 0L,
 #                                 "arrhythmic" = 10L,
 #                                 "rhythmic" = 10L))
