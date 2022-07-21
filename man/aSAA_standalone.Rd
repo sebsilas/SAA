@@ -39,6 +39,8 @@ aSAA_standalone(
   long_tone_trials_as_screening_failure_page = "http://www.google.com",
   success_on_completion_page = character(),
   concise_wording = TRUE,
+  skip_setup = FALSE,
+  app_name,
   ...
 )
 }
@@ -110,6 +112,10 @@ aSAA_standalone(
 \item{success_on_completion_page}{Where should users be directed to when they complete successfully?}
 
 \item{concise_wording}{TRUE for more detailed (but longer) instructions.}
+
+\item{skip_setup}{TRUE to skip setup steps.}
+
+\item{app_name}{Name of app.}
 
 \item{...}{}
 }

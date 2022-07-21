@@ -135,7 +135,8 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                                      css = system.file('www/css/musicassessr.css', package = "musicassessr")
                                    ),
                                    languages = c("en"),
-                                   additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws, copy_audio_to_location = copy_audio_to_location), ...))
+                                   additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
+                                                                                      app_name = app_name), ...))
 }
 
 
@@ -374,7 +375,7 @@ SAA_intro <- function(demo = FALSE,
                       test_name = "Singing Ability Assessment",
                       max_goes_forced,
                       max_goes,
-                      skip_setup,
+                      skip_setup = FALSE,
                       app_name) {
 
   psychTestR::join(

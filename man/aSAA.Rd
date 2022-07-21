@@ -38,11 +38,13 @@ aSAA(
   long_tone_trials_as_screening = FALSE,
   long_tone_trials_as_screening_failure_page = "http://www.google.com",
   success_on_completion_page = character(),
-  concise_wording = TRUE
+  concise_wording = TRUE,
+  skip_setup = FALSE,
+  app_name
 )
 }
 \arguments{
-\item{concise_wording}{}
+\item{app_name}{}
 }
 \value{
 

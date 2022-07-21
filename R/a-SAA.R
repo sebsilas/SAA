@@ -36,6 +36,8 @@
 #' @param long_tone_trials_as_screening_failure_page Where should users be directed to if they fail the long tone screening?
 #' @param success_on_completion_page Where should users be directed to when they complete successfully?
 #' @param concise_wording TRUE for more detailed (but longer) instructions.
+#' @param skip_setup TRUE to skip setup steps.
+#' @param app_name Name of app.
 #' @param ...
 #'
 #' @return
@@ -77,7 +79,9 @@ aSAA_standalone <- function(num_items = list("long_tones" = 6L,
                            long_tone_trials_as_screening = FALSE,
                            long_tone_trials_as_screening_failure_page = "http://www.google.com",
                            success_on_completion_page = character(),
-                           concise_wording = TRUE, ...) {
+                           concise_wording = TRUE,
+                           skip_setup = FALSE,
+                           app_name, ...) {
 
   timeline <- aSAA(num_items,
                   demographics,
@@ -112,7 +116,9 @@ aSAA_standalone <- function(num_items = list("long_tones" = 6L,
                   long_tone_trials_as_screening,
                   long_tone_trials_as_screening_failure_page,
                   success_on_completion_page,
-                  concise_wording)
+                  concise_wording,
+                  skip_setup,
+                  app_name)
 
 
   # run the test
@@ -126,7 +132,8 @@ aSAA_standalone <- function(num_items = list("long_tones" = 6L,
                                      css = system.file('www/css/musicassessr.css', package = "musicassessr")
                                    ),
                                    languages = c("en"),
-                                   additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws, copy_audio_to_location = copy_audio_to_location), ...))
+                                   additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
+                                                                                      app_name = app_name), ...))
 }
 
 
@@ -171,6 +178,8 @@ aSAA_standalone <- function(num_items = list("long_tones" = 6L,
 #' @param long_tone_trials_as_screening_failure_page
 #' @param success_on_completion_page
 #' @param concise_wording
+#' @param skip_setup
+#' @param app_name
 #'
 #' @return
 #' @export
@@ -211,7 +220,9 @@ aSAA <- function(num_items = list("long_tones" = 6L,
                 long_tone_trials_as_screening = FALSE,
                 long_tone_trials_as_screening_failure_page = "http://www.google.com",
                 success_on_completion_page = character(),
-                concise_wording = TRUE) {
+                concise_wording = TRUE,
+                skip_setup = FALSE,
+                app_name) {
 
   stopifnot(
     is.list(num_items),
@@ -247,7 +258,9 @@ aSAA <- function(num_items = list("long_tones" = 6L,
     is.logical(long_tone_trials_as_screening),
     is.character(long_tone_trials_as_screening_failure_page),
     is.character(success_on_completion_page),
-    is.logical(concise_wording)
+    is.logical(concise_wording),
+    is.logical(skip_setup),
+    assertthat::is.string(app_name)
     )
 
   if(demo) warning('Running SAA in demo mode!')
@@ -274,7 +287,9 @@ aSAA <- function(num_items = list("long_tones" = 6L,
                                      concise_wording,
                                      test_name,
                                      max_goes_forced,
-                                     max_goes),
+                                     max_goes,
+                                     skip_setup,
+                                     app_name),
 
                            # arbitrary and optional trial block to go first
                            append_trial_block_before,
