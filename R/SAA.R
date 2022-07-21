@@ -37,6 +37,7 @@
 #' @param long_tone_trials_as_screening_failure_page Where should users be directed to if they fail the long tone screening?
 #' @param success_on_completion_page Where should users be directed to when they complete successfully?
 #' @param concise_wording TRUE for more detailed (but longer) instructions.
+#' @param skip_setup TRUE to skip setup steps.
 #' @param ...
 #'
 #' @return
@@ -79,7 +80,8 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                            long_tone_trials_as_screening = FALSE,
                            long_tone_trials_as_screening_failure_page = "http://www.google.com",
                            success_on_completion_page = character(),
-                           concise_wording = TRUE, ...) {
+                           concise_wording = TRUE,
+                           skip_setup = FALSE, ...) {
 
   timeline <- SAA(num_items,
                   item_bank,
@@ -115,7 +117,8 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                   long_tone_trials_as_screening,
                   long_tone_trials_as_screening_failure_page,
                   success_on_completion_page,
-                  concise_wording)
+                  concise_wording,
+                  skip_setup)
 
 
   # run the test
@@ -175,6 +178,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
 #' @param long_tone_trials_as_screening_failure_page
 #' @param success_on_completion_page
 #' @param concise_wording
+#' @param skip_setup
 #'
 #' @return
 #' @export
@@ -216,7 +220,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
                 long_tone_trials_as_screening = FALSE,
                 long_tone_trials_as_screening_failure_page = "http://www.google.com",
                 success_on_completion_page = character(),
-                concise_wording = TRUE) {
+                concise_wording = TRUE,
+                skip_setup = FALSE) {
 
   stopifnot(
     is.list(num_items),
@@ -253,7 +258,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
     is.logical(long_tone_trials_as_screening),
     is.character(long_tone_trials_as_screening_failure_page),
     is.character(success_on_completion_page),
-    is.logical(concise_wording)
+    is.logical(concise_wording),
+    is.logical(skip_setup)
     )
 
   if(demo) warning('Running SAA in demo mode!')
@@ -280,7 +286,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
                                      concise_wording,
                                      test_name,
                                      max_goes_forced,
-                                     max_goes),
+                                     max_goes,
+                                     skip_setup),
 
                            # arbitrary and optional trial block to go first
                            append_trial_block_before,
@@ -317,6 +324,8 @@ SAA <- function(num_items = list("long_tones" = 6L,
 
                            # arbitrary and optional trial block to go after
                            append_trial_block_after,
+
+                           musicassessr::elt_add_session_to_db(),
 
 
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
@@ -357,7 +366,8 @@ SAA_intro <- function(demo = FALSE,
                       concise_wording = TRUE,
                       test_name = "Singing Ability Assessment",
                       max_goes_forced,
-                      max_goes) {
+                      max_goes,
+                      skip_setup) {
 
   psychTestR::join(
     musicassessr::musicassessr_init(test = "SAA",
@@ -367,7 +377,7 @@ SAA_intro <- function(demo = FALSE,
 
     # introduction page
     psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(paste0(psychTestR::i18n("SAA_welcome"), ' ', test_name, "!")),
-                                                       shiny::tags$img(src = 'https://adaptiveeartraining.com/magmaGold/img/intro.png', height = 100, width = 100),
+                                                       shiny::tags$img(src = 'https://adaptiveeartraining.com/assets/img/SAA_intro.png', height = 100, width = 100),
                                                        shiny::tags$p(psychTestR::i18n("SAA_welcome_1")),
                                                        shiny::tags$p(psychTestR::i18n("SAA_welcome_2"))),
                                 button_text = psychTestR::i18n("Next")),
@@ -382,9 +392,10 @@ SAA_intro <- function(demo = FALSE,
                               headphones = headphones_test,
                               microphone_test = microphone_test,
                               allow_repeat_SNR_tests = allow_repeat_SNR_tests,
-                              concise_wording = concise_wording),
+                              concise_wording = concise_wording,
+                              skip_setup = skip_setup),
     # instructions
-    SAA_instructions(max_goes_forced, max_goes)
+    if(!skip_setup) SAA_instructions(max_goes_forced, max_goes)
   )
 
 }

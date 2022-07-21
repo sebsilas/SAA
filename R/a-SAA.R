@@ -391,5 +391,5 @@ adaptive_arrhythmic_melody_trials <- function(num_items, item_bank, model, fixed
 
 # aSAA_standalone(copy_audio_to_location = '/Users/sebsilas/Desktop/audio_test',
 #                 SNR_test = F,
-#                 get_range = F, final_results = FALSE, demographics = F, gold_msi = F)
-
+#                 get_range = F, final_results = FALSE,
+# demographics = F, gold_msi = F)
