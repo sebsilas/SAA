@@ -38,6 +38,7 @@
 #' @param success_on_completion_page Where should users be directed to when they complete successfully?
 #' @param concise_wording TRUE for more detailed (but longer) instructions.
 #' @param skip_setup TRUE to skip setup steps.
+#' @param app_name Name of app.
 #' @param ...
 #'
 #' @return
@@ -81,7 +82,8 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                            long_tone_trials_as_screening_failure_page = "http://www.google.com",
                            success_on_completion_page = character(),
                            concise_wording = TRUE,
-                           skip_setup = FALSE, ...) {
+                           skip_setup = FALSE,
+                           app_name, ...) {
 
   timeline <- SAA(num_items,
                   item_bank,
@@ -118,7 +120,8 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                   long_tone_trials_as_screening_failure_page,
                   success_on_completion_page,
                   concise_wording,
-                  skip_setup)
+                  skip_setup,
+                  app_name)
 
 
   # run the test
@@ -371,7 +374,8 @@ SAA_intro <- function(demo = FALSE,
                       test_name = "Singing Ability Assessment",
                       max_goes_forced,
                       max_goes,
-                      skip_setup) {
+                      skip_setup,
+                      app_name) {
 
   psychTestR::join(
     musicassessr::musicassessr_init(test = "SAA",

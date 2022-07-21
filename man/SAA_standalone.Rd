@@ -41,6 +41,7 @@ SAA_standalone(
   success_on_completion_page = character(),
   concise_wording = TRUE,
   skip_setup = FALSE,
+  app_name,
   ...
 )
 }
@@ -116,6 +117,8 @@ SAA_standalone(
 \item{concise_wording}{TRUE for more detailed (but longer) instructions.}
 
 \item{skip_setup}{TRUE to skip setup steps.}
+
+\item{app_name}{Name of app.}
 
 \item{...}{}
 }
