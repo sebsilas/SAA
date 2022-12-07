@@ -1,0 +1,10 @@
+^MST\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^output$
+/output
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^LICENSE\.md$
+.Renviron

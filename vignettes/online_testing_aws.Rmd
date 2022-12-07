@@ -1,0 +1,57 @@
+
+---
+title: "Online testing (including via Amazon Web Services)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{"Online testing (including via Amazon Web Services)"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Online testing
+
+To test online, you will need your own domain name. You can use our scripts which setup an Amazon server with everything required for you:
+
+- Follow steps 1-3 [here](https://github.com/sebsilas/musicassessr_aws). Be sure to make a note of the credentials outputted in step 1.
+
+Once your server is setup, to run the app, log into your server (via Command Prompt or Terminal) using your ssh command e.g.,
+
+```
+ssh  -i your_key.pem ubuntu@ec2-1-23-45-67.eu-central-1.compute.amazonaws.com
+
+```
+
+Navigate to the Shiny apps folder:
+
+```
+cd  /srv/shiny-server
+
+```
+
+Create a new folder for your app (NB. Avoid underscores in app names):
+
+```
+sudo mkdir my-app-name
+
+```
+
+Go into that folder and create a file for your app (NB. must be called *app.R*)
+
+```
+cd my-app-name
+sudo nano app.R
+
+```
+
+Load R:
+
+```
+sudo R
+```
+
+Install the SAA:
+
+
+Please note, you don't have to use AWS to host your experiment. You could host the application on another server. To do that, you would need to install Shiny Server and NodeJS on your server. For the former, we recommend Anthony Chimiel's [guide](https://s3-eu-west-1.amazonaws.com/research.pmcharrison.com/psychTestR/psychTestR-server-docs-latest.pdf
+).
+
