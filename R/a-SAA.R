@@ -2,6 +2,7 @@
 
 #' Deploy aSAA as standalone test
 #'
+#' @param app_name Name of app.
 #' @param num_items The number of items as a list.
 #' @param demographics Deploy demographic form?
 #' @param demo Is demo?
@@ -36,14 +37,14 @@
 #' @param success_on_completion_page Where should users be directed to when they complete successfully?
 #' @param concise_wording TRUE for more detailed (but longer) instructions.
 #' @param skip_setup TRUE to skip setup steps.
-#' @param app_name Name of app.
 #' @param ...
 #'
 #' @return
 #' @export
 #'
 #' @examples
-aSAA_standalone <- function(num_items = list("long_tones" = 6L,
+aSAA_standalone <- function(app_name,
+                            num_items = list("long_tones" = 6L,
                                             "arrhythmic" = 15L,
                                             "rhythmic" = 10L),
                            demographics = TRUE,
@@ -79,9 +80,10 @@ aSAA_standalone <- function(num_items = list("long_tones" = 6L,
                            success_on_completion_page = character(),
                            concise_wording = TRUE,
                            skip_setup = FALSE,
-                           app_name, ...) {
+                           ...) {
 
-  timeline <- aSAA(num_items,
+  timeline <- aSAA(app_name,
+                   num_items,
                   demographics,
                   demo,
                   feedback,
@@ -114,8 +116,7 @@ aSAA_standalone <- function(num_items = list("long_tones" = 6L,
                   long_tone_trials_as_screening_failure_page,
                   success_on_completion_page,
                   concise_wording,
-                  skip_setup,
-                  app_name)
+                  skip_setup)
 
 
   # run the test
@@ -141,6 +142,7 @@ aSAA_standalone <- function(num_items = list("long_tones" = 6L,
 
 #' Deploy the aSAA
 #'
+#' @param app_name
 #' @param num_items
 #' @param demographics
 #' @param demo
@@ -175,13 +177,13 @@ aSAA_standalone <- function(num_items = list("long_tones" = 6L,
 #' @param success_on_completion_page
 #' @param concise_wording
 #' @param skip_setup
-#' @param app_name
 #'
 #' @return
 #' @export
 #'
 #' @examples
-aSAA <- function(num_items = list("long_tones" = 6L,
+aSAA <- function(app_name,
+                 num_items = list("long_tones" = 6L,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
                 demographics = TRUE,
@@ -216,10 +218,10 @@ aSAA <- function(num_items = list("long_tones" = 6L,
                 long_tone_trials_as_screening_failure_page = "http://www.google.com",
                 success_on_completion_page = character(),
                 concise_wording = TRUE,
-                skip_setup = FALSE,
-                app_name) {
+                skip_setup = FALSE) {
 
   stopifnot(
+    assertthat::is.string(app_name),
     is.list(num_items),
     is.logical(demographics),
     is.logical(demo),
@@ -253,8 +255,7 @@ aSAA <- function(num_items = list("long_tones" = 6L,
     is.character(long_tone_trials_as_screening_failure_page),
     is.character(success_on_completion_page),
     is.logical(concise_wording),
-    is.logical(skip_setup),
-    assertthat::is.string(app_name)
+    is.logical(skip_setup)
     )
 
   if(demo) warning('Running SAA in demo mode!')

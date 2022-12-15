@@ -2,6 +2,7 @@
 
 #' Deploy SAA as standalone test
 #'
+#' @param app_name Name of app.
 #' @param num_items The number of items as a list.
 #' @param item_bank The item bank (created with itembankr) to deployed with the test.
 #' @param demographics Deploy demographic form?
@@ -37,7 +38,6 @@
 #' @param success_on_completion_page Where should users be directed to when they complete successfully?
 #' @param concise_wording TRUE for more detailed (but longer) instructions.
 #' @param skip_setup TRUE to skip setup steps.
-#' @param app_name Name of app.
 #' @param full_screen Should app be full screen?
 #' @param validate_user_entry_into_test Should the user be validated against a session token?
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
@@ -47,7 +47,8 @@
 #' @export
 #'
 #' @examples
-SAA_standalone <- function(num_items = list("long_tones" = 6L,
+SAA_standalone <- function(app_name,
+                           num_items = list("long_tones" = 6L,
                                             "arrhythmic" = 10L,
                                             "rhythmic" = 10L),
                            item_bank = Berkowitz::Berkowitz,
@@ -84,12 +85,12 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                            success_on_completion_page = "https://adaptiveeartraining.com",
                            concise_wording = TRUE,
                            skip_setup = FALSE,
-                           app_name,
                            full_screen = FALSE,
                            validate_user_entry_into_test = FALSE,
                            additional_scoring_measures = NULL, ...) {
 
-  timeline <- SAA(num_items,
+  timeline <- SAA(app_name,
+                  num_items,
                   item_bank,
                   demographics,
                   demo,
@@ -124,7 +125,6 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
                   success_on_completion_page,
                   concise_wording,
                   skip_setup,
-                  app_name,
                   additional_scoring_measures)
 
 
@@ -154,6 +154,7 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
 
 #' Deploy the SAA
 #'
+#' @param app_name
 #' @param num_items
 #' @param item_bank
 #' @param demographics
@@ -189,14 +190,14 @@ SAA_standalone <- function(num_items = list("long_tones" = 6L,
 #' @param success_on_completion_page
 #' @param concise_wording
 #' @param skip_setup
-#' @param app_name
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
 #'
 #' @return
 #' @export
 #'
 #' @examples
-SAA <- function(num_items = list("long_tones" = 6L,
+SAA <- function(app_name,
+                num_items = list("long_tones" = 6L,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
                 item_bank = Berkowitz::Berkowitz,
@@ -233,10 +234,10 @@ SAA <- function(num_items = list("long_tones" = 6L,
                 success_on_completion_page = character(),
                 concise_wording = TRUE,
                 skip_setup = FALSE,
-                app_name,
                 additional_scoring_measures = NULL) {
 
   stopifnot(
+    assertthat::is.string(app_name),
     is.list(num_items),
     is.function(item_bank) | is.data.frame(item_bank),
     is.logical(demographics),
@@ -272,9 +273,12 @@ SAA <- function(num_items = list("long_tones" = 6L,
     is.character(success_on_completion_page),
     is.logical(concise_wording),
     is.logical(skip_setup),
-    assertthat::is.string(app_name),
     is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures)
     )
+
+  if(long_tone_trials_as_screening) {
+    stop("long_tone_trials_as_screening currently cannot be used, as the functionality is subject to reanalysis.")
+  }
 
   if(demo) warning('Running SAA in demo mode!')
 
@@ -451,63 +455,143 @@ SAA_instructions <- function(max_goes_forced, max_goes) {
 
 
 
-present_scores_saa <- function(res, num_items_long_tone, num_items_arrhythmic, num_items_rhythmic) {
+present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, num_items_rhythmic) {
 
-  if(num_items_long_tone > 0) {
-    # long tones
-    long_tones <- as.data.frame(lapply(res$SAA.long_note_trials$long_tone_, paste0, collapse = ","))
+  if(num_items_long_note > 0) {
+    # long notes
+    long_note_scores <- res$SAA.long_tone_trials %>%
+      dplyr::bind_rows() %>%
+      dplyr::select(long_note_accuracy, long_note_dtw_distance, long_note_autocorrelation_mean,
+                    long_note_run_test, long_note_no_cpts, long_note_beginning_of_second_cpt) %>%
+      unique()
 
-    long_tone_summary <- long_tones %>%
-      dplyr::select(note_accuracy, note_precision, dtw_distance) %>%
-      dplyr::mutate_if(is.character,as.numeric) %>%
-      dplyr::summarise(mean_note_accuracy = mean(note_accuracy, na.rm = TRUE),
-                       note_precision = mean(note_precision, na.rm = TRUE),
-                       mean_dtw_distance = mean(note_precision, na.rm = TRUE))
+    long_note_pca_scores <- musicassessr::get_long_note_pcas(long_note_scores)
   }
 
   if(num_items_arrhythmic > 0) {
 
     # arrhythmic
-    arrhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.arrhythmic_melodies)
+    arrhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.arrhythmic_melodies, use_for_production = "pyin_pitch_track")
+
+    arrhythmic_melody_tmp <- arrhythmic_melodies %>%
+      dplyr::select(answer_meta_data.N, answer_meta_data.step.cont.loc.var, answer_meta_data.tonalness, answer_meta_data.log_freq, opti3, proportion_of_correct_note_events) %>%
+      dplyr::mutate_if(is.character,as.numeric) %>%
+      unique() %>%
+      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
+      dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
 
     if(is.null(arrhythmic_melodies$error)) {
 
-      if(all(arrhythmic_melodies$error)) {
-        arrhythmic_melody_summary <- data.frame(opti3 = 0)
-      } else {
-        arrhythmic_melody_summary <- arrhythmic_melodies %>% dplyr::select(opti3) %>%
-          dplyr::mutate_if(is.character,as.numeric) %>% # previously this was using multiple vars
-          dplyr::summarise(dplyr::across(dplyr::everything(), ~ mean(.x, na.rm = TRUE)))
-      }
+      arrhythmic_melody_model_prediction <- arrhythmic_melody_tmp %>%
+        dplyr::select(-proportion_of_correct_note_events) %>%
+        psychTestRCATME::predict_based_on_mixed_effects_arrhythmic_model(musicassessr::lm2.2, .)
+
+      arrhythmic_melody_summary <- arrhythmic_melody_tmp %>%
+        dplyr::select(opti3, proportion_of_correct_note_events) %>%
+        dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
+        dplyr::mutate(SAA_Ability_Arrhythmic = arrhythmic_melody_model_prediction)
+
+      arrhythmic_melody_score <- arrhythmic_melody_summary$SAA_Ability_Arrhythmic
+
+    } else if(all(arrhythmic_melodies$error)) {
+      arrhythmic_melody_score <- 0
     } else {
-      arrhythmic_melody_summary <- data.frame(opti3 = 0)
-    }
+        arrhythmic_melody_score <- 0
+      }
 
   }
 
   if(num_items_rhythmic > 0) {
     # rhythmic
-    rhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.rhythmic_melodies)
+    rhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.rhythmic_melodies, use_for_production = "pyin_pitch_track")
+
+    rhythmic_melody_tmp <- rhythmic_melodies %>%
+      dplyr::select(answer_meta_data.N, answer_meta_data.step.cont.loc.var, answer_meta_data.log_freq, answer_meta_data.d.entropy, answer_meta_data.i.entropy, opti3, proportion_of_correct_note_events) %>%
+      dplyr::mutate_if(is.character,as.numeric) %>%
+      unique() %>%
+      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
+      dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
 
     if(is.null(rhythmic_melodies$error)) {
 
-      if(all(rhythmic_melodies$error)) {
-        rhythmic_melody_summary <- data.frame(opti3 = 0)
-      } else {
-        rhythmic_melody_summary <- rhythmic_melodies %>% dplyr::select(opti3) %>%
-          dplyr::mutate_if(is.character,as.numeric) %>% # previously this was using multiple vars
-          dplyr::summarise(dplyr::across(dplyr::everything(), ~ mean(.x, na.rm = TRUE)))
-      }
+      rhythmic_melody_model_prediction <- rhythmic_melody_tmp %>%
+        dplyr::select(-proportion_of_correct_note_events) %>%
+        psychTestRCATME::predict_based_on_mixed_effects_rhythmic_model(musicassessr::lm3.2, .)
+
+      rhythmic_melody_summary <- rhythmic_melody_tmp %>%
+        dplyr::select(opti3, proportion_of_correct_note_events) %>%
+        dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
+        dplyr::mutate(SAA_Ability_Rhythmic = rhythmic_melody_model_prediction)
+
+      rhythmic_melody_score <- rhythmic_melody_summary$SAA_Ability_Rhythmic
+
+    } else if(all(rhythmic_melodies$error)) {
+        rhythmic_melody_score <- 0
     } else {
-      rhythmic_melody_summary <- data.frame(opti3 = 0)
+      rhythmic_melody_score <- 0
     }
+
   }
 
-  list("long_note" = ifelse(is.null(long_tone_summary), data.frame(mean_note_accuracy = 1, note_precision = 1, mean_dtw_distance = 1), long_tone_summary),
-       "arrhythmic" = ifelse(is.null(arrhythmic_melody_summary), data.frame(opti3 = 0), arrhythmic_melody_summary),
-       "rhythmic" = ifelse(is.null(rhythmic_melody_summary), data.frame(opti3 = 0), rhythmic_melody_summary))
+
+  # Calculate note precision
+
+  shared_names <- intersect(names(arrhythmic_melodies), names(rhythmic_melodies))
+  arrhythmic_melodies <- arrhythmic_melodies %>% dplyr::select(shared_names)
+  rhythmic_melodies <- rhythmic_melodies %>% dplyr::select(shared_names)
+  all_melodies <- rbind(arrhythmic_melodies, rhythmic_melodies)
+
+  melody_precision_vars <- all_melodies %>%
+    dplyr::select(pyin_pitch_track.freq, stimuli,
+                  pyin_pitch_track.nearest_stimuli_note,
+                  pyin_pitch_track.interval, pyin_pitch_track.interval_cents) %>%
+    dplyr::rename(freq = pyin_pitch_track.freq,
+                  nearest_stimuli_note = pyin_pitch_track.nearest_stimuli_note,
+                  interval = pyin_pitch_track.interval,
+                  interval_cents = pyin_pitch_track.interval_cents) %>%
+    dplyr::mutate(freq = as.numeric(freq),
+                  nearest_stimuli_note = as.numeric(nearest_stimuli_note),
+                  note = round(hrep::freq_to_midi(freq)),
+                  interval = as.numeric(interval),
+                  interval_cents = as.numeric(interval_cents))
+
+    melody_note_precision <- melody_precision_vars %>%
+      musicassessr::score_melody_note_precision()
+
+    melody_interval_precision <- melody_precision_vars %>%
+     musicassessr::score_melody_interval_precision()
+
+    end_melody_summary <- all_melodies %>%
+      dplyr::select(file, melody_interval_accuracy, melody_note_accuracy) %>%
+      unique() %>%
+      dplyr::select(-file) %>%
+      dplyr::mutate(dplyr::across(dplyr::everything(), as.numeric)) %>%
+      dplyr::summarise(mean_melody_note_accuracy = mean(melody_note_accuracy, na.rm = TRUE),
+                       mean_melody_interval_accuracy = mean(melody_interval_accuracy, na.rm = TRUE)
+                       )
+
+    pca_melodic_singing_accuracy <- predict(musicassessr::melody_pca2,
+            data = tibble::tibble(melody_note_precision = melody_note_precision,
+                                  interval_precision = melody_interval_precision,
+                                  interval_accuracy = end_melody_summary$mean_melody_interval_accuracy),
+            old.data = musicassessr::melody_pca2_data
+            # you need to pass this for standardization or you will get NaNs
+            # https://stackoverflow.com/questions/27534968/dimension-reduction-using-psychprincipal-does-not-work-for-smaller-data
+    ) %>% as.numeric()
+
+  list("Long_Note" = if(is.null(long_note_scores)) tibble::tibble(pca_long_note_randomness = 0, pca_long_note_accuracy = 0, pca_long_note_scoop = 0) else long_note_pca_scores,
+       "SAA_Ability_Arrhythmic" = if(is.null(arrhythmic_melody_summary)) 0 else arrhythmic_melody_score,
+       "SAA_Ability_Rhythmic" = if(is.null(rhythmic_melody_summary)) 0 else rhythmic_melody_score,
+       "melody_note_precision" = melody_note_precision,
+       "melody_interval_precision" = melody_interval_precision,
+       "pca_melodic_singing_accuracy" = pca_melodic_singing_accuracy)
 
 }
+
+
+#
+# r <- readRDS("/Users/sebsilas/SAA/test_apps/short_test/output/results/id=25&p_id=8e1de37bc52ffbad49ed12a9e5b405f46c775877b7e2dcf768d4f41f47e7e8cd&save_id=6&pilot=false&complete=true.rds")
+# t <- present_scores_saa(r, 2, 2, 2)
 
 
 
@@ -528,9 +612,10 @@ final_results_saa <- function(test_name,
 
       processed_results <- present_scores_saa(res, num_items_long_tone, num_items_arrhythmic, num_items_rhythmic)
 
-      final_score <- 1 + processed_results$arrhythmic[[1]] + processed_results$rhythmic[[1]] * 1000
+      Final_SAA_Score <- .33 * get_arrhythmic_score_percentile(processed_results$SAA_Ability_Arrhythmic) + .33 * get_rhythmic_score_percentile(processed_results$SAA_Ability_Rhythmic) + .33 * get_long_note_score_percentile(.33 * processed_results$Long_Note$pca_long_note_randomness + .33 * processed_results$Long_Note$pca_long_note_scoop + .33 * processed_results$Long_Note$pca_long_note_accuracy)
+      Final_SAA_Score <- round(Final_SAA_Score, 2)
 
-      psychTestR::set_local("final_score", final_score, state) # leave this in; it gets used by musicassessr
+      psychTestR::set_local("final_score", Final_SAA_Score, state) # leave this in; it gets used by musicassessr
 
 
       psychTestR::text_input_page(
@@ -541,7 +626,7 @@ final_results_saa <- function(test_name,
 
                                  shiny::renderTable({
 
-                                   long_note_df <- processed_results$long_note[[1]]
+                                   long_note_df <- tibble::tibble(`Long Note` = round(get_long_note_score_percentile(.33 * processed_results$Long_Note$pca_long_note_randomness + .33 * processed_results$Long_Note$pca_long_note_scoop + .33 * processed_results$Long_Note$pca_long_note_accuracy), 2))
                                    long_note_df_names <- names(long_note_df)
                                    long_note_df <- base::t(long_note_df)
                                    row.names(long_note_df) <- long_note_df_names
@@ -552,7 +637,7 @@ final_results_saa <- function(test_name,
 
                                  shiny::renderTable({
 
-                                   arrhythmic_df <- processed_results$arrhythmic
+                                   arrhythmic_df <- tibble::tibble(`Arrhythmic Melodies` = round(get_arrhythmic_score_percentile(processed_results$SAA_Ability_Arrhythmic), 2))
                                    arrhythmic_df_names <- names(arrhythmic_df)
                                    arrhythmic_df <- base::t(arrhythmic_df)
                                    row.names(arrhythmic_df) <- arrhythmic_df_names
@@ -563,7 +648,7 @@ final_results_saa <- function(test_name,
 
                                  shiny::renderTable({
 
-                                   rhythmic_df <- processed_results$rhythmic
+                                   rhythmic_df <- tibble::tibble(`Rhythmic Melodies` = round(get_rhythmic_score_percentile(processed_results$SAA_Ability_Rhythmic), 2))
                                    rhythmic_df_names <- names(rhythmic_df)
                                    rhythmic_df <- base::t(rhythmic_df)
                                    row.names(rhythmic_df) <- rhythmic_df_names
@@ -571,7 +656,7 @@ final_results_saa <- function(test_name,
                                  }, rownames = TRUE, colnames = FALSE, width = "50%"),
 
                                  shiny::tags$h3('Total Score'),
-                                 shiny::tags$p(final_score),
+                                 shiny::tags$p(Final_SAA_Score),
                                  shiny::tags$p("Enter a username to see the scoreboard: ")
 
         )
@@ -596,14 +681,10 @@ final_results_saa <- function(test_name,
   # )
 }
 
-#
-# SAA_standalone(num_items = list(long_tones = 1L, arrhythmic = 2L, rhythmic = 2L),
-#                SNR_test = F, get_range = F,  musicassessr_aws = FALSE, examples = 0)
 
 
 
-
-# SAA_standalone(get_range = F, SNR_test = F,
+# SAA_standalone(get_range = FALSE, SNR_test = FALSE,
 #                num_items = list("long_tones" = 0L,
 #                                 "arrhythmic" = 10L,
 #                                 "rhythmic" = 10L))
