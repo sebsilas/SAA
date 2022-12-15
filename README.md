@@ -42,7 +42,7 @@ library(SAA)
 
 # Run a short test with feedback:
 
-SAA_standalone(app_name = "short_test",
+SAA_standalone(app_name = "my_SAA_app",
                num_items = list(long_tones = 2L, arrhythmic = 2L, rhythmic = 2L),
                feedback = TRUE,
                SNR_test = FALSE,
