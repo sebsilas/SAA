@@ -27,7 +27,7 @@ Seb Silas, sebsilas@gmail.com
 
 Once you have completed the above steps, you can run the `SAA` by doing the following:
 
-1. Create a folder which will contain your app. The name of your folder will become the `app_name` argument when you run the `SAA` function below.
+1. Create a folder which will contain your app. The name of your folder will become the `app_name` argument when you run the `SAA` or `SAA_standalone` functions.
 
 2. In the folder, create an *R* file called `app.R` and paste your code to run the `SAA` there, like below. Remember, the `app_name` argument should match the name of your folder.
 
@@ -54,7 +54,7 @@ SAA_standalone(app_name = "short_test",
 
 NB. If you run the script from *RStudio*, for best results, run the script using the shortcut `Command + Shift + Enter` on Mac (`Ctrl + Shift + Enter` on Windows).
 
-4. If the above steps were successful, the app should load in a browser and you should no errors and receive feedback after each trial. If not, go to our [Troubleshooting]() page or [raise an issue on Github](https://github.com/sebsilas/SAA/issues).
+4. If the above steps were successful, the `SAA` test should load in your web browser. As you progress through the test, you receive feedback after each trial. If not, go to our [Troubleshooting]() page or [raise an issue on Github](https://github.com/sebsilas/SAA/issues).
 
 ## Usage notes
 

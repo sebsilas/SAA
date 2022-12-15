@@ -1,6 +1,6 @@
 
 
-#' Deploy aSAA as standalone test
+#' Deploy adaptive SAA (aSAA) as standalone test
 #'
 #' @param app_name Name of app.
 #' @param num_items The number of items as a list.
@@ -140,7 +140,7 @@ aSAA_standalone <- function(app_name,
 
 
 
-#' Deploy the aSAA
+#' Deploy the adaptive SAA (aSAA)
 #'
 #' @param app_name
 #' @param num_items
