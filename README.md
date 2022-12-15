@@ -66,7 +66,7 @@ You can do this by either a) using an *.Rproj* file in */Users/musicassessr/my_p
 
 - The test requires internet connectivity. 
 
-- The *SAA* runs in your web browser. It is only recommended to run the test in [Google Chrome](https://www.google.com/chrome/) or [Opera](https://www.opera.com/download). 
+- The *SAA* runs in your web browser. It is only recommended to run the test in [Google Chrome](https://www.google.com/chrome/) or [Opera](https://www.opera.com/download). You will need to set one of these to be your default browser for *RStudio* to launch the test there (restart *RStudio* after doing this).
 
 
 

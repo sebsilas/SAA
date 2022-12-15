@@ -87,7 +87,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="singing-ability-assessment-saa">Singing Ability Assessment (SAA)<a class="anchor" aria-label="anchor" href="#singing-ability-assessment-saa"></a>
 </h1></div>
-<p>The SAA is a test of singing ability which can be launched in R/Shiny via the <a href="https://github.com/pmcharrison/psychTestR" class="external-link"><code>psychTestR</code></a> package.</p>
+<p>The <code>SAA</code> is a test of singing ability which can be launched in R/Shiny via the <a href="https://github.com/pmcharrison/psychTestR" class="external-link"><code>psychTestR</code></a> package.</p>
 </div>
 <div class="section level1">
 <h1 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a>
@@ -97,27 +97,25 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <ol style="list-style-type: decimal">
-<li><p>If you don’t have R installed, install it from here: <a href="https://cloud.r-project.org/" class="external-link uri">https://cloud.r-project.org/</a></p></li>
-<li><p>Open R.</p></li>
-<li><p>Install the ‘devtools’ package with the following command:</p></li>
+<li><p>Install <em>nodeJS</em>: <a href="https://nodejs.org/en/download/" class="external-link uri">https://nodejs.org/en/download/</a></p></li>
+<li><p>Install <em>R</em>: <a href="https://cloud.r-project.org/" class="external-link uri">https://cloud.r-project.org/</a></p></li>
+<li><p>Install <em>RStudio</em>: <a href="https://posit.co/downloads/" class="external-link uri">https://posit.co/downloads/</a></p></li>
+<li><p>Launch <em>RStudio</em></p></li>
+<li><p>Install the <code>devtools</code> <em>R</em> package by pasting the following command into the <em>RStudio</em> terminal:</p></li>
 </ol>
 <p><code>install.packages('devtools')</code></p>
-<ol start="4" style="list-style-type: decimal">
-<li>Install the <code>SAA</code>:</li>
+<ol start="6" style="list-style-type: decimal">
+<li>Install the <code>SAA</code> package:</li>
 </ol>
 <p><code>devtools::install_github('sebsilas/SAA')</code></p>
-<ol start="5" style="list-style-type: decimal">
-<li>Install <em>nodeJS</em> from here: <a href="https://nodejs.org/en/download/" class="external-link uri">https://nodejs.org/en/download/</a>
-</li>
-</ol>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>Once you have completed the above steps, you can run the <code>SAA</code> by doing the following:</p>
+<p>Once you have completed the above steps, you can run the <code>SAA</code> test by doing the following:</p>
 <ol style="list-style-type: decimal">
-<li><p>Create a folder which will contain your app. The name of your folder will become the <code>app_name</code> argument when you run the <code>SAA</code> function below.</p></li>
-<li><p>In the folder, create an <em>R</em> file called <code>app.R</code> and paste your code to run the <code>SAA</code> there, like below. Remember, the <code>app_name</code> argument should match the name of your folder.</p></li>
+<li><p>Create a folder which will contain your app. The name of this folder will become the <code>app_name</code> argument when you run the <code>SAA</code> or <code>SAA_standalone</code> functions later.</p></li>
+<li><p>In the folder, create an <em>R</em> file called <code>app.R</code>. In this file, paste your code to run the <code>SAA</code> there, like below:</p></li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -127,19 +125,21 @@
 
 <span class="co"># Run a short test with feedback:</span>
 
-<span class="fu"><a href="reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>app_name <span class="op">=</span> <span class="st">"short_test"</span>,
+<span class="fu"><a href="reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>app_name <span class="op">=</span> <span class="st">"my_SAA_app"</span>,
                num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">2L</span>, arrhythmic <span class="op">=</span> <span class="fl">2L</span>, rhythmic <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span>,
                feedback <span class="op">=</span> <span class="cn">TRUE</span>,
                SNR_test <span class="op">=</span> <span class="cn">FALSE</span>,
                get_range <span class="op">=</span> <span class="cn">FALSE</span>,
                musicassessr_aws <span class="op">=</span> <span class="cn">FALSE</span>,
                examples <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<p>Remember that the <code>app_name</code> argument should match the name of your folder.</p>
 <ol start="3" style="list-style-type: decimal">
-<li>Before you run this script, make sure that the directory the script runs from is one above your app folder. If your <code>SAA</code> app is in <em>/Users/musicassessr/my_project/my_SAA_app/</em> then make sure that the current directory is <em>/Users/musicassessr/my_project/</em>. You can do this using an <em>.Rproj</em> file in <em>/Users/musicassessr/my_project/</em> or placing <code>setwd('/Users/musicassessr/my_project/')</code> at the beginning of your app file.</li>
+<li>Before you run this app script, make sure that the directory the script runs from is one above your app folder. So, if your <code>SAA</code> <em>app.R</em> file is contained in <em>/Users/musicassessr/my_project/my_SAA_app/</em>, then make sure that the current directory of the app is <em>/Users/musicassessr/my_project/</em>.</li>
 </ol>
-<p>NB. If you run the script from <em>RStudio</em>, for best results, run the script using the shortcut <code>Command + Shift + Enter</code> on Mac (<code>Ctrl + Shift + Enter</code> on Windows).</p>
+<p>You can do this by either a) using an <em>.Rproj</em> file in <em>/Users/musicassessr/my_project/</em> or b) placing <code>setwd('/Users/musicassessr/my_project/')</code> at the beginning of your app file. Option a) is recommended. NB: You can check the current directory by using <code><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd()</a></code>.</p>
 <ol start="4" style="list-style-type: decimal">
-<li>If the above steps were successful, the app should load in a browser and you should no errors and receive feedback after each trial. If not, go to our <a href="">Troubleshooting</a> page or <a href="https://github.com/sebsilas/SAA/issues" class="external-link">raise an issue on Github</a>.</li>
+<li><p>Launch the app from <em>RStudio</em>. To do this, it is recommended to use the shortcut <code>Command + Shift + Enter</code> on Mac (<code>Ctrl + Shift + Enter</code> on Windows).</p></li>
+<li><p>If the above steps were successful, the <code>SAA</code> test should load in your web browser. As you progress through the test, you should receive feedback after each trial. If not, go to our <a href="">Troubleshooting</a> page or <a href="https://github.com/sebsilas/SAA/issues" class="external-link">raise an issue on Github</a>.</p></li>
 </ol>
 </div>
 <div class="section level2">
@@ -147,7 +147,7 @@
 </h2>
 <ul>
 <li><p>The test requires internet connectivity.</p></li>
-<li><p>The <em>SAA</em> runs in your web browser. It is only recommended to run the test in <a href="https://www.google.com/chrome/" class="external-link">Google Chrome</a> or <a href="https://www.opera.com/download" class="external-link">Opera</a>.</p></li>
+<li><p>The <em>SAA</em> runs in your web browser. It is only recommended to run the test in <a href="https://www.google.com/chrome/" class="external-link">Google Chrome</a> or <a href="https://www.opera.com/download" class="external-link">Opera</a>. You will need to set one of these to be your default browser for <em>RStudio</em> to launch the test there (restart <em>RStudio</em> after doing this).</p></li>
 </ul>
 </div>
 <div class="section level2">
