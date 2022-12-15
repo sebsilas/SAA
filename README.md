@@ -54,13 +54,12 @@ SAA_standalone(app_name = "my_SAA_app",
 
 Remember that the `app_name` argument should match the name of your folder.
 
-3. Before you run this app script, make sure that the directory the script runs from is one above your app folder. So, if your `SAA` *app.R* file is contained in */Users/musicassessr/my_project/my_SAA_app/*, then make sure that the current directory of the app is */Users/musicassessr/my_project/*. 
+3. Run the app. You need to make sure the app runs from the app folder. To do this in *RStudio*, use the shortcut `Command + Shift + Enter` on Mac (`Ctrl + Shift + Enter` on Windows).
 
-You can do this by either a) using an *.Rproj* file in */Users/musicassessr/my_project/* or b) placing `setwd('/Users/musicassessr/my_project/')` at the beginning of your app file. Option a) is recommended. NB: You can check the current directory by using `getwd()`.
+You may need to set the app directory manually by placing `setwd('/Users/musicassessr/my_project/my_SAA_app')` at the beginning of your app file. NB: You can check the current directory by using `getwd()`.
 
-4. Launch the app from *RStudio*. To do this, it is recommended to use the shortcut `Command + Shift + Enter` on Mac (`Ctrl + Shift + Enter` on Windows).
 
-4. If the above steps were successful, the `SAA` test should load in your web browser. As you progress through the test, you should receive feedback after each trial. If not, go to our [Troubleshooting]() page or [raise an issue on Github](https://github.com/sebsilas/SAA/issues).
+4. If the above steps were successful, the `SAA` test should load in your web browser, and as you progress through the test, you should receive feedback after each trial. If not, go to our [Troubleshooting]() page or [raise an issue on Github](https://github.com/sebsilas/SAA/issues).
 
 ## Usage notes
 

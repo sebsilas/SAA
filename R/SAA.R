@@ -154,42 +154,43 @@ SAA_standalone <- function(app_name,
 
 #' Deploy the SAA
 #'
-#' @param app_name
-#' @param num_items
-#' @param item_bank
-#' @param demographics
-#' @param demo
-#' @param feedback
-#' @param admin_password
-#' @param SNR_test
-#' @param get_range
-#' @param absolute_url
-#' @param examples
-#' @param final_results
-#' @param musicassessr_aws
-#' @param store_results_in_db
-#' @param test_username
-#' @param gold_msi
-#' @param with_final_page
-#' @param melody_length
-#' @param melody_sound
-#' @param adjust_range
-#' @param test_name
-#' @param show_socials
-#' @param headphones_test
-#' @param get_user_info
-#' @param microphone_test
-#' @param allow_repeat_SNR_tests
-#' @param append_trial_block_before
-#' @param append_trial_block_after
-#' @param stop_recording_after
-#' @param max_goes
-#' @param max_goes_forced
+#' @param app_name Name of app.
+#' @param num_items The number of items as a list.
+#' @param item_bank The item bank (created with itembankr) to deployed with the test.
+#' @param demographics Deploy demographic form?
+#' @param demo Is demo?
+#' @param feedback Give feedback after trials?
+#' @param admin_password psychTestR admin password.
+#' @param SNR_test Deploy signal-to-noise ratio test?
+#' @param get_range Deploy a test to get the users range at test time and present stimuli accordingly?
+#' @param absolute_url If using online, absolute URL?
+#' @param examples No of examples.
+#' @param final_results Display final results?
+#' @param musicassessr_aws Is this being deployed on AWS via the musicassessr setup?
+#' @param store_results_in_db Store results in a database?
+#' @param test_username Is there a username for the user? This is different from a p_id.
+#' @param gold_msi Deploy Gold-MSI form?
+#' @param with_final_page Should there be a final page? FALSE if there will be more pages in the timeline.
+#' @param melody_length What melody lengths should the test be constrained to?
+#' @param melody_sound Sound of melody? e.g, piano.
+#' @param adjust_range Should the range of the user, recorded at test time, be adjusted based on heuristics?
+#' @param test_name Custom name of the test.
+#' @param show_socials Should social media sharing options be shown at the end?
+#' @param headphones_test Should there be a headphone test?
+#' @param get_user_info Grab user info via the browser?
+#' @param microphone_test Deploy a microphone test?
+#' @param allow_repeat_SNR_tests Logical. TRUE if participant can fail the SNR test threshold and try again.
+#' @param append_trial_block_before A list of pages to go before the test.
+#' @param append_trial_block_after A list of pages to go after the test.
+#' @param stop_recording_after Stop recording after a certain amount of time.
+#' @param max_goes How many goes can the user have per melody?
+#' @param max_goes_forced Is this forced or optional?
 #' @param long_tone_trials_as_screening
-#' @param long_tone_trials_as_screening_failure_page
-#' @param success_on_completion_page
-#' @param concise_wording
-#' @param skip_setup
+#' @param long_tone_trials_as_screening Should long tone trials be used as a screening mechanism?
+#' @param long_tone_trials_as_screening_failure_page Where should users be directed to if they fail the long tone screening?
+#' @param success_on_completion_page Where should users be directed to when they complete successfully?
+#' @param concise_wording TRUE for more detailed (but longer) instructions.
+#' @param skip_setup TRUE to skip setup steps.
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
 #'
 #' @return

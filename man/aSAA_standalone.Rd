@@ -2,9 +2,10 @@
 % Please edit documentation in R/a-SAA.R
 \name{aSAA_standalone}
 \alias{aSAA_standalone}
-\title{Deploy aSAA as standalone test}
+\title{Deploy adaptive SAA (aSAA) as standalone test}
 \usage{
 aSAA_standalone(
+  app_name,
   num_items = list(long_tones = 6L, arrhythmic = 15L, rhythmic = 10L),
   demographics = TRUE,
   demo = FALSE,
@@ -39,11 +40,12 @@ aSAA_standalone(
   success_on_completion_page = character(),
   concise_wording = TRUE,
   skip_setup = FALSE,
-  app_name,
   ...
 )
 }
 \arguments{
+\item{app_name}{Name of app.}
+
 \item{num_items}{The number of items as a list.}
 
 \item{demographics}{Deploy demographic form?}
@@ -112,13 +114,11 @@ aSAA_standalone(
 
 \item{skip_setup}{TRUE to skip setup steps.}
 
-\item{app_name}{Name of app.}
-
 \item{...}{}
 }
 \value{
 
 }
 \description{
-Deploy aSAA as standalone test
+Deploy adaptive SAA (aSAA) as standalone test
 }

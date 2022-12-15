@@ -70,6 +70,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">SAA_standalone</span><span class="op">(</span>
+  <span class="va">app_name</span>,
   num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">6L</span>, arrhythmic <span class="op">=</span> <span class="fl">10L</span>, rhythmic <span class="op">=</span> <span class="fl">10L</span><span class="op">)</span>,
   item_bank <span class="op">=</span> <span class="fu">Berkowitz</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/Berkowitz/man/Berkowitz.html" class="external-link">Berkowitz</a></span>,
   demographics <span class="op">=</span> <span class="cn">TRUE</span>,
@@ -105,7 +106,6 @@
   success_on_completion_page <span class="op">=</span> <span class="st">"https://adaptiveeartraining.com"</span>,
   concise_wording <span class="op">=</span> <span class="cn">TRUE</span>,
   skip_setup <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">app_name</span>,
   full_screen <span class="op">=</span> <span class="cn">FALSE</span>,
   validate_user_entry_into_test <span class="op">=</span> <span class="cn">FALSE</span>,
   additional_scoring_measures <span class="op">=</span> <span class="cn">NULL</span>,
@@ -115,7 +115,11 @@
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>num_items</dt>
+    <dl><dt>app_name</dt>
+<dd><p>Name of app.</p></dd>
+
+
+<dt>num_items</dt>
 <dd><p>The number of items as a list.</p></dd>
 
 
@@ -253,10 +257,6 @@
 
 <dt>skip_setup</dt>
 <dd><p>TRUE to skip setup steps.</p></dd>
-
-
-<dt>app_name</dt>
-<dd><p>Name of app.</p></dd>
 
 
 <dt>full_screen</dt>

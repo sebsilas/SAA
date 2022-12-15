@@ -5,6 +5,7 @@
 \title{Deploy SAA as standalone test}
 \usage{
 SAA_standalone(
+  app_name,
   num_items = list(long_tones = 6L, arrhythmic = 10L, rhythmic = 10L),
   item_bank = Berkowitz::Berkowitz,
   demographics = TRUE,
@@ -40,7 +41,6 @@ SAA_standalone(
   success_on_completion_page = "https://adaptiveeartraining.com",
   concise_wording = TRUE,
   skip_setup = FALSE,
-  app_name,
   full_screen = FALSE,
   validate_user_entry_into_test = FALSE,
   additional_scoring_measures = NULL,
@@ -48,6 +48,8 @@ SAA_standalone(
 )
 }
 \arguments{
+\item{app_name}{Name of app.}
+
 \item{num_items}{The number of items as a list.}
 
 \item{item_bank}{The item bank (created with itembankr) to deployed with the test.}
@@ -117,8 +119,6 @@ SAA_standalone(
 \item{concise_wording}{TRUE for more detailed (but longer) instructions.}
 
 \item{skip_setup}{TRUE to skip setup steps.}
-
-\item{app_name}{Name of app.}
 
 \item{full_screen}{Should app be full screen?}
 

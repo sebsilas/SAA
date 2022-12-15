@@ -2,9 +2,10 @@
 % Please edit documentation in R/a-SAA.R
 \name{aSAA}
 \alias{aSAA}
-\title{Deploy the aSAA}
+\title{Deploy the adaptive SAA (aSAA)}
 \usage{
 aSAA(
+  app_name,
   num_items = list(long_tones = 6L, arrhythmic = 10L, rhythmic = 10L),
   demographics = TRUE,
   demo = FALSE,
@@ -38,16 +39,15 @@ aSAA(
   long_tone_trials_as_screening_failure_page = "http://www.google.com",
   success_on_completion_page = character(),
   concise_wording = TRUE,
-  skip_setup = FALSE,
-  app_name
+  skip_setup = FALSE
 )
 }
 \arguments{
-\item{app_name}{}
+\item{skip_setup}{}
 }
 \value{
 
 }
 \description{
-Deploy the aSAA
+Deploy the adaptive SAA (aSAA)
 }

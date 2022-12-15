@@ -70,6 +70,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">SAA</span><span class="op">(</span>
+  <span class="va">app_name</span>,
   num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">6L</span>, arrhythmic <span class="op">=</span> <span class="fl">10L</span>, rhythmic <span class="op">=</span> <span class="fl">10L</span><span class="op">)</span>,
   item_bank <span class="op">=</span> <span class="fu">Berkowitz</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/Berkowitz/man/Berkowitz.html" class="external-link">Berkowitz</a></span>,
   demographics <span class="op">=</span> <span class="cn">TRUE</span>,
@@ -105,14 +106,157 @@
   success_on_completion_page <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
   concise_wording <span class="op">=</span> <span class="cn">TRUE</span>,
   skip_setup <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">app_name</span>,
   additional_scoring_measures <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>additional_scoring_measures</dt>
+    <dl><dt>app_name</dt>
+<dd><p>Name of app.</p></dd>
+
+
+<dt>num_items</dt>
+<dd><p>The number of items as a list.</p></dd>
+
+
+<dt>item_bank</dt>
+<dd><p>The item bank (created with itembankr) to deployed with the test.</p></dd>
+
+
+<dt>demographics</dt>
+<dd><p>Deploy demographic form?</p></dd>
+
+
+<dt>demo</dt>
+<dd><p>Is demo?</p></dd>
+
+
+<dt>feedback</dt>
+<dd><p>Give feedback after trials?</p></dd>
+
+
+<dt>admin_password</dt>
+<dd><p>psychTestR admin password.</p></dd>
+
+
+<dt>SNR_test</dt>
+<dd><p>Deploy signal-to-noise ratio test?</p></dd>
+
+
+<dt>get_range</dt>
+<dd><p>Deploy a test to get the users range at test time and present stimuli accordingly?</p></dd>
+
+
+<dt>absolute_url</dt>
+<dd><p>If using online, absolute URL?</p></dd>
+
+
+<dt>examples</dt>
+<dd><p>No of examples.</p></dd>
+
+
+<dt>final_results</dt>
+<dd><p>Display final results?</p></dd>
+
+
+<dt>musicassessr_aws</dt>
+<dd><p>Is this being deployed on AWS via the musicassessr setup?</p></dd>
+
+
+<dt>store_results_in_db</dt>
+<dd><p>Store results in a database?</p></dd>
+
+
+<dt>test_username</dt>
+<dd><p>Is there a username for the user? This is different from a p_id.</p></dd>
+
+
+<dt>gold_msi</dt>
+<dd><p>Deploy Gold-MSI form?</p></dd>
+
+
+<dt>with_final_page</dt>
+<dd><p>Should there be a final page? FALSE if there will be more pages in the timeline.</p></dd>
+
+
+<dt>melody_length</dt>
+<dd><p>What melody lengths should the test be constrained to?</p></dd>
+
+
+<dt>melody_sound</dt>
+<dd><p>Sound of melody? e.g, piano.</p></dd>
+
+
+<dt>adjust_range</dt>
+<dd><p>Should the range of the user, recorded at test time, be adjusted based on heuristics?</p></dd>
+
+
+<dt>test_name</dt>
+<dd><p>Custom name of the test.</p></dd>
+
+
+<dt>show_socials</dt>
+<dd><p>Should social media sharing options be shown at the end?</p></dd>
+
+
+<dt>headphones_test</dt>
+<dd><p>Should there be a headphone test?</p></dd>
+
+
+<dt>get_user_info</dt>
+<dd><p>Grab user info via the browser?</p></dd>
+
+
+<dt>microphone_test</dt>
+<dd><p>Deploy a microphone test?</p></dd>
+
+
+<dt>allow_repeat_SNR_tests</dt>
+<dd><p>Logical. TRUE if participant can fail the SNR test threshold and try again.</p></dd>
+
+
+<dt>append_trial_block_before</dt>
+<dd><p>A list of pages to go before the test.</p></dd>
+
+
+<dt>append_trial_block_after</dt>
+<dd><p>A list of pages to go after the test.</p></dd>
+
+
+<dt>stop_recording_after</dt>
+<dd><p>Stop recording after a certain amount of time.</p></dd>
+
+
+<dt>max_goes</dt>
+<dd><p>How many goes can the user have per melody?</p></dd>
+
+
+<dt>max_goes_forced</dt>
+<dd><p>Is this forced or optional?</p></dd>
+
+
+<dt>long_tone_trials_as_screening</dt>
+<dd><p>Should long tone trials be used as a screening mechanism?</p></dd>
+
+
+<dt>long_tone_trials_as_screening_failure_page</dt>
+<dd><p>Where should users be directed to if they fail the long tone screening?</p></dd>
+
+
+<dt>success_on_completion_page</dt>
+<dd><p>Where should users be directed to when they complete successfully?</p></dd>
+
+
+<dt>concise_wording</dt>
+<dd><p>TRUE for more detailed (but longer) instructions.</p></dd>
+
+
+<dt>skip_setup</dt>
+<dd><p>TRUE to skip setup steps.</p></dd>
+
+
+<dt>additional_scoring_measures</dt>
 <dd><p>A function or list of functions with additional measures for scoring pYIN data.</p></dd>
 
 </dl></div>
