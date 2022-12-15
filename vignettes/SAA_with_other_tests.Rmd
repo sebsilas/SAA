@@ -3,7 +3,7 @@
 title: "Running an experiment with the SAA alongside other ability tests"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Running an experiment with the SAA alongside other ability tests"}
+  %\VignetteIndexEntry{Running an experiment with the SAA alongside other ability tests}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

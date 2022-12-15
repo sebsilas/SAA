@@ -3,7 +3,7 @@
 title: "Online testing (including via Amazon Web Services)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Online testing (including via Amazon Web Services)"}
+  %\VignetteIndexEntry{Online testing (including via Amazon Web Services)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

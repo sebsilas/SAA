@@ -3,7 +3,7 @@
 title: "Creating custom pages to collect singing data."
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Creating custom pages to collect singing data."}
+  %\VignetteIndexEntry{Creating custom pages to collect singing data.}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

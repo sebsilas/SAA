@@ -3,7 +3,7 @@
 title: "Scoring singing data with additional scoring measures"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Scoring singing data with additional scoring measures"}
+  %\VignetteIndexEntry{Scoring singing data with additional scoring measures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
