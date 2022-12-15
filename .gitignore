@@ -6,3 +6,6 @@
 /output
 docs
 .Renviron
+node
+www
+tmp
