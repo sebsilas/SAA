@@ -8,6 +8,4 @@
 ^pkgdown$
 ^LICENSE\.md$
 .Renviron
-node
-tmp
 

@@ -278,7 +278,6 @@ SAA <- function(app_name,
     is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures)
     )
 
-
   shiny::addResourcePath(
     prefix = "custom-assets", # custom prefix that will be used to reference your directory
     directoryPath = system.file("www", package = "SAA") # path to resource in your package
