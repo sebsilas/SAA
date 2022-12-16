@@ -134,12 +134,11 @@
                examples <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p>Remember that the <code>app_name</code> argument should match the name of your folder.</p>
 <ol start="3" style="list-style-type: decimal">
-<li>Run the app. You need to make sure the app runs from the app folder. To do this in <em>RStudio</em>, use the shortcut <code>Command + Shift + Enter</code> on Mac (<code>Ctrl + Shift + Enter</code> on Windows).</li>
+<li><p>Make sure that your current directory is the app folder you created. You can check the current directory by using <code><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd()</a></code>. You may need to set the app directory by placing <code>setwd('/Users/musicassessr/my_project/my_SAA_app')</code> at the beginning of your app file.</p></li>
+<li><p>Run the app. To do this in <em>RStudio</em>, use the shortcut <code>Command + Shift + Enter</code> on Mac (<code>Ctrl + Shift + Enter</code> on Windows).</p></li>
+<li><p>If the above steps were successful, the <code>SAA</code> test should load in your web browser, and as you progress through the test, you should receive feedback after each trial. Recorded audio should appear in the <em>/app_name/www/audio/</em> directory.</p></li>
 </ol>
-<p>You may need to set the app directory manually by placing <code>setwd('/Users/musicassessr/my_project/my_SAA_app')</code> at the beginning of your app file. NB: You can check the current directory by using <code><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd()</a></code>.</p>
-<ol start="4" style="list-style-type: decimal">
-<li>If the above steps were successful, the <code>SAA</code> test should load in your web browser, and as you progress through the test, you should receive feedback after each trial. If not, go to our <a href="">Troubleshooting</a> page or <a href="https://github.com/sebsilas/SAA/issues" class="external-link">raise an issue on Github</a>.</li>
-</ol>
+<p>If not, go to our <a href="">Troubleshooting</a> page or <a href="https://github.com/sebsilas/SAA/issues" class="external-link">raise an issue on Github</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="usage-notes">Usage notes<a class="anchor" aria-label="anchor" href="#usage-notes"></a>
