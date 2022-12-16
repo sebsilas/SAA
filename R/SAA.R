@@ -237,6 +237,7 @@ SAA <- function(app_name,
                 skip_setup = FALSE,
                 additional_scoring_measures = NULL) {
 
+
   stopifnot(
     assertthat::is.string(app_name),
     is.list(num_items),
@@ -277,11 +278,21 @@ SAA <- function(app_name,
     is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures)
     )
 
+
+  shiny::addResourcePath(
+    prefix = "custom-assets", # custom prefix that will be used to reference your directory
+    directoryPath = system.file("www", package = "SAA") # path to resource in your package
+  )
+
   if(long_tone_trials_as_screening) {
     stop("long_tone_trials_as_screening currently cannot be used, as the functionality is subject to reanalysis.")
   }
 
   if(demo) warning('Running SAA in demo mode!')
+
+  # Instantiate the enclosure/function factory:
+
+  pyin_with_additional <- musicassessr::get_answer_pyin_melodic_production_additional_measures(type = "both", melconv = FALSE, additional_scoring_measures = additional_scoring_measures)
 
 
   timeline <- psychTestR::join(
@@ -327,7 +338,8 @@ SAA <- function(app_name,
                                                                   page_title = "Sing The Melody",
                                                                   instruction_text = "Now you will hear some melodies. Please try and sing the melodies.",
                                                                   max_goes = max_goes,
-                                                                  max_goes_forced = max_goes_forced),
+                                                                  max_goes_forced = max_goes_forced,
+                                                                  get_answer = pyin_with_additional),
 
                            # rhythmic
                            musicassessr::rhythmic_melody_trials(item_bank = itembankr::subset_item_bank(item_bank("phrases"), melody_length),
@@ -339,7 +351,8 @@ SAA <- function(app_name,
                                                                 page_title = "Sing This Melody Plus Rhythm",
                                                                 instruction_text = "Now you will hear melodies with rhythms. Please try and sing the melodies with the correct rhythm.",
                                                                 max_goes = max_goes,
-                                                                max_goes_forced = max_goes_forced),
+                                                                max_goes_forced = max_goes_forced,
+                                                                get_answer = pyin_with_additional),
 
                            # arbitrary and optional trial block to go after
                            append_trial_block_after,
@@ -467,6 +480,17 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
       unique()
 
     long_note_pca_scores <- musicassessr::get_long_note_pcas(long_note_scores)
+
+    } else {
+
+    long_note_scores <- tibble::tibble(
+      long_note_accuracy = NA, long_note_dtw_distance = NA, long_note_autocorrelation_mean = NA,
+      long_note_run_test = NA, long_note_no_cpts = NA, long_note_beginning_of_second_cpt = NA
+      )
+
+    long_note_pca_scores <- tibble::tibble(pca_long_note_randomness = NA,
+                                       pca_long_note_accuracy = NA,
+                                       pca_long_note_scoop = NA)
   }
 
   if(num_items_arrhythmic > 0) {
@@ -500,6 +524,8 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
         arrhythmic_melody_score <- 0
       }
 
+  } else {
+    arrhythmic_melody_score <- 0
   }
 
   if(num_items_rhythmic > 0) {
@@ -532,6 +558,8 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
       rhythmic_melody_score <- 0
     }
 
+  } else {
+    rhythmic_melody_score <- 0
   }
 
 
@@ -667,19 +695,6 @@ final_results_saa <- function(test_name,
 
     musicassessr::share_score_page(test_name, url, hashtag, socials, leaderboard_name = 'SAA_leaderboard.rda')
   )
-}
-
-
-
-.onLoad <- function(...) {
-  shiny::addResourcePath(
-    prefix = "custom-assets", # custom prefix that will be used to reference your directory
-    directoryPath = system.file("www", package = "SAA") # path to resource in your package
-  )
-  # shiny::addResourcePath(
-  #   prefix = "item_banks", # custom prefix that will be used to reference your directory
-  #   directoryPath = system.file("item_banks", package = "itembankr") # path to resource in your package
-  # )
 }
 
 
