@@ -1,4 +1,4 @@
-^MST\.Rproj$
+^SAA\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
 ^output$
@@ -9,6 +9,5 @@
 ^LICENSE\.md$
 .Renviron
 node
-www
 tmp
 
