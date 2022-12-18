@@ -27,7 +27,7 @@ Depends:
     musicassessr (>= 0.0.0.9000),
     Berkowitz
 Remotes: 
-    sebsilas/musicassessr,
+    sebsilas/musicassessr@master,
     sebsilas/psychTestR,
     sebsilas/Berkowitz,
     sebsilas/psychTestRCATME
