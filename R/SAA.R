@@ -518,13 +518,13 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
       arrhythmic_melody_score <- arrhythmic_melody_summary$SAA_Ability_Arrhythmic
 
     } else if(all(arrhythmic_melodies$error)) {
-      arrhythmic_melody_score <- 0
+      arrhythmic_melody_score <- NA
     } else {
-        arrhythmic_melody_score <- 0
+        arrhythmic_melody_score <- NA
       }
 
   } else {
-    arrhythmic_melody_score <- 0
+    arrhythmic_melody_score <- NA
   }
 
   if(num_items_rhythmic > 0) {
@@ -552,13 +552,13 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
       rhythmic_melody_score <- rhythmic_melody_summary$SAA_Ability_Rhythmic
 
     } else if(all(rhythmic_melodies$error)) {
-        rhythmic_melody_score <- 0
+        rhythmic_melody_score <- NA
     } else {
-      rhythmic_melody_score <- 0
+      rhythmic_melody_score <- NA
     }
 
   } else {
-    rhythmic_melody_score <- 0
+    rhythmic_melody_score <- NA
   }
 
 
@@ -607,9 +607,9 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
             # https://stackoverflow.com/questions/27534968/dimension-reduction-using-psychprincipal-does-not-work-for-smaller-data
     ) %>% as.numeric()
 
-  list("Long_Note" = if(is.null(long_note_scores)) tibble::tibble(pca_long_note_randomness = 0, pca_long_note_accuracy = 0, pca_long_note_scoop = 0) else long_note_pca_scores,
-       "SAA_Ability_Arrhythmic" = if(is.null(arrhythmic_melody_summary)) 0 else arrhythmic_melody_score,
-       "SAA_Ability_Rhythmic" = if(is.null(rhythmic_melody_summary)) 0 else rhythmic_melody_score,
+  list("Long_Note" = if(is.null(long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else long_note_pca_scores,
+       "SAA_Ability_Arrhythmic" = if(is.null(arrhythmic_melody_summary)) NA else arrhythmic_melody_score,
+       "SAA_Ability_Rhythmic" = if(is.null(rhythmic_melody_summary)) NA else rhythmic_melody_score,
        "melody_note_precision" = melody_note_precision,
        "melody_interval_precision" = melody_interval_precision,
        "pca_melodic_singing_accuracy" = pca_melodic_singing_accuracy)
@@ -622,6 +622,8 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 # t <- present_scores_saa(r, 2, 2, 2)
 
 
+# r <- readRDS("/Users/sebsilas/SAA/test_apps/additional_scoring_measures/output/results/id=2&p_id=8c0fa06e5360dfb7b334129665375c51e9a88d3331bfdc9c6428e15cec1c3f32&save_id=5&pilot=false&complete=true.rds")
+# t <- present_scores_saa(r, 2, 2, 2)
 
 
 
@@ -640,8 +642,15 @@ final_results_saa <- function(test_name,
 
       processed_results <- present_scores_saa(res, num_items_long_tone, num_items_arrhythmic, num_items_rhythmic)
 
-      Final_SAA_Score <- .33 * get_arrhythmic_score_percentile(processed_results$SAA_Ability_Arrhythmic) + .33 * get_rhythmic_score_percentile(processed_results$SAA_Ability_Rhythmic) + .33 * get_long_note_score_percentile(.33 * processed_results$Long_Note$pca_long_note_randomness + .33 * processed_results$Long_Note$pca_long_note_scoop + .33 * processed_results$Long_Note$pca_long_note_accuracy)
-      Final_SAA_Score <- round(Final_SAA_Score, 2)
+
+      # Convert scores to percentiles
+      long_note_percentile <- get_long_note_score_percentile(.33 * processed_results$Long_Note$pca_long_note_randomness + .33 * processed_results$Long_Note$pca_long_note_scoop + .33 * processed_results$Long_Note$pca_long_note_accuracy)
+      arrhythmic_percentile <- get_arrhythmic_score_percentile(processed_results$SAA_Ability_Arrhythmic)
+      rhythmic_percentile <- get_rhythmic_score_percentile(processed_results$SAA_Ability_Rhythmic)
+
+      # Calculate the score
+      Final_SAA_Score <- weight_final_SAA_score(num_items_long_tone, num_items_arrhythmic, num_items_rhythmic,
+                                                long_note_percentile, arrhythmic_percentile, rhythmic_percentile)
 
       psychTestR::set_local("final_score", Final_SAA_Score, state) # leave this in; it gets used by musicassessr
 
@@ -692,12 +701,58 @@ final_results_saa <- function(test_name,
 
     }),
 
-    musicassessr::share_score_page(test_name, url, hashtag, socials, leaderboard_name = 'SAA_leaderboard.rda')
+    musicassessr::share_score_page(test_name,
+                                   url,
+                                   hashtag,
+                                   socials,
+                                   leaderboard_name = 'SAA_leaderboard.rda',
+                                   distribution_mean = Final_SAA_Score_m,
+                                   distribution_sd = Final_SAA_Score_sd)
   )
 }
 
 
+weight_final_SAA_score <- function(num_items_long_tone, num_items_arrhythmic, num_items_rhythmic,
+                                   long_note_percentile, arrhythmic_percentile, rhythmic_percentile) {
 
+  # If NA, change to 0th percentile
+  long_note_percentile <- NA_to_0(long_note_percentile)
+  arrhythmic_percentile <- NA_to_0(arrhythmic_percentile)
+  rhythmic_percentile <- NA_to_0(rhythmic_percentile)
+
+  # But make sure participants aren't unnecessarily penalised, by only using the scores that were actually included.
+
+  if(num_items_long_tone > 0 & num_items_arrhythmic > 0 & num_items_rhythmic > 0) {
+    Final_SAA_Score <- .33*arrhythmic_percentile + .33*rhythmic_percentile + .33*long_note_percentile
+  } else if(num_items_long_tone == 0 & num_items_arrhythmic > 0 & num_items_rhythmic > 0) {
+    Final_SAA_Score <- .50*arrhythmic_percentile + .50*rhythmic_percentile
+  } else if(num_items_long_tone > 0 & num_items_arrhythmic == 0 & num_items_rhythmic > 0) {
+    Final_SAA_Score <- .50*long_note_percentile + .50*rhythmic_percentile
+  } else if(num_items_long_tone > 0 & num_items_arrhythmic > 0 & num_items_rhythmic == 0) {
+    Final_SAA_Score <- .50*long_note_percentile + .50*arrhythmic_percentile
+  } else if(num_items_long_tone > 0 & num_items_arrhythmic == 0 & num_items_rhythmic == 0) {
+    Final_SAA_Score <- long_note_percentile
+  } else if(num_items_long_tone == 0 & num_items_arrhythmic > 0 & num_items_rhythmic == 0) {
+    Final_SAA_Score <- arrhythmic_percentile
+  } else if(num_items_long_tone == 0 & num_items_arrhythmic == 0 & num_items_rhythmic > 0) {
+    Final_SAA_Score <- rhythmic_percentile
+  } else {
+    stop('Unrecognised score structure.')
+  }
+
+
+
+  round(Final_SAA_Score, 2)
+}
+
+NA_to_0 <- function(val) {
+  if(is.na(val)) 0 else val
+}
+
+
+FALSE_to_0 <- function(val) {
+  if(val == FALSE) 0 else val
+}
 
 # SAA_standalone(get_range = FALSE, SNR_test = FALSE,
 #                num_items = list("long_tones" = 0L,
