@@ -473,6 +473,14 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
   if(num_items_long_note > 0) {
     # long notes
     long_note_scores <- res$SAA.long_tone_trials %>%
+      purrr::map(function(l) {
+        if(length(l$failed_tests) > 1) {
+          l$failed_tests <- paste0(l$failed_tests, collapse = ",")
+          l
+        } else {
+          l
+        }
+      }) %>%
       dplyr::bind_rows() %>%
       dplyr::select(long_note_accuracy, long_note_dtw_distance, long_note_autocorrelation_mean,
                     long_note_run_test, long_note_no_cpts, long_note_beginning_of_second_cpt) %>%
@@ -482,14 +490,13 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
     } else {
 
-    long_note_scores <- tibble::tibble(
-      long_note_accuracy = NA, long_note_dtw_distance = NA, long_note_autocorrelation_mean = NA,
-      long_note_run_test = NA, long_note_no_cpts = NA, long_note_beginning_of_second_cpt = NA
-      )
+      long_note_scores <- tibble::tibble(
+        long_note_accuracy = NA, long_note_dtw_distance = NA, long_note_autocorrelation_mean = NA,
+        long_note_run_test = NA, long_note_no_cpts = NA, long_note_beginning_of_second_cpt = NA)
 
-    long_note_pca_scores <- tibble::tibble(pca_long_note_randomness = NA,
-                                       pca_long_note_accuracy = NA,
-                                       pca_long_note_scoop = NA)
+      long_note_pca_scores <- tibble::tibble(pca_long_note_randomness = NA,
+                                         pca_long_note_accuracy = NA,
+                                         pca_long_note_scoop = NA)
   }
 
   if(num_items_arrhythmic > 0) {
@@ -504,7 +511,7 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
       dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
       dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
 
-    if(is.null(arrhythmic_melodies$error)) {
+    if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(arrhythmic_melodies$error))) {
 
       arrhythmic_melody_model_prediction <- arrhythmic_melody_tmp %>%
         dplyr::select(-proportion_of_correct_note_events) %>%
@@ -517,14 +524,9 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
       arrhythmic_melody_score <- arrhythmic_melody_summary$SAA_Ability_Arrhythmic
 
-    } else if(all(arrhythmic_melodies$error)) {
-      arrhythmic_melody_score <- NA
     } else {
-        arrhythmic_melody_score <- NA
-      }
-
-  } else {
-    arrhythmic_melody_score <- NA
+      arrhythmic_melody_score <- NA
+    }
   }
 
   if(num_items_rhythmic > 0) {
@@ -538,7 +540,7 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
       dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
       dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
 
-    if(is.null(rhythmic_melodies$error)) {
+    if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(rhythmic_melodies$error))) {
 
       rhythmic_melody_model_prediction <- rhythmic_melody_tmp %>%
         dplyr::select(-proportion_of_correct_note_events) %>%
@@ -551,14 +553,9 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
       rhythmic_melody_score <- rhythmic_melody_summary$SAA_Ability_Rhythmic
 
-    } else if(all(rhythmic_melodies$error)) {
-        rhythmic_melody_score <- NA
     } else {
       rhythmic_melody_score <- NA
     }
-
-  } else {
-    rhythmic_melody_score <- NA
   }
 
 
@@ -618,12 +615,10 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
 
 #
-# r <- readRDS("/Users/sebsilas/SAA/test_apps/short_test/output/results/id=25&p_id=8e1de37bc52ffbad49ed12a9e5b405f46c775877b7e2dcf768d4f41f47e7e8cd&save_id=6&pilot=false&complete=true.rds")
+# r <- readRDS("/Users/sebsilas/SAA/test_apps/example/output/results/id=2&p_id=364814f4daf3585347c3b169c29e29ae128e4da159870984351b5b0948c862b7&save_id=6&pilot=false&complete=true.rds")
 # t <- present_scores_saa(r, 2, 2, 2)
 
 
-# r <- readRDS("/Users/sebsilas/SAA/test_apps/additional_scoring_measures/output/results/id=2&p_id=8c0fa06e5360dfb7b334129665375c51e9a88d3331bfdc9c6428e15cec1c3f32&save_id=5&pilot=false&complete=true.rds")
-# t <- present_scores_saa(r, 2, 2, 2)
 
 
 
