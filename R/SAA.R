@@ -527,6 +527,8 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
     } else {
       arrhythmic_melody_score <- NA
     }
+  } else {
+    arrhythmic_melodies <- NA
   }
 
   if(num_items_rhythmic > 0) {
@@ -556,6 +558,8 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
     } else {
       rhythmic_melody_score <- NA
     }
+  } else {
+    rhythmic_melodies <- NA
   }
 
 
@@ -565,6 +569,7 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
   arrhythmic_melodies <- arrhythmic_melodies %>% dplyr::select(shared_names)
   rhythmic_melodies <- rhythmic_melodies %>% dplyr::select(shared_names)
   all_melodies <- rbind(arrhythmic_melodies, rhythmic_melodies)
+
 
   melody_precision_vars <- all_melodies %>%
     dplyr::select(pyin_pitch_track.freq, stimuli,
@@ -576,9 +581,11 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
                   interval_cents = pyin_pitch_track.interval_cents) %>%
     dplyr::mutate(freq = as.numeric(freq),
                   nearest_stimuli_note = as.numeric(nearest_stimuli_note),
-                  note = dplyr::case_when(is.na(freq) ~ NA, TRUE ~ round(hrep::freq_to_midi(freq))),
                   interval = as.numeric(interval),
-                  interval_cents = as.numeric(interval_cents))
+                  interval_cents = as.numeric(interval_cents)) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(note = if(is.na(freq)) NA else round(hrep::freq_to_midi(freq))) %>%
+    dplyr::ungroup()
 
     melody_note_precision <- melody_precision_vars %>%
       musicassessr::score_melody_note_precision()
