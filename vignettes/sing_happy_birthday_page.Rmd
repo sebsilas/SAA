@@ -8,37 +8,68 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```r
-library(musicassessr)
-library(SAA)
+As mentioned in our paper, the `SAA` is built in a modular way, meaning functionality can be used from its dependent packages, like `musicassessr`.
 
+`musicassessr` has a special page type called `record_audio_page`, which does just that: allows you to create a page which records and stores audio data. 
+
+We're going to harness this and make our own function which returns a "Sing Happy Birthday" page. This is really just a `record_audio_page` with some custom text:
+
+```{r message = FALSE, warning = FALSE}
+
+library(musicassessr)
 
 # Create a "Sing Happy Birthday Page"
 
 sing_hbd <- function() {
   record_audio_page(label = "sing_hbd",
                     page_text = "Please sing happy birthday!",
-                    get_answer = get_answer_simple_pyin_summary,
+                    get_answer = musicassessr::get_answer_simple_pyin_summary,
                     auto_next_page = TRUE)
 }
 
+```
+
+Note that, for the `get_answer` function, we use a function which summarises what the user sung with some descriptive statistics. Type the following in your *R* console for more information:
+
+```{r}
+
+?musicassessr::get_answer_simple_pyin_summary
+
+```
+
+
+We can now include our new page, or a list of pages, if we wanted, by using the `append_trial_block_before` or `append_trial_block_after` arguments to the `SAA` functions.
+
+1. Launch the `SAA` with the new Happy Birthday Page at the beginning of the protocol:
+
+
+```{r eval = FALSE}
+
+library(SAA)
+
+SAA_standalone(app_name = "sing_hbd", 
+               append_trial_block_before = sing_hbd())
+
+```
+
+
+2. Or the end of the protocol:
 
 
 
-# Launch the SAA with the new Happy Birthday page at the beginning of the protocol
+```{r eval = FALSE}
 
-SAA_standalone(append_trial_block_before = sing_hbd())
+SAA_standalone(app_name = "sing_hbd",
+               append_trial_block_after = sing_hbd())
 
+```
 
-
-# Or the end
-
-SAA_standalone(append_trial_block_after = sing_hbd())
-
+3. Or even in your own custom timeline!
 
 
+```{r eval = FALSE}
 
-# Or even in your own custom timeline!
+library(psychTestR)
 
 password <- "demo"
 
@@ -60,5 +91,14 @@ make_test(
   
 ```
 
-# NB. musicassessr::sing_happy_birthday_page
-# NB musicassessr::get_answer_simple_pyin_summary
+
+
+By the way, a "Sing Happy Birthday" page is already packaged as part of `musicassessr`. Type the following into your *R* console for more information:
+
+```{r}
+
+?musicassessr::sing_happy_birthday_page
+
+```
+
+

@@ -56,7 +56,7 @@
       <a href="../articles/additional_scoring_measures.html">Scoring singing data with additional scoring measures</a>
     </li>
     <li>
-      <a href="../articles/online_testing_aws.html">Online testing (including via Amazon Web Services)</a>
+      <a href="../articles/online_testing_aws.html">Online testing (via Amazon Web Services)</a>
     </li>
     <li>
       <a href="../articles/sing_happy_birthday_page.html">Creating custom pages to collect singing data.</a>
@@ -95,9 +95,17 @@ other ability tests</h1>
 
     
     
+<p><a href="https://pmcharrison.github.io/psychTestR/articles/b-introduction" class="external-link"><code>psychTestR</code></a>
+enables psychologists to chain together multiple psychology tests and
+questionnaires in one battery, allowing for data from several tests to
+be stored together in one place.</p>
+<p>This vignette will show a quick example of how you can include
+several <code>psychTestR</code> tests together alongside the
+<code>SAA</code>.</p>
+<p>First we install some tests. These tests were the ones used in
+Experiment 1 of our paper.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
     <span class="st">'pmcharrison/piat'</span>,
     <span class="st">'sebsilas/SAA'</span>,
     <span class="st">'pmcharrison/piat'</span>,
@@ -107,9 +115,11 @@ other ability tests</h1>
     <span class="st">'fmhoeger/psyquest'</span>
 <span class="op">)</span>
 
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="va">tests</span><span class="op">)</span>
-
-
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="va">tests</span><span class="op">)</span></code></pre></div>
+<p>If they all installed correctly, we can proceed to put the tests
+together in a single timeline:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Import the test libraries</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestR" class="external-link">psychTestR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">PDT</span><span class="op">)</span>
@@ -119,13 +129,16 @@ other ability tests</h1>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">JAJ</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/fmhoeger/psyquest" class="external-link">psyquest</a></span><span class="op">)</span>
 
+<span class="co"># For now, we need to do this:</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestRCAT" class="external-link">psychTestRCAT</a></span><span class="op">)</span> <span class="co"># call this after SAA for now</span>
 
+<span class="co"># A global password for all tests</span>
 <span class="va">password</span> <span class="op">&lt;-</span> <span class="st">"demo"</span>
 
 
 <span class="va">timeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/join.html" class="external-link">join</a></span><span class="op">(</span>
 
-  <span class="fu"><a href="../reference/SAA.html">SAA</a></span><span class="op">(</span><span class="op">)</span>,
+  <span class="fu"><a href="../reference/SAA.html">SAA</a></span><span class="op">(</span>app_name <span class="op">=</span> <span class="st">"my_research_project"</span><span class="op">)</span>,
   <span class="co"># The SAA num_items defaults are the same as used in the experiment: 6 long notes, 10 arrhythmic and 10 rhythmic melodies</span>
   <span class="co"># By default, the SAA deploys the Goldsmiths Musical Sophistication Index Musical Training and Singing Abilities subscales</span>
 
@@ -157,7 +170,7 @@ other ability tests</h1>
 
 <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/make_test.html" class="external-link">make_test</a></span><span class="op">(</span>
   elts <span class="op">=</span> <span class="va">timeline</span>,
-  opt <span class="op">=</span> <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/test_options.html" class="external-link">test_options</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Melody Singing"</span>, admin_password <span class="op">=</span> <span class="va">password</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+  opt <span class="op">=</span> <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/test_options.html" class="external-link">test_options</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Melody Singing Battery"</span>, admin_password <span class="op">=</span> <span class="va">password</span><span class="op">)</span><span class="op">)</span></code></pre></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -8,7 +8,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```r
+[`psychTestR`](https://pmcharrison.github.io/psychTestR/articles/b-introduction) enables psychologists to chain together multiple psychology tests and questionnaires in one battery, allowing for data from several tests to be stored together in one place.
+
+This vignette will show a quick example of how you can include several `psychTestR` tests together alongside the `SAA`.
+
+First we install some tests. These tests were the ones used in Experiment 1 of our paper.
+
+```{r eval = FALSE}
 
 tests <- c(
     'pmcharrison/piat',
@@ -22,7 +28,14 @@ tests <- c(
 
 devtools::install_github(tests)
 
+```
 
+If they all installed correctly, we can proceed to put the tests together in a single timeline:
+
+```{r eval = FALSE}
+
+
+# Import the test libraries
 library(psychTestR)
 library(SAA)
 library(PDT)
@@ -32,13 +45,16 @@ library(mpt)
 library(JAJ)
 library(psyquest)
 
+# For now, we need to do this:
+library(psychTestRCAT) # call this after SAA for now
 
+# A global password for all tests
 password <- "demo"
 
 
 timeline <- join(
 
-  SAA(),
+  SAA(app_name = "my_research_project"),
   # The SAA num_items defaults are the same as used in the experiment: 6 long notes, 10 arrhythmic and 10 rhythmic melodies
   # By default, the SAA deploys the Goldsmiths Musical Sophistication Index Musical Training and Singing Abilities subscales
 
@@ -70,7 +86,7 @@ timeline <- join(
 
 make_test(
   elts = timeline,
-  opt = test_options(title = "Melody Singing", admin_password = password))
+  opt = test_options(title = "Melody Singing Battery", admin_password = password))
 
 ```
 

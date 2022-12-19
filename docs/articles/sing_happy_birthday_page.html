@@ -56,7 +56,7 @@
       <a href="../articles/additional_scoring_measures.html">Scoring singing data with additional scoring measures</a>
     </li>
     <li>
-      <a href="../articles/online_testing_aws.html">Online testing (including via Amazon Web Services)</a>
+      <a href="../articles/online_testing_aws.html">Online testing (via Amazon Web Services)</a>
     </li>
     <li>
       <a href="../articles/sing_happy_birthday_page.html">Creating custom pages to collect singing data.</a>
@@ -95,37 +95,56 @@ data.</h1>
 
     
     
+<p>As mentioned in our paper, the <code>SAA</code> is built in a modular
+way, meaning functionality can be used from its dependent packages, like
+<code>musicassessr</code>.</p>
+<p><code>musicassessr</code> has a special page type called
+<code>record_audio_page</code>, which does just that: allows you to
+create a page which records and stores audio data.</p>
+<p>We’re going to harness this and make our own function which returns a
+“Sing Happy Birthday” page. This is really just a
+<code>record_audio_page</code> with some custom text:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">musicassessr</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span>
-
 
 <span class="co"># Create a "Sing Happy Birthday Page"</span>
 
 <span class="va">sing_hbd</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/pkg/musicassessr/man/record_audio_page.html" class="external-link">record_audio_page</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"sing_hbd"</span>,
                     page_text <span class="op">=</span> <span class="st">"Please sing happy birthday!"</span>,
-                    get_answer <span class="op">=</span> <span class="va">get_answer_simple_pyin_summary</span>,
+                    get_answer <span class="op">=</span> <span class="fu">musicassessr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/musicassessr/man/get_answer_simple_pyin_summary.html" class="external-link">get_answer_simple_pyin_summary</a></span>,
                     auto_next_page <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="op">}</span>
+<span class="op">}</span></code></pre></div>
+<p>Note that, for the <code>get_answer</code> function, we use a
+function which summarises what the user sung with some descriptive
+statistics. Type the following in your <em>R</em> console for more
+information:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">?</span><span class="fu">musicassessr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/musicassessr/man/get_answer_simple_pyin_summary.html" class="external-link">get_answer_simple_pyin_summary</a></span></code></pre></div>
+<p>We can now include our new page, or a list of pages, if we wanted, by
+using the <code>append_trial_block_before</code> or
+<code>append_trial_block_after</code> arguments to the <code>SAA</code>
+functions.</p>
+<ol style="list-style-type: decimal">
+<li>Launch the <code>SAA</code> with the new Happy Birthday Page at the
+beginning of the protocol:</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span>
 
-
-
-
-<span class="co"># Launch the SAA with the new Happy Birthday page at the beginning of the protocol</span>
-
-<span class="fu"><a href="../reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>append_trial_block_before <span class="op">=</span> <span class="fu">sing_hbd</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-
-
-<span class="co"># Or the end</span>
-
-<span class="fu"><a href="../reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>append_trial_block_after <span class="op">=</span> <span class="fu">sing_hbd</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-
-
-
-<span class="co"># Or even in your own custom timeline!</span>
+<span class="fu"><a href="../reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>app_name <span class="op">=</span> <span class="st">"sing_hbd"</span>, 
+               append_trial_block_before <span class="op">=</span> <span class="fu">sing_hbd</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Or the end of the protocol:</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>app_name <span class="op">=</span> <span class="st">"sing_hbd"</span>,
+               append_trial_block_after <span class="op">=</span> <span class="fu">sing_hbd</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Or even in your own custom timeline!</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestR" class="external-link">psychTestR</a></span><span class="op">)</span>
 
 <span class="va">password</span> <span class="op">&lt;-</span> <span class="st">"demo"</span>
 
@@ -143,23 +162,17 @@ data.</h1>
 
 <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/make_test.html" class="external-link">make_test</a></span><span class="op">(</span>
   elts <span class="op">=</span> <span class="va">timeline</span>,
-  opt <span class="op">=</span> <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/test_options.html" class="external-link">test_options</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Melody Singing"</span>, admin_password <span class="op">=</span> <span class="va">password</span><span class="op">)</span><span class="op">)</span>
-  </code></pre></div>
-<div class="section level2">
-<h2 id="nb--musicassessrsing_happy_birthday_page">NB. musicassessr::sing_happy_birthday_page<a class="anchor" aria-label="anchor" href="#nb--musicassessrsing_happy_birthday_page"></a>
-</h2>
-</div>
-<div class="section level2">
-<h2 id="nb-musicassessrget_answer_simple_pyin_summary">NB musicassessr::get_answer_simple_pyin_summary<a class="anchor" aria-label="anchor" href="#nb-musicassessrget_answer_simple_pyin_summary"></a>
-</h2>
-</div>
+  opt <span class="op">=</span> <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/test_options.html" class="external-link">test_options</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Melody Singing"</span>, admin_password <span class="op">=</span> <span class="va">password</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>By the way, a “Sing Happy Birthday” page is already packaged as part
+of <code>musicassessr</code>. Type the following into your <em>R</em>
+console for more information:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">?</span><span class="fu">musicassessr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/musicassessr/man/sing_happy_birthday_page.html" class="external-link">sing_happy_birthday_page</a></span></code></pre></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 

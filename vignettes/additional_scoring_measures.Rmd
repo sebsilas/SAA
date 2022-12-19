@@ -8,7 +8,40 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```r
+To add your own measures for scoring the melodic singing data, outputted by the [`pYIN`](https://code.soundsoftware.ac.uk/projects/pyin) algorithm, you can use the `additional_scoring_measures` argument to the `SAA` or `SAA_standalone` functions. 
+
+
+The argument should be a function with the following arguments: `onset`, `dur`, `freq`, `note`, `stimuli`, `stimuli_durations` or a list of functions, each with the same arguments.
+
+Here are some examples.
+
+## Example 1
+
+Here is the inclusion of a trivial scoring measure which counts the number of sung notes above `C4` (MIDI pitch 60).
+
+```{r eval = FALSE}
+
+check_no_notes_above_c4 <- function(onset, dur, freq, note, stimuli, stimuli_durations) {
+  # C4 is MIDI note number 60
+  sum(note > 60)
+
+}
+
+
+SAA::SAA_standalone(skip_setup = TRUE,
+                    app_name = 'additional_measures',
+                    num_items = list(long_tones = 2L, arrhythmic = 2L, rhythmic = 2L),
+                     examples = 0,
+                     max_goes = 1L,
+                     additional_scoring_measures = check_no_notes_above_c4)
+
+```
+
+## Example 2
+
+Here is another trivial scoring function which takes the log of some of the user's melodic production data, the stimuli durations and multiplies the frequencies by 2. There is no reason why this would be useful, but is a way of demonstrating that you can transform the melodic production variables, and also store them in a dataframe.
+
+```{r eval = FALSE}
 
 library(SAA)
 
@@ -22,34 +55,17 @@ log_scores <- function(onset, dur, freq, note, stimuli, stimuli_durations) {
 
 }
 
-check_no_notes_above_c4 <- function(onset, dur, freq, note, stimuli, stimuli_durations) {
 
-  # C4 is MIDI note number 60
-  sum(note > 60)
-
-}
+```
 
 
 
-# Example 1: additional measure using a trivial function to take the log of onset, durations and stimuli durations and multiply the frequency by 2
-example_1 <- SAA::SAA_standalone(skip_setup = TRUE,
-                                 app_name = 'additional_measures',
-                                 num_items = list(long_tones = 2L, arrhythmic = 2L, rhythmic = 2L),
-                                 examples = 0,
-                                 max_goes = 1L,
-                                 additional_scoring_measures = log_scores)
+## Example 3
 
+Include the last two functions as a list, for both function results to appear in the results file:
 
-# Example 2: additional measure using a trivial function to check the number of notes above C4 (MIDI pitch 60)
-example_2 <- SAA::SAA_standalone(skip_setup = TRUE,
-                                 app_name = 'additional_measures',
-                                 num_items = list(long_tones = 2L, arrhythmic = 2L, rhythmic = 2L),
-                                 examples = 0,
-                                 max_goes = 1L,
-                                 additional_scoring_measures = check_no_notes_above_c4)
+```{r eval = FALSE}
 
-
-# Example 3: a list of functions
 SAA::SAA_standalone(skip_setup = TRUE,
                     app_name = 'additional_measures',
                     num_items = list(long_tones = 2L, arrhythmic = 2L, rhythmic = 2L),

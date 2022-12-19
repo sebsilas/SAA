@@ -56,7 +56,7 @@
       <a href="../articles/additional_scoring_measures.html">Scoring singing data with additional scoring measures</a>
     </li>
     <li>
-      <a href="../articles/online_testing_aws.html">Online testing (including via Amazon Web Services)</a>
+      <a href="../articles/online_testing_aws.html">Online testing (via Amazon Web Services)</a>
     </li>
     <li>
       <a href="../articles/sing_happy_birthday_page.html">Creating custom pages to collect singing data.</a>
@@ -95,9 +95,46 @@ measures</h1>
 
     
     
+<p>To add your own measures for scoring the melodic singing data,
+outputted by the <a href="https://code.soundsoftware.ac.uk/projects/pyin" class="external-link"><code>pYIN</code></a>
+algorithm, you can use the <code>additional_scoring_measures</code>
+argument to the <code>SAA</code> or <code>SAA_standalone</code>
+functions.</p>
+<p>The argument should be a function with the following arguments:
+<code>onset</code>, <code>dur</code>, <code>freq</code>,
+<code>note</code>, <code>stimuli</code>, <code>stimuli_durations</code>
+or a list of functions, each with the same arguments.</p>
+<p>Here are some examples.</p>
+<div class="section level2">
+<h2 id="example-1">Example 1<a class="anchor" aria-label="anchor" href="#example-1"></a>
+</h2>
+<p>Here is the inclusion of a trivial scoring measure which counts the
+number of sung notes above <code>C4</code> (MIDI pitch 60).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">check_no_notes_above_c4</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">onset</span>, <span class="va">dur</span>, <span class="va">freq</span>, <span class="va">note</span>, <span class="va">stimuli</span>, <span class="va">stimuli_durations</span><span class="op">)</span> <span class="op">{</span>
+  <span class="co"># C4 is MIDI note number 60</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">note</span> <span class="op">&gt;</span> <span class="fl">60</span><span class="op">)</span>
+
+<span class="op">}</span>
+
+
+<span class="fu">SAA</span><span class="fu">::</span><span class="fu"><a href="../reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>skip_setup <span class="op">=</span> <span class="cn">TRUE</span>,
+                    app_name <span class="op">=</span> <span class="st">'additional_measures'</span>,
+                    num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">2L</span>, arrhythmic <span class="op">=</span> <span class="fl">2L</span>, rhythmic <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span>,
+                     examples <span class="op">=</span> <span class="fl">0</span>,
+                     max_goes <span class="op">=</span> <span class="fl">1L</span>,
+                     additional_scoring_measures <span class="op">=</span> <span class="va">check_no_notes_above_c4</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="example-2">Example 2<a class="anchor" aria-label="anchor" href="#example-2"></a>
+</h2>
+<p>Here is another trivial scoring function which takes the log of some
+of the user’s melodic production data, the stimuli durations and
+multiplies the frequencies by 2. There is no reason why this would be
+useful, but is a way of demonstrating that you can transform the melodic
+production variables, and also store them in a dataframe.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span>
 
 
 <span class="va">log_scores</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">onset</span>, <span class="va">dur</span>, <span class="va">freq</span>, <span class="va">note</span>, <span class="va">stimuli</span>, <span class="va">stimuli_durations</span><span class="op">)</span> <span class="op">{</span>
@@ -107,48 +144,28 @@ measures</h1>
                  freq_2 <span class="op">=</span> <span class="va">freq</span> <span class="op">*</span> <span class="fl">2</span>,
                  stimuli_durations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">stimuli_durations</span><span class="op">)</span><span class="op">)</span>
 
-<span class="op">}</span>
-
-<span class="va">check_no_notes_above_c4</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">onset</span>, <span class="va">dur</span>, <span class="va">freq</span>, <span class="va">note</span>, <span class="va">stimuli</span>, <span class="va">stimuli_durations</span><span class="op">)</span> <span class="op">{</span>
-
-  <span class="co"># C4 is MIDI note number 60</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">note</span> <span class="op">&gt;</span> <span class="fl">60</span><span class="op">)</span>
-
-<span class="op">}</span>
-
-
-
-<span class="co"># Example 1: additional measure using a trivial function to take the log of onset, durations and stimuli durations and multiply the frequency by 2</span>
-<span class="va">example_1</span> <span class="op">&lt;-</span> <span class="fu">SAA</span><span class="fu">::</span><span class="fu"><a href="../reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>skip_setup <span class="op">=</span> <span class="cn">TRUE</span>,
-                                 app_name <span class="op">=</span> <span class="st">'additional_measures'</span>,
-                                 num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">2L</span>, arrhythmic <span class="op">=</span> <span class="fl">2L</span>, rhythmic <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span>,
-                                 examples <span class="op">=</span> <span class="fl">0</span>,
-                                 max_goes <span class="op">=</span> <span class="fl">1L</span>,
-                                 additional_scoring_measures <span class="op">=</span> <span class="va">log_scores</span><span class="op">)</span>
-
-
-<span class="co"># Example 2: additional measure using a trivial function to check the number of notes above C4 (MIDI pitch 60)</span>
-<span class="va">example_2</span> <span class="op">&lt;-</span> <span class="fu">SAA</span><span class="fu">::</span><span class="fu"><a href="../reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>skip_setup <span class="op">=</span> <span class="cn">TRUE</span>,
-                                 app_name <span class="op">=</span> <span class="st">'additional_measures'</span>,
-                                 num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">2L</span>, arrhythmic <span class="op">=</span> <span class="fl">2L</span>, rhythmic <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span>,
-                                 examples <span class="op">=</span> <span class="fl">0</span>,
-                                 max_goes <span class="op">=</span> <span class="fl">1L</span>,
-                                 additional_scoring_measures <span class="op">=</span> <span class="va">check_no_notes_above_c4</span><span class="op">)</span>
-
-
-<span class="co"># Example 3: a list of functions</span>
-<span class="fu">SAA</span><span class="fu">::</span><span class="fu"><a href="../reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>skip_setup <span class="op">=</span> <span class="cn">TRUE</span>,
+<span class="op">}</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="example-3">Example 3<a class="anchor" aria-label="anchor" href="#example-3"></a>
+</h2>
+<p>Include the last two functions as a list, for both function results
+to appear in the results file:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">SAA</span><span class="fu">::</span><span class="fu"><a href="../reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>skip_setup <span class="op">=</span> <span class="cn">TRUE</span>,
                     app_name <span class="op">=</span> <span class="st">'additional_measures'</span>,
                     num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">2L</span>, arrhythmic <span class="op">=</span> <span class="fl">2L</span>, rhythmic <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span>,
                     examples <span class="op">=</span> <span class="fl">0</span>,
                     max_goes <span class="op">=</span> <span class="fl">1L</span>,
-                    additional_scoring_measures <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">check_no_notes_above_c4</span>, <span class="va">log_scores</span><span class="op">)</span><span class="op">)</span>
-</code></pre></div>
+                    additional_scoring_measures <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">check_no_notes_above_c4</span>, <span class="va">log_scores</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

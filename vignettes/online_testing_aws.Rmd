@@ -1,18 +1,20 @@
 
 ---
-title: "Online testing (including via Amazon Web Services)"
+title: "Online testing (via Amazon Web Services)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Online testing (including via Amazon Web Services)}
+  %\VignetteIndexEntry{Online testing (via Amazon Web Services)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Online testing
 
-To test online, you will need your own domain name. You can use our scripts which setup an Amazon server with everything required for you:
+To run the `SAA` test online, you will need your own domain name. 
 
-- Follow steps 1-3 [here](https://github.com/sebsilas/musicassessr_aws). Be sure to make a note of the credentials outputted in step 1.
+You can use our scripts which setup an Amazon Web Service (AWS) EC2 instance,  with everything required for you:
+
+- Follow steps 1-3 [here](https://github.com/sebsilas/musicassessr-aws). Be sure to make a note of the credentials outputted in step 1.
 
 Once your server is setup, to run the app, log into your server (via Command Prompt or Terminal) using your ssh command e.g.,
 
@@ -49,9 +51,11 @@ Load R:
 sudo R
 ```
 
-Install the SAA:
+Install the `SAA`:
 
 
-Please note, you don't have to use AWS to host your experiment. You could host the application on another server. To do that, you would need to install Shiny Server and NodeJS on your server. For the former, we recommend Anthony Chimiel's [guide](https://s3-eu-west-1.amazonaws.com/research.pmcharrison.com/psychTestR/psychTestR-server-docs-latest.pdf
+Please note, it is not technically necessary to use AWS to host your experiment. You could host the application on another server. To do that, you would need to install `Shiny Server` and `NodeJS` on your server yourself. For the former, we recommend Anthony Chimiel's [guide](https://s3-eu-west-1.amazonaws.com/research.pmcharrison.com/psychTestR/psychTestR-server-docs-latest.pdf
 ).
+
+After this, there would be some other manual steps to take. We have not documented this yet. If you are interested, please raise an issue on Github.
 
