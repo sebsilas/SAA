@@ -576,7 +576,7 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
                   interval_cents = pyin_pitch_track.interval_cents) %>%
     dplyr::mutate(freq = as.numeric(freq),
                   nearest_stimuli_note = as.numeric(nearest_stimuli_note),
-                  note = round(hrep::freq_to_midi(freq)),
+                  note = dplyr::case_when(is.na(freq) ~ NA, TRUE ~ round(hrep::freq_to_midi(freq))),
                   interval = as.numeric(interval),
                   interval_cents = as.numeric(interval_cents))
 
