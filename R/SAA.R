@@ -637,7 +637,7 @@ final_results_saa <- function(test_name,
                           num_items_rhythmic,
                           socials = FALSE,
                           hashtag = " ") {
-  c(
+  psychTestR::join(
     psychTestR::reactive_page(function(state, ...) {
 
       res <- as.list(psychTestR::get_results(state, complete = FALSE))
@@ -656,50 +656,20 @@ final_results_saa <- function(test_name,
 
       psychTestR::set_local("final_score", Final_SAA_Score, state) # leave this in; it gets used by musicassessr
 
+      # Save results
+      psychTestR::save_result(place = state,
+                              label = "Final_SAA_Scores",
+                              value = c(
+                                processed_results,
+                                list(
+                                  "Long_Note_Percentile" = long_note_percentile,
+                                  "Arrhythmic_Percentile" = arrhythmic_percentile,
+                                  "Rhythmic_Percentile" = rhythmic_percentile,
+                                  "Final_SAA_Score" = Final_SAA_Score)))
 
-      psychTestR::text_input_page(
-        label = "final_score",
-        prompt = shiny::tags$div(style = "width: 500px;",
-                                 shiny::tags$h2('Final Results'),
-                                 shiny::tags$h3('Long Note Scores'),
+      # Present results
 
-                                 shiny::renderTable({
-
-                                   long_note_df <- tibble::tibble(`Long Note` = round(get_long_note_score_percentile(.33 * processed_results$Long_Note$pca_long_note_randomness + .33 * processed_results$Long_Note$pca_long_note_scoop + .33 * processed_results$Long_Note$pca_long_note_accuracy), 2))
-                                   long_note_df_names <- names(long_note_df)
-                                   long_note_df <- base::t(long_note_df)
-                                   row.names(long_note_df) <- long_note_df_names
-                                   long_note_df
-                                 }, rownames = TRUE, colnames = FALSE, width = "50%"),
-
-                                 shiny::tags$h3('Arrhythmic Melody Scores'),
-
-                                 shiny::renderTable({
-
-                                   arrhythmic_df <- tibble::tibble(`Arrhythmic Melodies` = round(get_arrhythmic_score_percentile(processed_results$SAA_Ability_Arrhythmic), 2))
-                                   arrhythmic_df_names <- names(arrhythmic_df)
-                                   arrhythmic_df <- base::t(arrhythmic_df)
-                                   row.names(arrhythmic_df) <- arrhythmic_df_names
-                                   arrhythmic_df
-                                 }, rownames = TRUE, colnames = FALSE, width = "50%"),
-
-                                 shiny::tags$h3('Rhythmic Melody Scores'),
-
-                                 shiny::renderTable({
-
-                                   rhythmic_df <- tibble::tibble(`Rhythmic Melodies` = round(get_rhythmic_score_percentile(processed_results$SAA_Ability_Rhythmic), 2))
-                                   rhythmic_df_names <- names(rhythmic_df)
-                                   rhythmic_df <- base::t(rhythmic_df)
-                                   row.names(rhythmic_df) <- rhythmic_df_names
-                                   rhythmic_df
-                                 }, rownames = TRUE, colnames = FALSE, width = "50%"),
-
-                                 shiny::tags$h3('Total Score'),
-                                 shiny::tags$p(Final_SAA_Score),
-                                 shiny::tags$p("Enter a username to see the scoreboard: ")
-
-        )
-      )
+      present_scores_page(Final_SAA_Score, processed_results)
 
     }),
 
@@ -710,9 +680,56 @@ final_results_saa <- function(test_name,
                                    leaderboard_name = 'SAA_leaderboard.rda',
                                    distribution_mean = Final_SAA_Score_m,
                                    distribution_sd = Final_SAA_Score_sd)
+
   )
 }
 
+
+present_scores_page <- function(Final_SAA_Score, processed_results) {
+  psychTestR::text_input_page(
+    label = "final_score",
+    prompt = shiny::tags$div(style = "width: 500px;",
+                             shiny::tags$h2('Final Results'),
+                             shiny::tags$h3('Long Note Scores'),
+
+                             shiny::renderTable({
+
+                               long_note_df <- tibble::tibble(`Long Note` = round(get_long_note_score_percentile(.33 * processed_results$Long_Note$pca_long_note_randomness + .33 * processed_results$Long_Note$pca_long_note_scoop + .33 * processed_results$Long_Note$pca_long_note_accuracy), 2))
+                               long_note_df_names <- names(long_note_df)
+                               long_note_df <- base::t(long_note_df)
+                               row.names(long_note_df) <- long_note_df_names
+                               long_note_df
+                             }, rownames = TRUE, colnames = FALSE, width = "50%"),
+
+                             shiny::tags$h3('Arrhythmic Melody Scores'),
+
+                             shiny::renderTable({
+
+                               arrhythmic_df <- tibble::tibble(`Arrhythmic Melodies` = round(get_arrhythmic_score_percentile(processed_results$SAA_Ability_Arrhythmic), 2))
+                               arrhythmic_df_names <- names(arrhythmic_df)
+                               arrhythmic_df <- base::t(arrhythmic_df)
+                               row.names(arrhythmic_df) <- arrhythmic_df_names
+                               arrhythmic_df
+                             }, rownames = TRUE, colnames = FALSE, width = "50%"),
+
+                             shiny::tags$h3('Rhythmic Melody Scores'),
+
+                             shiny::renderTable({
+
+                               rhythmic_df <- tibble::tibble(`Rhythmic Melodies` = round(get_rhythmic_score_percentile(processed_results$SAA_Ability_Rhythmic), 2))
+                               rhythmic_df_names <- names(rhythmic_df)
+                               rhythmic_df <- base::t(rhythmic_df)
+                               row.names(rhythmic_df) <- rhythmic_df_names
+                               rhythmic_df
+                             }, rownames = TRUE, colnames = FALSE, width = "50%"),
+
+                             shiny::tags$h3('Total Score'),
+                             shiny::tags$p(Final_SAA_Score),
+                             shiny::tags$p("Enter a username to see the scoreboard: ")
+
+    )
+  )
+}
 
 weight_final_SAA_score <- function(num_items_long_tone, num_items_arrhythmic, num_items_rhythmic,
                                    long_note_percentile, arrhythmic_percentile, rhythmic_percentile) {
@@ -755,6 +772,7 @@ NA_to_0 <- function(val) {
 FALSE_to_0 <- function(val) {
   if(val == FALSE) 0 else val
 }
+
 
 # SAA_standalone(get_range = FALSE, SNR_test = FALSE,
 #                num_items = list("long_tones" = 0L,
