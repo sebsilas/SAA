@@ -1,0 +1,25 @@
+citHeader("To cite SAA in publications use:")
+
+
+citHeader("To cite SAA in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Singing Ability Assessment: Development and validation of an open-source testing environment for singing data.",
+  author   = c("Sebastian Silas, Daniel Müllensiefen, Reinhard Kopiez"),
+  journal  = "In review.",
+  year     = 2022,
+  textVersion = "Silas, Müllensiefen and Kopiez (2022)"
+)
+
+
+citEntry(
+  entry    = "Misc",
+  title    = "SAA: Singing Ability Assessment",
+  author   = "Sebastian Silas",
+  year     = "2022",
+  note = "R package version 0.0.0.9000",
+  url = "https://github.com/sebsilas/SAA",
+  textVersion = "Silas (2022)"
+)
+

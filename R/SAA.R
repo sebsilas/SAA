@@ -644,7 +644,6 @@ final_results_saa <- function(test_name,
 
       processed_results <- present_scores_saa(res, num_items_long_tone, num_items_arrhythmic, num_items_rhythmic)
 
-
       # Convert scores to percentiles
       long_note_percentile <- get_long_note_score_percentile(.33 * processed_results$Long_Note$pca_long_note_randomness + .33 * processed_results$Long_Note$pca_long_note_scoop + .33 * processed_results$Long_Note$pca_long_note_accuracy)
       arrhythmic_percentile <- get_arrhythmic_score_percentile(processed_results$SAA_Ability_Arrhythmic)
@@ -727,7 +726,8 @@ present_scores_page <- function(Final_SAA_Score, processed_results) {
                              shiny::tags$p(Final_SAA_Score),
                              shiny::tags$p("Enter a username to see the scoreboard: ")
 
-    )
+    ),
+    save_answer = FALSE
   )
 }
 

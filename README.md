@@ -2,9 +2,15 @@
 
 The `SAA` is a test of singing ability which can be launched in R/Shiny via the [`psychTestR`](https://github.com/pmcharrison/psychTestR) package.
 
-# Author
+## Author
 
-Seb Silas, sebsilas@gmail.com
+Seb Silas, [sebsilas@gmail.com](mailto:sebsilas@gmail.com)
+
+## Demos
+
+Short `SAA` with feedback: https://adaptiveeartraining.com/SAA-demo
+
+Prototype adaptive-`SAA`(*aSAA*) with feedback: https://adaptiveeartraining.com/aSAA
 
 ## Installation
 
