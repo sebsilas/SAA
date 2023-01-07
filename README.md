@@ -71,6 +71,8 @@ If not, go to our [Troubleshooting]() page or [raise an issue on Github](https:/
 
 ## Usage notes
 
+- This has not yet been tested on Windows. We will be doing this very soon.
+
 - The test requires internet connectivity. 
 
 - The *SAA* runs in your web browser. It is only recommended to run the test in [Google Chrome](https://www.google.com/chrome/) or [Opera](https://www.opera.com/download). You will need to set one of these to be your default browser for *RStudio* to launch the test there (restart *RStudio* after doing this).
