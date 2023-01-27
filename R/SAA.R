@@ -41,6 +41,7 @@
 #' @param full_screen Should app be full screen?
 #' @param validate_user_entry_into_test Should the user be validated against a session token?
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
+#' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
 #' @param ...
 #'
 #' @return
@@ -87,7 +88,8 @@ SAA_standalone <- function(app_name,
                            skip_setup = FALSE,
                            full_screen = FALSE,
                            validate_user_entry_into_test = FALSE,
-                           additional_scoring_measures = NULL, ...) {
+                           additional_scoring_measures = NULL,
+                           default_range = list(bottom_range = 48, top_range = 72), ...) {
 
   timeline <- SAA(app_name,
                   num_items,
@@ -125,7 +127,8 @@ SAA_standalone <- function(app_name,
                   success_on_completion_page,
                   concise_wording,
                   skip_setup,
-                  additional_scoring_measures)
+                  additional_scoring_measures,
+                  default_range)
 
 
   # run the test
@@ -192,6 +195,7 @@ SAA_standalone <- function(app_name,
 #' @param concise_wording TRUE for more detailed (but longer) instructions.
 #' @param skip_setup TRUE to skip setup steps.
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
+#' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
 #'
 #' @return
 #' @export
@@ -235,7 +239,9 @@ SAA <- function(app_name,
                 success_on_completion_page = character(),
                 concise_wording = TRUE,
                 skip_setup = FALSE,
-                additional_scoring_measures = NULL) {
+                additional_scoring_measures = NULL,
+                default_range = list(bottom_range = 48, top_range = 72)
+                ) {
 
 
   stopifnot(
@@ -275,7 +281,8 @@ SAA <- function(app_name,
     is.character(success_on_completion_page),
     is.logical(concise_wording),
     is.logical(skip_setup),
-    is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures)
+    is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures),
+    is.list(default_range) & length(default_range) == 2 & setequal(names(default_range), c("bottom_range", "top_range"))
     )
 
   shiny::addResourcePath(
@@ -316,19 +323,23 @@ SAA <- function(app_name,
                                      max_goes_forced,
                                      max_goes,
                                      skip_setup,
-                                     app_name),
+                                     app_name,
+                                     default_range),
 
                            # arbitrary and optional trial block to go first
                            append_trial_block_before,
 
 
                            # long tone trials
-                           musicassessr::long_tone_trials(num_items$long_tones, num_examples = examples, feedback = feedback,
+                           musicassessr::long_tone_trials(num_items =
+                                                          num_items$long_tones,
+                                                          num_examples = examples,
+                                                          feedback = feedback,
                                                           long_tone_trials_as_screening = long_tone_trials_as_screening,
                                                           long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page),
 
                            # arrhythmic
-                           musicassessr::arrhythmic_melody_trials(itembankr::subset_item_bank(item_bank("main"), item_length = melody_length),
+                           musicassessr::arrhythmic_melody_trials(item_bank = itembankr::subset_item_bank(item_bank("main"), item_length = melody_length),
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
                                                                   feedback = feedback,
@@ -347,7 +358,7 @@ SAA <- function(app_name,
                                                                 feedback = feedback,
                                                                 sound = melody_sound,
                                                                 page_text = "Click below to hear the melody. Sing back the melody. Click Stop when finished.",
-                                                                page_title = "Sing This Melody Plus Rhythm",
+                                                                page_title = "Sing this melody plus rhythm",
                                                                 instruction_text = "Now you will hear melodies with rhythms. Please try and sing the melodies with the correct rhythm.",
                                                                 max_goes = max_goes,
                                                                 max_goes_forced = max_goes_forced,
@@ -398,7 +409,8 @@ SAA_intro <- function(demo = FALSE,
                       max_goes_forced,
                       max_goes,
                       skip_setup = FALSE,
-                      app_name) {
+                      app_name,
+                      default_range = list(bottom_range = 48, top_range = 72)) {
 
   psychTestR::join(
     musicassessr::musicassessr_init(test = "SAA",
@@ -424,7 +436,8 @@ SAA_intro <- function(demo = FALSE,
                               microphone_test = microphone_test,
                               allow_repeat_SNR_tests = allow_repeat_SNR_tests,
                               concise_wording = concise_wording,
-                              skip_setup = skip_setup),
+                              skip_setup = skip_setup,
+                              default_range = default_range),
     # instructions
     if(!skip_setup) SAA_instructions(max_goes_forced, max_goes)
   )

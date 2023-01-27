@@ -44,6 +44,7 @@ SAA_standalone(
   full_screen = FALSE,
   validate_user_entry_into_test = FALSE,
   additional_scoring_measures = NULL,
+  default_range = list(bottom_range = 48, top_range = 72),
   ...
 )
 }
@@ -125,6 +126,8 @@ SAA_standalone(
 \item{validate_user_entry_into_test}{Should the user be validated against a session token?}
 
 \item{additional_scoring_measures}{A function or list of functions with additional measures for scoring pYIN data.}
+
+\item{default_range}{A list of the range that stimuli should be presented in, if not collected at test time.}
 
 \item{...}{}
 }

@@ -41,7 +41,8 @@ SAA(
   success_on_completion_page = character(),
   concise_wording = TRUE,
   skip_setup = FALSE,
-  additional_scoring_measures = NULL
+  additional_scoring_measures = NULL,
+  default_range = list(bottom_range = 48, top_range = 72)
 )
 }
 \arguments{
@@ -118,6 +119,8 @@ SAA(
 \item{skip_setup}{TRUE to skip setup steps.}
 
 \item{additional_scoring_measures}{A function or list of functions with additional measures for scoring pYIN data.}
+
+\item{default_range}{A list of the range that stimuli should be presented in, if not collected at test time.}
 }
 \value{
 
