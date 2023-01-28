@@ -331,8 +331,7 @@ SAA <- function(app_name,
 
 
                            # long tone trials
-                           musicassessr::long_tone_trials(num_items =
-                                                          num_items$long_tones,
+                           musicassessr::long_tone_trials(num_items = num_items$long_tones,
                                                           num_examples = examples,
                                                           feedback = feedback,
                                                           long_tone_trials_as_screening = long_tone_trials_as_screening,
