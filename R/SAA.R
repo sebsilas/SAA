@@ -246,7 +246,7 @@ SAA <- function(app_name,
 
   stopifnot(
     assertthat::is.string(app_name),
-    is.list(num_items),
+    is.list(num_items) | length(num_items) == 3L & setequal(names(num_items), c("long_tones", "arrhythmic", "rhythmic")),
     is.function(item_bank) | is.data.frame(item_bank),
     is.logical(demographics),
     is.logical(demo),
