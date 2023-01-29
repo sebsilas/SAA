@@ -577,6 +577,7 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
   # Calculate note precision
 
+
   if(!is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
     shared_names <- intersect(names(arrhythmic_melodies), names(rhythmic_melodies))
     arrhythmic_melodies <- arrhythmic_melodies %>% dplyr::select(shared_names)
@@ -586,10 +587,18 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
     all_melodies <- rhythmic_melodies
   } else if(!is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
     all_melodies <- arrhythmic_melodies
+  }  else if(is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
+    all_melodies <- NA
   } else {
     stop('Something is not right')
   }
 
+
+  if(is_na_scalar(all_melodies)) {
+    arrhythmic_melody_summary <- NA
+    rhythmic_melody_summary <- NA
+    pca_melodic_singing_accuracy <- NA
+  } else {
 
   melody_precision_vars <- all_melodies %>%
     dplyr::select(pyin_pitch_track.freq, stimuli,
@@ -630,6 +639,7 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
             # you need to pass this for standardization or you will get NaNs
             # https://stackoverflow.com/questions/27534968/dimension-reduction-using-psychprincipal-does-not-work-for-smaller-data
     ) %>% as.numeric()
+  }
 
   list("Long_Note" = if(is_null_scalar(long_note_scores) | is_na_scalar(long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else long_note_pca_scores,
        "SAA_Ability_Arrhythmic" = if(is_null_scalar(arrhythmic_melody_summary) | is_na_scalar(arrhythmic_melody_summary)) NA else arrhythmic_melody_score,
