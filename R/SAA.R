@@ -577,10 +577,18 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
   # Calculate note precision
 
-  shared_names <- intersect(names(arrhythmic_melodies), names(rhythmic_melodies))
-  arrhythmic_melodies <- arrhythmic_melodies %>% dplyr::select(shared_names)
-  rhythmic_melodies <- rhythmic_melodies %>% dplyr::select(shared_names)
-  all_melodies <- rbind(arrhythmic_melodies, rhythmic_melodies)
+  if(!is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
+    shared_names <- intersect(names(arrhythmic_melodies), names(rhythmic_melodies))
+    arrhythmic_melodies <- arrhythmic_melodies %>% dplyr::select(shared_names)
+    rhythmic_melodies <- rhythmic_melodies %>% dplyr::select(shared_names)
+    all_melodies <- rbind(arrhythmic_melodies, rhythmic_melodies)
+  } else if(is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
+    all_melodies <- rhythmic_melodies
+  } else if(!is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
+    all_melodies <- arrhythmic_melodies
+  } else {
+    stop('Something is not right')
+  }
 
 
   melody_precision_vars <- all_melodies %>%
@@ -623,9 +631,9 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
             # https://stackoverflow.com/questions/27534968/dimension-reduction-using-psychprincipal-does-not-work-for-smaller-data
     ) %>% as.numeric()
 
-  list("Long_Note" = if(is.null(long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else long_note_pca_scores,
-       "SAA_Ability_Arrhythmic" = if(is.null(arrhythmic_melody_summary)) NA else arrhythmic_melody_score,
-       "SAA_Ability_Rhythmic" = if(is.null(rhythmic_melody_summary)) NA else rhythmic_melody_score,
+  list("Long_Note" = if(is_null_scalar(long_note_scores) | is_na_scalar(long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else long_note_pca_scores,
+       "SAA_Ability_Arrhythmic" = if(is_null_scalar(arrhythmic_melody_summary) | is_na_scalar(arrhythmic_melody_summary)) NA else arrhythmic_melody_score,
+       "SAA_Ability_Rhythmic" = if(is_null_scalar(rhythmic_melody_summary) | is_na_scalar(rhythmic_melody_summary)) NA else rhythmic_melody_score,
        "melody_note_precision" = melody_note_precision,
        "melody_interval_precision" = melody_interval_precision,
        "pca_melodic_singing_accuracy" = pca_melodic_singing_accuracy)
