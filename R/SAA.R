@@ -585,8 +585,10 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
     all_melodies <- rbind(arrhythmic_melodies, rhythmic_melodies)
   } else if(is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
     all_melodies <- rhythmic_melodies
+    arrhythmic_melody_summary <- NA
   } else if(!is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
     all_melodies <- arrhythmic_melodies
+    rhythmic_melody_summary <- NA
   }  else if(is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
     all_melodies <- NA
   } else {
@@ -598,47 +600,49 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
     arrhythmic_melody_summary <- NA
     rhythmic_melody_summary <- NA
     pca_melodic_singing_accuracy <- NA
+    melody_note_precision <- NA
+    melody_interval_precision <- NA
   } else {
 
-  melody_precision_vars <- all_melodies %>%
-    dplyr::select(pyin_pitch_track.freq, stimuli,
-                  pyin_pitch_track.nearest_stimuli_note,
-                  pyin_pitch_track.interval, pyin_pitch_track.interval_cents) %>%
-    dplyr::rename(freq = pyin_pitch_track.freq,
-                  nearest_stimuli_note = pyin_pitch_track.nearest_stimuli_note,
-                  interval = pyin_pitch_track.interval,
-                  interval_cents = pyin_pitch_track.interval_cents) %>%
-    dplyr::mutate(freq = as.numeric(freq),
-                  nearest_stimuli_note = as.numeric(nearest_stimuli_note),
-                  interval = as.numeric(interval),
-                  interval_cents = as.numeric(interval_cents)) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(note = if(is.na(freq)) NA else round(hrep::freq_to_midi(freq))) %>%
-    dplyr::ungroup()
+    melody_precision_vars <- all_melodies %>%
+      dplyr::select(pyin_pitch_track.freq, stimuli,
+                    pyin_pitch_track.nearest_stimuli_note,
+                    pyin_pitch_track.interval, pyin_pitch_track.interval_cents) %>%
+      dplyr::rename(freq = pyin_pitch_track.freq,
+                    nearest_stimuli_note = pyin_pitch_track.nearest_stimuli_note,
+                    interval = pyin_pitch_track.interval,
+                    interval_cents = pyin_pitch_track.interval_cents) %>%
+      dplyr::mutate(freq = as.numeric(freq),
+                    nearest_stimuli_note = as.numeric(nearest_stimuli_note),
+                    interval = as.numeric(interval),
+                    interval_cents = as.numeric(interval_cents)) %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(note = if(is.na(freq)) NA else round(hrep::freq_to_midi(freq))) %>%
+      dplyr::ungroup()
 
-    melody_note_precision <- melody_precision_vars %>%
-      musicassessr::score_melody_note_precision()
+      melody_note_precision <- melody_precision_vars %>%
+        musicassessr::score_melody_note_precision()
 
-    melody_interval_precision <- melody_precision_vars %>%
-     musicassessr::score_melody_interval_precision()
+      melody_interval_precision <- melody_precision_vars %>%
+       musicassessr::score_melody_interval_precision()
 
-    end_melody_summary <- all_melodies %>%
-      dplyr::select(file, melody_interval_accuracy, melody_note_accuracy) %>%
-      unique() %>%
-      dplyr::select(-file) %>%
-      dplyr::mutate(dplyr::across(dplyr::everything(), as.numeric)) %>%
-      dplyr::summarise(mean_melody_note_accuracy = mean(melody_note_accuracy, na.rm = TRUE),
-                       mean_melody_interval_accuracy = mean(melody_interval_accuracy, na.rm = TRUE)
-                       )
+      end_melody_summary <- all_melodies %>%
+        dplyr::select(file, melody_interval_accuracy, melody_note_accuracy) %>%
+        unique() %>%
+        dplyr::select(-file) %>%
+        dplyr::mutate(dplyr::across(dplyr::everything(), as.numeric)) %>%
+        dplyr::summarise(mean_melody_note_accuracy = mean(melody_note_accuracy, na.rm = TRUE),
+                         mean_melody_interval_accuracy = mean(melody_interval_accuracy, na.rm = TRUE)
+                         )
 
-    pca_melodic_singing_accuracy <- predict(musicassessr::melody_pca2,
-            data = tibble::tibble(melody_note_precision = melody_note_precision,
-                                  interval_precision = melody_interval_precision,
-                                  interval_accuracy = end_melody_summary$mean_melody_interval_accuracy),
-            old.data = musicassessr::melody_pca2_data
-            # you need to pass this for standardization or you will get NaNs
-            # https://stackoverflow.com/questions/27534968/dimension-reduction-using-psychprincipal-does-not-work-for-smaller-data
-    ) %>% as.numeric()
+      pca_melodic_singing_accuracy <- predict(musicassessr::melody_pca2,
+              data = tibble::tibble(melody_note_precision = melody_note_precision,
+                                    interval_precision = melody_interval_precision,
+                                    interval_accuracy = end_melody_summary$mean_melody_interval_accuracy),
+              old.data = musicassessr::melody_pca2_data
+              # you need to pass this for standardization or you will get NaNs
+              # https://stackoverflow.com/questions/27534968/dimension-reduction-using-psychprincipal-does-not-work-for-smaller-data
+      ) %>% as.numeric()
   }
 
   list("Long_Note" = if(is_null_scalar(long_note_scores) | is_na_scalar(long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else long_note_pca_scores,
