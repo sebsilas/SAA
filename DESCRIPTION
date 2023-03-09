@@ -21,15 +21,17 @@ Imports:
     musicassessr (>= 0.0.0.9000),
     psychTestR (>= 2.23.0),
     psychTestRCATME (>= 1.6.2),
+    psyquest (>= 1.3.0),
     readxl
 Depends: 
     R (>= 2.10),
     musicassessr (>= 0.0.0.9000),
     Berkowitz
-Remotes: 
+Remotes:  
     sebsilas/musicassessr@master,
     sebsilas/psychTestR,
     sebsilas/Berkowitz,
-    sebsilas/psychTestRCATME
+    sebsilas/psychTestRCATME,
+    fmhoeger/psyquest
 URL: https://github.com/sebsilas/SAA
 BugReports: https://github.com/sebsilas/SAA/issues
