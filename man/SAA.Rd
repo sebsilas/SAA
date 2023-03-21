@@ -7,7 +7,8 @@
 SAA(
   app_name,
   num_items = list(long_tones = 6L, arrhythmic = 10L, rhythmic = 10L),
-  item_bank = Berkowitz::Berkowitz,
+  arrhythmic_item_bank = Berkowitz::ngram_item_bank,
+  rhythmic_item_bank = Berkowitz::phrase_item_bank,
   demographics = TRUE,
   demo = FALSE,
   feedback = FALSE,
@@ -50,7 +51,9 @@ SAA(
 
 \item{num_items}{The number of items as a list.}
 
-\item{item_bank}{The item bank (created with itembankr) to deployed with the test.}
+\item{arrhythmic_item_bank}{The item bank (created with itembankr) to deployed with the test.}
+
+\item{rhythmic_item_bank}{The item bank (created with itembankr) to deployed with the test.}
 
 \item{demographics}{Deploy demographic form?}
 

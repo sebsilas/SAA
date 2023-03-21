@@ -4,7 +4,8 @@
 #'
 #' @param app_name Name of app.
 #' @param num_items The number of items as a list.
-#' @param item_bank The item bank (created with itembankr) to deployed with the test.
+#' @param arrhythmic_item_bank The item bank (created with itembankr) to deployed with the test.
+#' @param rhythmic_item_bank The item bank (created with itembankr) to deployed with the test.
 #' @param demographics Deploy demographic form?
 #' @param demo Is demo?
 #' @param feedback Give feedback after trials?
@@ -52,7 +53,8 @@ SAA_standalone <- function(app_name,
                            num_items = list("long_tones" = 6L,
                                             "arrhythmic" = 10L,
                                             "rhythmic" = 10L),
-                           item_bank = Berkowitz::Berkowitz,
+                           arrhythmic_item_bank = Berkowitz::ngram_item_bank,
+                           rhythmic_item_bank = Berkowitz::phrase_item_bank,
                            demographics = TRUE,
                            demo = FALSE,
                            feedback = FALSE,
@@ -93,7 +95,8 @@ SAA_standalone <- function(app_name,
 
   timeline <- SAA(app_name,
                   num_items,
-                  item_bank,
+                  arrhythmic_item_bank,
+                  rhythmic_item_bank,
                   demographics,
                   demo,
                   feedback,
@@ -159,7 +162,8 @@ SAA_standalone <- function(app_name,
 #'
 #' @param app_name Name of app.
 #' @param num_items The number of items as a list.
-#' @param item_bank The item bank (created with itembankr) to deployed with the test.
+#' @param arrhythmic_item_bank The item bank (created with itembankr) to deployed with the test.
+#' @param rhythmic_item_bank The item bank (created with itembankr) to deployed with the test.
 #' @param demographics Deploy demographic form?
 #' @param demo Is demo?
 #' @param feedback Give feedback after trials?
@@ -205,7 +209,8 @@ SAA <- function(app_name,
                 num_items = list("long_tones" = 6L,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
-                item_bank = Berkowitz::Berkowitz,
+                arrhythmic_item_bank = Berkowitz::ngram_item_bank,
+                rhythmic_item_bank = Berkowitz::phrase_item_bank,
                 demographics = TRUE,
                 demo = FALSE,
                 feedback = FALSE,
@@ -247,7 +252,8 @@ SAA <- function(app_name,
   stopifnot(
     assertthat::is.string(app_name),
     is.list(num_items) | length(num_items) == 3L & setequal(names(num_items), c("long_tones", "arrhythmic", "rhythmic")),
-    is.function(item_bank) | is.data.frame(item_bank),
+    is(arrhythmic_item_bank, "item_bank"),
+    is(rhythmic_item_bank, "item_bank"),
     is.logical(demographics),
     is.logical(demo),
     is.logical(feedback),
@@ -338,7 +344,7 @@ SAA <- function(app_name,
                                                           long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page),
 
                            # arrhythmic
-                           musicassessr::arrhythmic_melody_trials(item_bank = itembankr::subset_item_bank(item_bank("main"), item_length = melody_length),
+                           musicassessr::arrhythmic_melody_trials(item_bank = itembankr::subset_item_bank(arrhythmic_item_bank, item_length = melody_length),
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
                                                                   feedback = feedback,
@@ -351,7 +357,7 @@ SAA <- function(app_name,
                                                                   get_answer = pyin_with_additional),
 
                            # rhythmic
-                           musicassessr::rhythmic_melody_trials(item_bank = itembankr::subset_item_bank(item_bank("phrases"), melody_length),
+                           musicassessr::rhythmic_melody_trials(item_bank = itembankr::subset_item_bank(rhythmic_item_bank, melody_length),
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = 0, # because it's effectively the same task as arrhythmic
                                                                 feedback = feedback,
