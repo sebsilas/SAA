@@ -344,7 +344,7 @@ SAA <- function(app_name,
                                                           long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page),
 
                            # arrhythmic
-                           musicassessr::arrhythmic_melody_trials(item_bank = itembankr::subset_item_bank(arrhythmic_item_bank, item_length = melody_length),
+                           musicassessr::arrhythmic_melody_trials(item_bank = itembankr::subset_item_bank(arrhythmic_item_bank, item_length = melody_length, return_as_item_bank_class = TRUE),
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
                                                                   feedback = feedback,
@@ -357,7 +357,7 @@ SAA <- function(app_name,
                                                                   get_answer = pyin_with_additional),
 
                            # rhythmic
-                           musicassessr::rhythmic_melody_trials(item_bank = itembankr::subset_item_bank(rhythmic_item_bank, melody_length),
+                           musicassessr::rhythmic_melody_trials(item_bank = itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE),
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = 0, # because it's effectively the same task as arrhythmic
                                                                 feedback = feedback,
