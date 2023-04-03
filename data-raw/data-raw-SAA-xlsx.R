@@ -3,7 +3,9 @@
 library(tidyverse)
 
 SAA_dict_df <- readxl::read_excel("data-raw/SAA.xlsx")
-SAA_dict_df$de <- "a"
+
+SAA_dict_df <- SAA_dict_df %>%
+  mutate(de = case_when(is.na(de) ~ en, TRUE ~ de))
 
 SAA_dict <- musicassessr::dict(additional_dict = SAA_dict_df)
 
@@ -72,7 +74,7 @@ hist(percentile_dist$long_note_percentile)
 
 hist(percentile_dist$Final_SAA_Score)
 
-# But these distributions are not normal. We should be careful.
+# But these distributions are not normal. We should be careful. This can be a temporary solution until I think of a better way of doing it.
 
 # But the original distrs are:
 # hist(d1$arrhythmic_score)
