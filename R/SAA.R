@@ -522,6 +522,10 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
     # arrhythmic
     arrhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.arrhythmic_melodies, use_for_production = "pyin_pitch_track")
 
+    if(!"proportion_of_correct_note_events" %in% names(arrhythmic_melodies)) {
+      arrhythmic_melodies$proportion_of_correct_note_events <- NA
+    }
+
     arrhythmic_melody_tmp <- arrhythmic_melodies %>%
       dplyr::select(answer_meta_data.N, answer_meta_data.step.cont.loc.var, answer_meta_data.tonalness, answer_meta_data.log_freq, opti3, proportion_of_correct_note_events) %>%
       dplyr::mutate_if(is.character,as.numeric) %>%
@@ -553,8 +557,12 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
     # rhythmic
     rhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.rhythmic_melodies, use_for_production = "pyin_pitch_track")
 
+    if(!"proportion_of_correct_note_events" %in% names(rhythmic_melodies)) {
+      rhythmic_melodies$proportion_of_correct_note_events <- NA
+    }
+
     rhythmic_melody_tmp <- rhythmic_melodies %>%
-      dplyr::select(answer_meta_data.N, answer_meta_data.step.cont.loc.var, answer_meta_data.log_freq, answer_meta_data.d.entropy, answer_meta_data.i.entropy, opti3, proportion_of_correct_note_events) %>%
+      dplyr::select(answer_meta_data.N, answer_meta_data.step.cont.loc.var, answer_meta_data.d.entropy, answer_meta_data.i.entropy, opti3, proportion_of_correct_note_events) %>%
       dplyr::mutate_if(is.character,as.numeric) %>%
       unique() %>%
       dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
