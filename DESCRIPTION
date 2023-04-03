@@ -29,7 +29,7 @@ Depends:
     Berkowitz
 Remotes:  
     sebsilas/musicassessr@master,
-    sebsilas/psychTestR,
+    pmcharrison/psychTestR,
     sebsilas/Berkowitz,
     sebsilas/psychTestRCATME,
     klausfrieler/psyquest

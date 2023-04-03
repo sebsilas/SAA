@@ -129,7 +129,7 @@ aSAA_standalone <- function(app_name,
                                      right_margin = 1L,
                                      css = system.file('www/css/musicassessr.css', package = "musicassessr")
                                    ),
-                                   languages = c("en"),
+                                   languages = c("en", "de", "it"),
                                    additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
                                                                                       app_name = app_name), ...))
 }
