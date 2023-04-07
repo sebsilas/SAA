@@ -417,6 +417,9 @@ SAA_intro <- function(demo = FALSE,
                       app_name,
                       default_range = list(bottom_range = 48, top_range = 72)) {
 
+  if(test_name == "Singing Ability Assessment") test_name <- psychTestR::i18n("SAA_test_name")
+
+
   psychTestR::join(
     musicassessr::musicassessr_init(test = "SAA",
                                     test_username = test_username,
@@ -472,7 +475,7 @@ SAA_instructions <- function(max_goes_forced, max_goes) {
                                                      shiny::tags$p(psychTestR::i18n("SAA_instructions4"))),
                               button_text = psychTestR::i18n("Next")),
 
-  psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2("Instructions"),
+  psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(psychTestR::i18n("Instructions")),
                                                      shiny::tags$p(paste0(psychTestR::i18n(SAA_instructions_5.1), " "),
                                                                    shiny::tags$strong(max_goes),
                                                                    paste0(" ", psychTestR::i18n(SAA_instructions_5.2))),
@@ -772,7 +775,7 @@ present_scores_page <- function(Final_SAA_Score, processed_results) {
 
                              shiny::tags$h3('Total Score'),
                              shiny::tags$p(Final_SAA_Score),
-                             shiny::tags$p("Enter a username to see the scoreboard: ")
+                             shiny::tags$p(psychTestR::i18n("enter_username_to_see_scoreboard"))
 
     ),
     save_answer = FALSE
