@@ -46,6 +46,7 @@ SAA_standalone(
   validate_user_entry_into_test = FALSE,
   additional_scoring_measures = NULL,
   default_range = list(bottom_range = 48, top_range = 72),
+  long_tone_paradigm = c("sing_along", "call_response"),
   ...
 )
 }
@@ -131,6 +132,8 @@ SAA_standalone(
 \item{additional_scoring_measures}{A function or list of functions with additional measures for scoring pYIN data.}
 
 \item{default_range}{A list of the range that stimuli should be presented in, if not collected at test time.}
+
+\item{long_tone_paradigm}{Can be sing_along or call_and_response.}
 
 \item{...}{}
 }

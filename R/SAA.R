@@ -43,6 +43,7 @@
 #' @param validate_user_entry_into_test Should the user be validated against a session token?
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
 #' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
+#' @param long_tone_paradigm Can be sing_along or call_and_response.
 #' @param ...
 #'
 #' @return
@@ -91,7 +92,8 @@ SAA_standalone <- function(app_name,
                            full_screen = FALSE,
                            validate_user_entry_into_test = FALSE,
                            additional_scoring_measures = NULL,
-                           default_range = list(bottom_range = 48, top_range = 72), ...) {
+                           default_range = list(bottom_range = 48, top_range = 72),
+                           long_tone_paradigm = c("sing_along", "call_and_response"), ...) {
 
   timeline <- SAA(app_name,
                   num_items,
@@ -131,7 +133,8 @@ SAA_standalone <- function(app_name,
                   concise_wording,
                   skip_setup,
                   additional_scoring_measures,
-                  default_range)
+                  default_range,
+                  long_tone_paradigm)
 
 
   # run the test
@@ -200,7 +203,7 @@ SAA_standalone <- function(app_name,
 #' @param skip_setup TRUE to skip setup steps.
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
 #' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
-#'
+#' @param long_tone_paradigm Can be sing_along or call_and_response.
 #' @return
 #' @export
 #'
@@ -245,7 +248,8 @@ SAA <- function(app_name,
                 concise_wording = TRUE,
                 skip_setup = FALSE,
                 additional_scoring_measures = NULL,
-                default_range = list(bottom_range = 48, top_range = 72)
+                default_range = list(bottom_range = 48, top_range = 72),
+                long_tone_paradigm = c("sing_along", "call_and_response")
                 ) {
 
 
@@ -288,7 +292,8 @@ SAA <- function(app_name,
     is.logical(concise_wording),
     is.logical(skip_setup),
     is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures),
-    is.list(default_range) & length(default_range) == 2 & setequal(names(default_range), c("bottom_range", "top_range"))
+    is.list(default_range) & length(default_range) == 2 & setequal(names(default_range), c("bottom_range", "top_range")),
+    assertthat::is.string(match.arg(long_tone_paradigm))
     )
 
   shiny::addResourcePath(
@@ -341,7 +346,8 @@ SAA <- function(app_name,
                                                           num_examples = examples,
                                                           feedback = feedback,
                                                           long_tone_trials_as_screening = long_tone_trials_as_screening,
-                                                          long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page),
+                                                          long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page,
+                                                          paradigm = long_tone_paradigm),
 
                            # arrhythmic
                            musicassessr::arrhythmic_melody_trials(item_bank = itembankr::subset_item_bank(arrhythmic_item_bank, item_length = melody_length, return_as_item_bank_class = TRUE),
