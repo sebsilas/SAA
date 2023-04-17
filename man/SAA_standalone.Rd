@@ -46,7 +46,7 @@ SAA_standalone(
   validate_user_entry_into_test = FALSE,
   additional_scoring_measures = NULL,
   default_range = list(bottom_range = 48, top_range = 72),
-  long_tone_paradigm = c("sing_along", "call_response"),
+  long_tone_paradigm = c("sing_along", "call_and_response"),
   ...
 )
 }
