@@ -54,8 +54,8 @@ SAA_standalone <- function(app_name,
                            num_items = list("long_tones" = 6L,
                                             "arrhythmic" = 10L,
                                             "rhythmic" = 10L),
-                           arrhythmic_item_bank = Berkowitz::ngram_item_bank,
-                           rhythmic_item_bank = Berkowitz::phrase_item_bank,
+                           arrhythmic_item_bank = Berkowitz::ngram_item_bank, # N.B. this has a log_freq column, which is required. No other itembankr columns do
+                           rhythmic_item_bank = Berkowitz::combined_item_bank,
                            demographics = TRUE,
                            demo = FALSE,
                            feedback = FALSE,
@@ -70,7 +70,7 @@ SAA_standalone <- function(app_name,
                            test_username = character(),
                            gold_msi = TRUE,
                            with_final_page = TRUE,
-                           melody_length = c(3,15),
+                           melody_length = c(4,20),
                            melody_sound = "piano",
                            adjust_range = TRUE,
                            test_name = "Singing Ability Assessment",
@@ -213,7 +213,7 @@ SAA <- function(app_name,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
                 arrhythmic_item_bank = Berkowitz::ngram_item_bank,
-                rhythmic_item_bank = Berkowitz::ngram_item_bank,
+                rhythmic_item_bank = Berkowitz::combined_item_bank,
                 demographics = TRUE,
                 demo = FALSE,
                 feedback = FALSE,
@@ -228,7 +228,7 @@ SAA <- function(app_name,
                 test_username = character(),
                 gold_msi = TRUE,
                 with_final_page = TRUE,
-                melody_length = c(3,20),
+                melody_length = c(4,20),
                 melody_sound = "piano",
                 adjust_range = TRUE,
                 test_name = "Singing Ability Assessment",
@@ -254,6 +254,7 @@ SAA <- function(app_name,
 
 
   stopifnot(
+    melody_length[1] > 3,
     assertthat::is.string(app_name),
     is.list(num_items) | length(num_items) == 3L & setequal(names(num_items), c("long_tones", "arrhythmic", "rhythmic")),
     is(arrhythmic_item_bank, "item_bank"),
@@ -398,12 +399,8 @@ SAA <- function(app_name,
 
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
 
-                           if(final_results) final_results_saa(test_name = test_name,
-                                                               url = absolute_url,
-                                                               num_items$long_tones,
-                                                               num_items$arrhythmic,
-                                                               num_items$rhythmic,
-                                                               show_socials)
+                           final_results_saa(final_results, test_name = test_name,  url = absolute_url,
+                                             num_items$long_tones, num_items$arrhythmic, num_items$rhythmic, show_socials)
 
         )
       ),
@@ -551,10 +548,11 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
     }
 
     arrhythmic_melody_tmp <- arrhythmic_melodies %>%
-      dplyr::select(answer_meta_data.N, answer_meta_data.step.cont.loc.var, answer_meta_data.tonalness, answer_meta_data.log_freq, opti3, proportion_of_correct_note_events) %>%
+      dplyr::select(-c(durations, ngrukkon)) %>%
+      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
+      dplyr::select(N, step.cont.loc.var, tonalness, log_freq, opti3, proportion_of_correct_note_events) %>%
       dplyr::mutate_if(is.character,as.numeric) %>%
       unique() %>%
-      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
       dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
 
     if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(arrhythmic_melodies$error))) {
@@ -586,10 +584,11 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
     }
 
     rhythmic_melody_tmp <- rhythmic_melodies %>%
-      dplyr::select(answer_meta_data.N, answer_meta_data.step.cont.loc.var, answer_meta_data.d.entropy, answer_meta_data.i.entropy, opti3, proportion_of_correct_note_events) %>%
+      dplyr::select(-c(durations, ngrukkon)) %>%
+      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
+      dplyr::select(N, step.cont.loc.var, d.entropy, i.entropy, opti3, proportion_of_correct_note_events) %>%
       dplyr::mutate_if(is.character,as.numeric) %>%
       unique() %>%
-      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
       dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
 
     if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(rhythmic_melodies$error))) {
@@ -635,34 +634,38 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
 
   if(is_na_scalar(all_melodies)) {
+
     arrhythmic_melody_summary <- NA
     rhythmic_melody_summary <- NA
     pca_melodic_singing_accuracy <- NA
     melody_note_precision <- NA
     melody_interval_precision <- NA
+
   } else {
 
     melody_precision_vars <- all_melodies %>%
-      dplyr::select(pyin_pitch_track.freq, stimuli,
-                    pyin_pitch_track.nearest_stimuli_note,
-                    pyin_pitch_track.interval, pyin_pitch_track.interval_cents) %>%
-      dplyr::rename(freq = pyin_pitch_track.freq,
-                    nearest_stimuli_note = pyin_pitch_track.nearest_stimuli_note,
-                    interval = pyin_pitch_track.interval,
-                    interval_cents = pyin_pitch_track.interval_cents) %>%
-      dplyr::mutate(freq = as.numeric(freq),
-                    nearest_stimuli_note = as.numeric(nearest_stimuli_note),
-                    interval = as.numeric(interval),
-                    interval_cents = as.numeric(interval_cents)) %>%
-      dplyr::rowwise() %>%
-      dplyr::mutate(note = if(is.na(freq)) NA else round(hrep::freq_to_midi(freq))) %>%
-      dplyr::ungroup()
+      dplyr::select(-durations) %>%
+      dplyr::rename_with(~stringr::str_remove(.x, "pyin_pitch_track.")) %>%
+      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data."))
+
+
+    if( length(intersect(c('freq', 'stimuli', 'nearest_stimuli_note', 'interval', 'interval_cents'), names(melody_precision_vars) )) == 5 ) {
+
+      melody_precision_vars <- melody_precision_vars %>%
+        dplyr::select(freq, stimuli, nearest_stimuli_note, interval, interval_cents) %>%
+        dplyr::mutate(freq = as.numeric(freq),
+                      nearest_stimuli_note = as.numeric(nearest_stimuli_note),
+                      interval = as.numeric(interval),
+                      interval_cents = as.numeric(interval_cents)) %>%
+        dplyr::rowwise() %>%
+        dplyr::mutate(note = if(is.na(freq)) NA else round(hrep::freq_to_midi(freq))) %>%
+        dplyr::ungroup()
 
       melody_note_precision <- melody_precision_vars %>%
         musicassessr::score_melody_note_precision()
 
       melody_interval_precision <- melody_precision_vars %>%
-       musicassessr::score_melody_interval_precision()
+        musicassessr::score_melody_interval_precision()
 
       end_melody_summary <- all_melodies %>%
         dplyr::select(file, melody_interval_accuracy, melody_note_accuracy) %>%
@@ -671,16 +674,25 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
         dplyr::mutate(dplyr::across(dplyr::everything(), as.numeric)) %>%
         dplyr::summarise(mean_melody_note_accuracy = mean(melody_note_accuracy, na.rm = TRUE),
                          mean_melody_interval_accuracy = mean(melody_interval_accuracy, na.rm = TRUE)
-                         )
+        )
 
       pca_melodic_singing_accuracy <- predict(musicassessr::melody_pca2,
-              data = tibble::tibble(melody_note_precision = melody_note_precision,
-                                    interval_precision = melody_interval_precision,
-                                    interval_accuracy = end_melody_summary$mean_melody_interval_accuracy),
-              old.data = musicassessr::melody_pca2_data
-              # you need to pass this for standardization or you will get NaNs
-              # https://stackoverflow.com/questions/27534968/dimension-reduction-using-psychprincipal-does-not-work-for-smaller-data
+                                              data = tibble::tibble(melody_note_precision = melody_note_precision,
+                                                                    interval_precision = melody_interval_precision,
+                                                                    interval_accuracy = end_melody_summary$mean_melody_interval_accuracy),
+                                              old.data = musicassessr::melody_pca2_data
+                                              # you need to pass this for standardization or you will get NaNs
+                                              # https://stackoverflow.com/questions/27534968/dimension-reduction-using-psychprincipal-does-not-work-for-smaller-data
       ) %>% as.numeric()
+    } else {
+      arrhythmic_melody_summary <- NA
+      rhythmic_melody_summary <- NA
+      pca_melodic_singing_accuracy <- NA
+      melody_note_precision <- NA
+      melody_interval_precision <- NA
+    }
+
+
   }
 
   list("Long_Note" = if(is_null_scalar(long_note_scores) | is_na_scalar(long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else long_note_pca_scores,
@@ -702,15 +714,18 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
 
 
-final_results_saa <- function(test_name,
-                          url,
-                          num_items_long_tone,
-                          num_items_arrhythmic,
-                          num_items_rhythmic,
-                          socials = FALSE,
-                          hashtag = " ") {
+final_results_saa <- function(final_results,
+                              test_name,
+                              url,
+                              num_items_long_tone,
+                              num_items_arrhythmic,
+                              num_items_rhythmic,
+                              socials = FALSE,
+                              hashtag = " ") {
+
   psychTestR::join(
-    psychTestR::reactive_page(function(state, ...) {
+
+    psychTestR::code_block(function(state, ...) {
 
       res <- as.list(psychTestR::get_results(state, complete = FALSE))
 
@@ -725,7 +740,10 @@ final_results_saa <- function(test_name,
       Final_SAA_Score <- weight_final_SAA_score(num_items_long_tone, num_items_arrhythmic, num_items_rhythmic,
                                                 long_note_percentile, arrhythmic_percentile, rhythmic_percentile)
 
+
       psychTestR::set_local("final_score", Final_SAA_Score, state) # leave this in; it gets used by musicassessr
+      psychTestR::set_local("processed_results", processed_results, state) # leave this in; it gets used by musicassessr
+
 
       # Save results
       psychTestR::save_result(place = state,
@@ -738,19 +756,27 @@ final_results_saa <- function(test_name,
                                   "Rhythmic_Percentile" = rhythmic_percentile,
                                   "Final_SAA_Score" = Final_SAA_Score)))
 
-      # Present results
-
-      present_scores_page(Final_SAA_Score, processed_results)
-
     }),
 
-    musicassessr::share_score_page(test_name,
-                                   url,
-                                   hashtag,
-                                   socials,
-                                   leaderboard_name = 'SAA_leaderboard.rda',
-                                   distribution_mean = Final_SAA_Score_m,
-                                   distribution_sd = Final_SAA_Score_sd)
+    if(final_results) {
+      psychTestR::join(
+        psychTestR::reactive_page(function(state, ...) {
+          # Present results
+          Final_SAA_Score <- psychTestR::get_local("final_score", state) # leave this in; it gets used by musicassessr
+          processed_results <- psychTestR::get_local("processed_results", state) # leave this in; it gets used by musicassessr
+
+          present_scores_page(Final_SAA_Score, processed_results)
+
+        }),
+        musicassessr::share_score_page(test_name,
+                                       url,
+                                       hashtag,
+                                       socials,
+                                       leaderboard_name = 'SAA_leaderboard.rda',
+                                       distribution_mean = Final_SAA_Score_m,
+                                       distribution_sd = Final_SAA_Score_sd)
+      )
+    }
 
   )
 }
