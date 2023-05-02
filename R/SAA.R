@@ -213,7 +213,7 @@ SAA <- function(app_name,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
                 arrhythmic_item_bank = Berkowitz::ngram_item_bank,
-                rhythmic_item_bank = Berkowitz::phrase_item_bank,
+                rhythmic_item_bank = Berkowitz::ngram_item_bank,
                 demographics = TRUE,
                 demo = FALSE,
                 feedback = FALSE,
@@ -228,7 +228,7 @@ SAA <- function(app_name,
                 test_username = character(),
                 gold_msi = TRUE,
                 with_final_page = TRUE,
-                melody_length = c(3,15),
+                melody_length = c(3,20),
                 melody_sound = "piano",
                 adjust_range = TRUE,
                 test_name = "Singing Ability Assessment",
@@ -312,6 +312,21 @@ SAA <- function(app_name,
   pyin_with_additional <- musicassessr::get_answer_pyin_melodic_production_additional_measures(type = "both", melconv = FALSE, additional_scoring_measures = additional_scoring_measures)
 
 
+  # Subset item banks
+  arrhythmic_item_bank_subset <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
+  rhythmic_item_bank_subset <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
+
+  # Check there is enough stimuli
+  if(nrow(arrhythmic_item_bank_subset) < num_items$arrhythmic)  stop("There are too few items using your item constraints for the arrhythmic_item_bank. Try making your melody length constraints less restrictive, or using another item bank.")
+  if(nrow(rhythmic_item_bank_subset) < num_items$rhythmic)  stop("There are too few items using your item constraints for the rhythmic_item_bank. Try making your melody length constraints less restrictive, or using another item bank.")
+
+  # Clean up
+  rm(c(arrhythmic_item_bank, rhythmic_item_bank))
+  gc()
+
+  # Start test
+
+
   timeline <- psychTestR::join(
     psychTestR::new_timeline(
       psychTestR::join(
@@ -350,7 +365,7 @@ SAA <- function(app_name,
                                                           paradigm = long_tone_paradigm),
 
                            # arrhythmic
-                           musicassessr::arrhythmic_melody_trials(item_bank = itembankr::subset_item_bank(arrhythmic_item_bank, item_length = melody_length, return_as_item_bank_class = TRUE),
+                           musicassessr::arrhythmic_melody_trials(item_bank = arrhythmic_item_bank_subset,
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
                                                                   feedback = feedback,
@@ -363,7 +378,7 @@ SAA <- function(app_name,
                                                                   get_answer = pyin_with_additional),
 
                            # rhythmic
-                           musicassessr::rhythmic_melody_trials(item_bank = itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE),
+                           musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank_subset,
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = 0, # because it's effectively the same task as arrhythmic
                                                                 feedback = feedback,
