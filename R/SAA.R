@@ -321,7 +321,7 @@ SAA <- function(app_name,
   if(nrow(rhythmic_item_bank_subset) < num_items$rhythmic)  stop("There are too few items using your item constraints for the rhythmic_item_bank. Try making your melody length constraints less restrictive, or using another item bank.")
 
   # Clean up
-  rm(c(arrhythmic_item_bank, rhythmic_item_bank))
+  rm(c("arrhythmic_item_bank", "rhythmic_item_bank"))
   gc()
 
   # Start test
