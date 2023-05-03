@@ -682,9 +682,11 @@ sort_arrhythmic_scores <- function(num_items_arrhythmic, res) {
 
     } else {
       arrhythmic_melody_score <- NA
+      arrhythmic_melody_summary <- NA
     }
   } else {
     arrhythmic_melodies <- NA
+    arrhythmic_melody_summary <- NA
   }
   list(arrhythmic_melody_score = arrhythmic_melody_score,
        arrhythmic_melodies = arrhythmic_melodies,
@@ -724,9 +726,11 @@ sort_rhythmic_scores <- function(num_items_rhythmic, res) {
 
     } else {
       rhythmic_melody_score <- NA
+      rhythmic_melody_summary <- NA
     }
   } else {
     rhythmic_melodies <- NA
+    rhythmic_melody_summary <- NA
   }
   list(rhythmic_melody_score = rhythmic_melody_score,
        rhythmic_melodies = rhythmic_melodies,
