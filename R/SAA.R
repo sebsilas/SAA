@@ -899,14 +899,6 @@ weight_final_SAA_score <- function(num_items_long_tone, num_items_arrhythmic, nu
   round(Final_SAA_Score, 2)
 }
 
-NA_to_0 <- function(val) {
-  if(is.na(val)) 0 else val
-}
-
-
-FALSE_to_0 <- function(val) {
-  if(val == FALSE) 0 else val
-}
 
 
 # SAA_standalone(get_range = FALSE, SNR_test = FALSE,
