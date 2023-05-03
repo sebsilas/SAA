@@ -528,6 +528,9 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
   } else {
 
+    arrhythmic_melody_summary <- results_arrhythmic$arrhythmic_melody_summary
+    rhythmic_melody_summary <- results_rhythmic$rhythmic_melody_summary
+
     melody_precision_vars <- all_melodies %>%
       { if("durations" %in% names(.)) dplyr::select(., -durations) else . } %>% # Because we want the version that comes from answer_meta_data, which is edited on-the-fly, in the case where the melody is made arrhythmic
       dplyr::rename_with(~stringr::str_remove(.x, "pyin_pitch_track.")) %>%
@@ -684,7 +687,8 @@ sort_arrhythmic_scores <- function(num_items_arrhythmic, res) {
     arrhythmic_melodies <- NA
   }
   list(arrhythmic_melody_score = arrhythmic_melody_score,
-       arrhythmic_melodies = arrhythmic_melodies)
+       arrhythmic_melodies = arrhythmic_melodies,
+       arrhythmic_melody_summary = arrhythmic_melody_summary)
 }
 
 sort_rhythmic_scores <- function(num_items_rhythmic, res) {
@@ -725,7 +729,8 @@ sort_rhythmic_scores <- function(num_items_rhythmic, res) {
     rhythmic_melodies <- NA
   }
   list(rhythmic_melody_score = rhythmic_melody_score,
-       rhythmic_melodies = rhythmic_melodies)
+       rhythmic_melodies = rhythmic_melodies,
+       rhythmic_melody_summary = rhythmic_melody_summary)
 }
 
 #
