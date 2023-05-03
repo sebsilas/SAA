@@ -509,128 +509,13 @@ SAA_instructions <- function(max_goes_forced, max_goes) {
 
 present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, num_items_rhythmic) {
 
-  if(num_items_long_note > 0) {
-    # long notes
-    long_note_scores <- res$SAA.long_tone_trials %>%
-      purrr::map(function(l) {
-        if(length(l$failed_tests) > 1) {
-          l$failed_tests <- paste0(l$failed_tests, collapse = ",")
-          l
-        } else {
-          l
-        }
-      }) %>%
-      dplyr::bind_rows() %>%
-      dplyr::select(long_note_accuracy, long_note_dtw_distance, long_note_autocorrelation_mean,
-                    long_note_run_test, long_note_no_cpts, long_note_beginning_of_second_cpt) %>%
-      unique()
+  results_long_note <- sort_long_note_scores(num_items_long_note, res)
 
-    long_note_pca_scores <- musicassessr::get_long_note_pcas(long_note_scores)
+  results_arrhythmic <- sort_arrhythmic_scores(num_items_arrhythmic, res)
 
-    } else {
+  results_rhythmic <- sort_rhythmic_scores(num_items_rhythmic, res)
 
-      long_note_scores <- tibble::tibble(
-        long_note_accuracy = NA, long_note_dtw_distance = NA, long_note_autocorrelation_mean = NA,
-        long_note_run_test = NA, long_note_no_cpts = NA, long_note_beginning_of_second_cpt = NA)
-
-      long_note_pca_scores <- tibble::tibble(pca_long_note_randomness = NA,
-                                         pca_long_note_accuracy = NA,
-                                         pca_long_note_scoop = NA)
-  }
-
-  if(num_items_arrhythmic > 0) {
-
-    # arrhythmic
-    arrhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.arrhythmic_melodies, use_for_production = "pyin_pitch_track")
-
-    if(!"proportion_of_correct_note_events" %in% names(arrhythmic_melodies)) {
-      arrhythmic_melodies$proportion_of_correct_note_events <- NA
-    }
-
-    arrhythmic_melody_tmp <- arrhythmic_melodies %>%
-      dplyr::select(-c(durations, ngrukkon)) %>%
-      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
-      dplyr::select(N, step.cont.loc.var, tonalness, log_freq, opti3, proportion_of_correct_note_events) %>%
-      dplyr::mutate_if(is.character,as.numeric) %>%
-      unique() %>%
-      dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
-
-    if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(arrhythmic_melodies$error))) {
-
-      arrhythmic_melody_model_prediction <- arrhythmic_melody_tmp %>%
-        dplyr::select(-proportion_of_correct_note_events) %>%
-        psychTestRCATME::predict_based_on_mixed_effects_arrhythmic_model(musicassessr::lm2.2, .)
-
-      arrhythmic_melody_summary <- arrhythmic_melody_tmp %>%
-        dplyr::select(opti3, proportion_of_correct_note_events) %>%
-        dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
-        dplyr::mutate(SAA_Ability_Arrhythmic = arrhythmic_melody_model_prediction)
-
-      arrhythmic_melody_score <- arrhythmic_melody_summary$SAA_Ability_Arrhythmic
-
-    } else {
-      arrhythmic_melody_score <- NA
-    }
-  } else {
-    arrhythmic_melodies <- NA
-  }
-
-  if(num_items_rhythmic > 0) {
-    # rhythmic
-    rhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.rhythmic_melodies, use_for_production = "pyin_pitch_track")
-
-    if(!"proportion_of_correct_note_events" %in% names(rhythmic_melodies)) {
-      rhythmic_melodies$proportion_of_correct_note_events <- NA
-    }
-
-    rhythmic_melody_tmp <- rhythmic_melodies %>%
-      dplyr::select(-c(durations, ngrukkon)) %>%
-      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
-      dplyr::select(N, step.cont.loc.var, d.entropy, i.entropy, opti3, proportion_of_correct_note_events) %>%
-      dplyr::mutate_if(is.character,as.numeric) %>%
-      unique() %>%
-      dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
-
-    if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(rhythmic_melodies$error))) {
-
-      rhythmic_melody_model_prediction <- rhythmic_melody_tmp %>%
-        dplyr::select(-proportion_of_correct_note_events) %>%
-        psychTestRCATME::predict_based_on_mixed_effects_rhythmic_model(musicassessr::lm3.2, .)
-
-      rhythmic_melody_summary <- rhythmic_melody_tmp %>%
-        dplyr::select(opti3, proportion_of_correct_note_events) %>%
-        dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
-        dplyr::mutate(SAA_Ability_Rhythmic = rhythmic_melody_model_prediction)
-
-      rhythmic_melody_score <- rhythmic_melody_summary$SAA_Ability_Rhythmic
-
-    } else {
-      rhythmic_melody_score <- NA
-    }
-  } else {
-    rhythmic_melodies <- NA
-  }
-
-
-  # Calculate note precision
-
-
-  if(!is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
-    shared_names <- intersect(names(arrhythmic_melodies), names(rhythmic_melodies))
-    arrhythmic_melodies <- arrhythmic_melodies %>% dplyr::select(shared_names)
-    rhythmic_melodies <- rhythmic_melodies %>% dplyr::select(shared_names)
-    all_melodies <- rbind(arrhythmic_melodies, rhythmic_melodies)
-  } else if(is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
-    all_melodies <- rhythmic_melodies
-    arrhythmic_melody_summary <- NA
-  } else if(!is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
-    all_melodies <- arrhythmic_melodies
-    rhythmic_melody_summary <- NA
-  }  else if(is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
-    all_melodies <- NA
-  } else {
-    stop('Something is not right')
-  }
+  all_melodies <- compile_melodies_together(results_arrhythmic$arrhythmic_melodies, results_rhythmic$rhythmic_melodies)
 
 
   if(is_na_scalar(all_melodies)) {
@@ -644,7 +529,7 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
   } else {
 
     melody_precision_vars <- all_melodies %>%
-      dplyr::select(-durations) %>%
+      { if("durations" %in% names(.)) dplyr::select(., -durations) else . } %>% # Because we want the version that comes from answer_meta_data, which is edited on-the-fly, in the case where the melody is made arrhythmic
       dplyr::rename_with(~stringr::str_remove(.x, "pyin_pitch_track.")) %>%
       dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data."))
 
@@ -695,15 +580,153 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
   }
 
-  list("Long_Note" = if(is_null_scalar(long_note_scores) | is_na_scalar(long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else long_note_pca_scores,
-       "SAA_Ability_Arrhythmic" = if(is_null_scalar(arrhythmic_melody_summary) | is_na_scalar(arrhythmic_melody_summary)) NA else arrhythmic_melody_score,
-       "SAA_Ability_Rhythmic" = if(is_null_scalar(rhythmic_melody_summary) | is_na_scalar(rhythmic_melody_summary)) NA else rhythmic_melody_score,
+  list("Long_Note" = if(is_null_scalar(results_long_note$long_note_scores) | is_na_scalar(results_long_note$long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else results_long_note$long_note_pca_scores,
+       "SAA_Ability_Arrhythmic" = if(is_null_scalar(arrhythmic_melody_summary) | is_na_scalar(arrhythmic_melody_summary)) NA else results_arrhythmic$arrhythmic_melody_score,
+       "SAA_Ability_Rhythmic" = if(is_null_scalar(rhythmic_melody_summary) | is_na_scalar(rhythmic_melody_summary)) NA else results_rhythmic$rhythmic_melody_score,
        "melody_note_precision" = melody_note_precision,
        "melody_interval_precision" = melody_interval_precision,
        "pca_melodic_singing_accuracy" = pca_melodic_singing_accuracy)
 
 }
 
+compile_melodies_together <- function(arrhythmic_melodies, rhythmic_melodies) {
+
+  if(!is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
+    shared_names <- intersect(names(arrhythmic_melodies), names(rhythmic_melodies))
+    arrhythmic_melodies <- arrhythmic_melodies %>% dplyr::select(shared_names)
+    rhythmic_melodies <- rhythmic_melodies %>% dplyr::select(shared_names)
+    all_melodies <- rbind(arrhythmic_melodies, rhythmic_melodies)
+  } else if(is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
+    all_melodies <- rhythmic_melodies
+    arrhythmic_melody_summary <- NA
+  } else if(!is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
+    all_melodies <- arrhythmic_melodies
+    rhythmic_melody_summary <- NA
+  }  else if(is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
+    all_melodies <- NA
+  } else {
+    stop('Something is not right')
+  }
+  all_melodies
+}
+
+sort_long_note_scores <- function(num_items_long_note, res) {
+  if(num_items_long_note > 0) {
+    # long notes
+    long_note_scores <- res$SAA.long_tone_trials %>%
+      purrr::map(function(l) {
+        if(length(l$failed_tests) > 1) {
+          l$failed_tests <- paste0(l$failed_tests, collapse = ",")
+          l
+        } else {
+          l
+        }
+      }) %>%
+      dplyr::bind_rows() %>%
+      dplyr::select(long_note_accuracy, long_note_dtw_distance, long_note_autocorrelation_mean,
+                    long_note_run_test, long_note_no_cpts, long_note_beginning_of_second_cpt) %>%
+      unique()
+
+    long_note_pca_scores <- musicassessr::get_long_note_pcas(long_note_scores)
+
+  } else {
+
+    long_note_scores <- tibble::tibble(
+      long_note_accuracy = NA, long_note_dtw_distance = NA, long_note_autocorrelation_mean = NA,
+      long_note_run_test = NA, long_note_no_cpts = NA, long_note_beginning_of_second_cpt = NA)
+
+    long_note_pca_scores <- tibble::tibble(pca_long_note_randomness = NA,
+                                           pca_long_note_accuracy = NA,
+                                           pca_long_note_scoop = NA)
+  }
+
+  list(long_note_scores = long_note_scores,
+       long_note_pca_scores = long_note_pca_scores)
+}
+
+
+sort_arrhythmic_scores <- function(num_items_arrhythmic, res) {
+  if(num_items_arrhythmic > 0) {
+
+    # arrhythmic
+    arrhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.arrhythmic_melodies, use_for_production = "pyin_pitch_track")
+
+    if(!"proportion_of_correct_note_events" %in% names(arrhythmic_melodies)) {
+      arrhythmic_melodies$proportion_of_correct_note_events <- NA
+    }
+
+    arrhythmic_melody_tmp <- arrhythmic_melodies %>%
+      { if("durations" %in% names(.)) dplyr::select(., -durations) else . } %>% # Because we want the version that comes from answer_meta_data, which is edited on-the-fly, in the case where the melody is made arrhythmic
+      { if("ngrukkon" %in% names(.)) dplyr::select(., -ngrukkon) else . } %>%
+      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
+      dplyr::select(N, step.cont.loc.var, tonalness, log_freq, opti3, proportion_of_correct_note_events) %>%
+      dplyr::mutate_if(is.character,as.numeric) %>%
+      unique() %>%
+      dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
+
+    if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(arrhythmic_melodies$error))) {
+
+      arrhythmic_melody_model_prediction <- arrhythmic_melody_tmp %>%
+        dplyr::select(-proportion_of_correct_note_events) %>%
+        psychTestRCATME::predict_based_on_mixed_effects_arrhythmic_model(musicassessr::lm2.2, .)
+
+      arrhythmic_melody_summary <- arrhythmic_melody_tmp %>%
+        dplyr::select(opti3, proportion_of_correct_note_events) %>%
+        dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
+        dplyr::mutate(SAA_Ability_Arrhythmic = arrhythmic_melody_model_prediction)
+
+      arrhythmic_melody_score <- arrhythmic_melody_summary$SAA_Ability_Arrhythmic
+
+    } else {
+      arrhythmic_melody_score <- NA
+    }
+  } else {
+    arrhythmic_melodies <- NA
+  }
+  list(arrhythmic_melody_score = arrhythmic_melody_score,
+       arrhythmic_melodies = arrhythmic_melodies)
+}
+
+sort_rhythmic_scores <- function(num_items_rhythmic, res) {
+  if(num_items_rhythmic > 0) {
+    # rhythmic
+    rhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.rhythmic_melodies, use_for_production = "pyin_pitch_track")
+
+    if(!"proportion_of_correct_note_events" %in% names(rhythmic_melodies)) {
+      rhythmic_melodies$proportion_of_correct_note_events <- NA
+    }
+
+    rhythmic_melody_tmp <- rhythmic_melodies %>%
+      { if("durations" %in% names(.)) dplyr::select(., -durations) else . } %>% # Because we want the version that comes from answer_meta_data, which is edited on-the-fly, in the case where the melody is made arrhythmic
+      { if("ngrukkon" %in% names(.)) dplyr::select(., -ngrukkon) else . } %>%
+      dplyr::rename_with(~stringr::str_remove(.x, "answer_meta_data.")) %>%
+      dplyr::select(N, step.cont.loc.var, d.entropy, i.entropy, opti3, proportion_of_correct_note_events) %>%
+      dplyr::mutate_if(is.character,as.numeric) %>%
+      unique() %>%
+      dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
+
+    if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(rhythmic_melodies$error))) {
+
+      rhythmic_melody_model_prediction <- rhythmic_melody_tmp %>%
+        dplyr::select(-proportion_of_correct_note_events) %>%
+        psychTestRCATME::predict_based_on_mixed_effects_rhythmic_model(musicassessr::lm3.2, .)
+
+      rhythmic_melody_summary <- rhythmic_melody_tmp %>%
+        dplyr::select(opti3, proportion_of_correct_note_events) %>%
+        dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
+        dplyr::mutate(SAA_Ability_Rhythmic = rhythmic_melody_model_prediction)
+
+      rhythmic_melody_score <- rhythmic_melody_summary$SAA_Ability_Rhythmic
+
+    } else {
+      rhythmic_melody_score <- NA
+    }
+  } else {
+    rhythmic_melodies <- NA
+  }
+  list(rhythmic_melody_score = rhythmic_melody_score,
+       rhythmic_melodies = rhythmic_melodies)
+}
 
 #
 # r <- readRDS("/Users/sebsilas/SAA/test_apps/example/output/results/id=2&p_id=364814f4daf3585347c3b169c29e29ae128e4da159870984351b5b0948c862b7&save_id=6&pilot=false&complete=true.rds")
@@ -726,6 +749,8 @@ final_results_saa <- function(final_results,
   psychTestR::join(
 
     psychTestR::code_block(function(state, ...) {
+
+      cat(file=stderr(), "asjdi23", "\n")
 
       res <- as.list(psychTestR::get_results(state, complete = FALSE))
 
@@ -761,6 +786,9 @@ final_results_saa <- function(final_results,
     if(final_results) {
       psychTestR::join(
         psychTestR::reactive_page(function(state, ...) {
+
+          cat(file=stderr(), "jasd92", "\n")
+
           # Present results
           Final_SAA_Score <- psychTestR::get_local("final_score", state) # leave this in; it gets used by musicassessr
           processed_results <- psychTestR::get_local("processed_results", state) # leave this in; it gets used by musicassessr
