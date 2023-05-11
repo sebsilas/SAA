@@ -47,6 +47,7 @@ SAA_standalone(
   additional_scoring_measures = NULL,
   default_range = list(bottom_range = 48, top_range = 72),
   long_tone_paradigm = c("sing_along", "call_and_response"),
+  get_p_id = FALSE,
   ...
 )
 }
@@ -134,6 +135,8 @@ SAA_standalone(
 \item{default_range}{A list of the range that stimuli should be presented in, if not collected at test time.}
 
 \item{long_tone_paradigm}{Can be sing_along or call_and_response.}
+
+\item{get_p_id}{if TRUE, get the participant to enter their ID at the beginning of the test.}
 
 \item{...}{}
 }

@@ -7,7 +7,7 @@
 SAA(
   app_name,
   num_items = list(long_tones = 6L, arrhythmic = 10L, rhythmic = 10L),
-  arrhythmic_item_bank = Berkowitz::combined_item_bank,
+  arrhythmic_item_bank = Berkowitz::ngram_item_bank,
   rhythmic_item_bank = Berkowitz::combined_item_bank,
   demographics = TRUE,
   demo = FALSE,
@@ -44,7 +44,8 @@ SAA(
   skip_setup = FALSE,
   additional_scoring_measures = NULL,
   default_range = list(bottom_range = 48, top_range = 72),
-  long_tone_paradigm = c("sing_along", "call_and_response")
+  long_tone_paradigm = c("sing_along", "call_and_response"),
+  get_p_id = FALSE
 )
 }
 \arguments{
@@ -127,6 +128,8 @@ SAA(
 \item{default_range}{A list of the range that stimuli should be presented in, if not collected at test time.}
 
 \item{long_tone_paradigm}{Can be sing_along or call_and_response.}
+
+\item{get_p_id}{if TRUE, get the participant to enter their ID at the beginning of the test.}
 }
 \description{
 Deploy the SAA

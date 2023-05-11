@@ -44,6 +44,7 @@
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
 #' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
 #' @param long_tone_paradigm Can be sing_along or call_and_response.
+#' @param get_p_id if TRUE, get the participant to enter their ID at the beginning of the test.
 #' @param ...
 #'
 #' @return
@@ -93,7 +94,8 @@ SAA_standalone <- function(app_name,
                            validate_user_entry_into_test = FALSE,
                            additional_scoring_measures = NULL,
                            default_range = list(bottom_range = 48, top_range = 72),
-                           long_tone_paradigm = c("sing_along", "call_and_response"), ...) {
+                           long_tone_paradigm = c("sing_along", "call_and_response"),
+                           get_p_id = FALSE, ...) {
 
   timeline <- SAA(app_name,
                   num_items,
@@ -134,7 +136,8 @@ SAA_standalone <- function(app_name,
                   skip_setup,
                   additional_scoring_measures,
                   default_range,
-                  long_tone_paradigm)
+                  long_tone_paradigm,
+                  get_p_id)
 
 
   # run the test
@@ -204,6 +207,7 @@ SAA_standalone <- function(app_name,
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
 #' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
 #' @param long_tone_paradigm Can be sing_along or call_and_response.
+#' @param get_p_id if TRUE, get the participant to enter their ID at the beginning of the test.
 #' @return
 #' @export
 #'
@@ -249,7 +253,8 @@ SAA <- function(app_name,
                 skip_setup = FALSE,
                 additional_scoring_measures = NULL,
                 default_range = list(bottom_range = 48, top_range = 72),
-                long_tone_paradigm = c("sing_along", "call_and_response")
+                long_tone_paradigm = c("sing_along", "call_and_response"),
+                get_p_id = FALSE
                 ) {
 
 
@@ -295,7 +300,8 @@ SAA <- function(app_name,
     is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures),
     is.list(default_range) & length(default_range) == 2 & setequal(names(default_range), c("bottom_range", "top_range")),
     assertthat::is.string(match.arg(long_tone_paradigm)),
-    "log_freq" %in% names(arrhythmic_item_bank)
+    "log_freq" %in% names(arrhythmic_item_bank),
+    is.scalar.logical(get_p_id)
     )
 
   shiny::addResourcePath(
@@ -332,6 +338,8 @@ SAA <- function(app_name,
   timeline <- psychTestR::join(
     psychTestR::new_timeline(
       psychTestR::join(
+
+        if(get_p_id) psychTestR::get_p_id(),
 
         psychTestR::module("SAA",
                            # introduction, same for all users
@@ -784,8 +792,6 @@ final_results_saa <- function(final_results,
 
     psychTestR::code_block(function(state, ...) {
 
-      cat(file=stderr(), "asjdi23", "\n")
-
       res <- as.list(psychTestR::get_results(state, complete = FALSE))
 
       processed_results <- present_scores_saa(res, num_items_long_tone, num_items_arrhythmic, num_items_rhythmic)
@@ -820,8 +826,6 @@ final_results_saa <- function(final_results,
     if(final_results) {
       psychTestR::join(
         psychTestR::reactive_page(function(state, ...) {
-
-          cat(file=stderr(), "jasd92", "\n")
 
           # Present results
           Final_SAA_Score <- psychTestR::get_local("final_score", state) # leave this in; it gets used by musicassessr
@@ -924,15 +928,4 @@ weight_final_SAA_score <- function(num_items_long_tone, num_items_arrhythmic, nu
   round(Final_SAA_Score, 2)
 }
 
-
-
-
-# r <- readRDS("/Users/sebsilas/SAA/test_apps/example/output/results/id=2&p_id=364814f4daf3585347c3b169c29e29ae128e4da159870984351b5b0948c862b7&save_id=6&pilot=false&complete=true.rds")
-# t <- present_scores_saa(r, 2, 2, 2)
-
-
-# SAA_standalone(get_range = FALSE, SNR_test = FALSE,
-#                num_items = list("long_tones" = 0L,
-#                                 "arrhythmic" = 10L,
-#                                 "rhythmic" = 10L))
 
