@@ -410,7 +410,7 @@ SAA <- function(app_name,
     if(gold_msi) psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),
     psychTestR::elt_save_results_to_disk(complete = TRUE),
-    musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name)
+    psychTestR::new_timeline(musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name), dict = musicassessr::dict())
   )
 
 }
