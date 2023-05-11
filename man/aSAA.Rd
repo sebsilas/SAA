@@ -45,9 +45,6 @@ aSAA(
 \arguments{
 \item{skip_setup}{}
 }
-\value{
-
-}
 \description{
 Deploy the adaptive SAA (aSAA)
 }

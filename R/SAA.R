@@ -667,24 +667,9 @@ sort_arrhythmic_scores <- function(num_items_arrhythmic, res) {
       unique() %>%
       dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
 
-    if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(arrhythmic_melodies$error))) {
-
-      arrhythmic_melody_model_prediction <- arrhythmic_melody_tmp %>%
-        dplyr::select(-proportion_of_correct_note_events) %>%
-        psychTestRCATME::predict_based_on_mixed_effects_arrhythmic_model(musicassessr::lm2.2, .)
-
-      arrhythmic_melody_summary <- arrhythmic_melody_tmp %>%
-        dplyr::select(opti3, proportion_of_correct_note_events) %>%
-        dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
-        dplyr::mutate(SAA_Ability_Arrhythmic = arrhythmic_melody_model_prediction)
-
-      arrhythmic_melody_score <- arrhythmic_melody_summary$SAA_Ability_Arrhythmic
-
-    } else {
-      arrhythmic_melody_score <- NA
-      arrhythmic_melody_summary <- NA
-      arrhythmic_melody_score <- NA
-    }
+    as <- get_rhythmic_summary_and_scores(rhythmic_melodies, rhythmic_melody_tmp)
+    rhythmic_melody_summary <- as$rhythmic_melody_summary
+    rhythmic_melody_score <- as$rhythmic_melody_score
   } else {
     arrhythmic_melodies <- NA
     arrhythmic_melody_summary <- NA
@@ -714,37 +699,95 @@ sort_rhythmic_scores <- function(num_items_rhythmic, res) {
       unique() %>%
       dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
 
-    if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(rhythmic_melodies$error))) {
+    rs <- get_rhythmic_summary_and_scores(rhythmic_melodies, rhythmic_melody_tmp)
+    rhythmic_melody_summary <- rs$rhythmic_melody_summary
+    rhythmic_melody_score <- rs$rhythmic_melody_score
 
-      rhythmic_melody_model_prediction <- rhythmic_melody_tmp %>%
-        dplyr::select(-proportion_of_correct_note_events) %>%
-        psychTestRCATME::predict_based_on_mixed_effects_rhythmic_model(musicassessr::lm3.2, .)
-
-      rhythmic_melody_summary <- rhythmic_melody_tmp %>%
-        dplyr::select(opti3, proportion_of_correct_note_events) %>%
-        dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
-        dplyr::mutate(SAA_Ability_Rhythmic = rhythmic_melody_model_prediction)
-
-      rhythmic_melody_score <- rhythmic_melody_summary$SAA_Ability_Rhythmic
-
-    } else {
-      rhythmic_melody_score <- NA
-      rhythmic_melody_summary <- NA
-      rhythmic_melody_score <- NA
-    }
   } else {
     rhythmic_melodies <- NA
     rhythmic_melody_summary <- NA
     rhythmic_melody_score <- NA
   }
+
   list(rhythmic_melody_score = rhythmic_melody_score,
        rhythmic_melodies = rhythmic_melodies,
        rhythmic_melody_summary = rhythmic_melody_summary)
 }
 
-#
-# r <- readRDS("/Users/sebsilas/SAA/test_apps/example/output/results/id=2&p_id=364814f4daf3585347c3b169c29e29ae128e4da159870984351b5b0948c862b7&save_id=6&pilot=false&complete=true.rds")
-# t <- present_scores_saa(r, 2, 2, 2)
+
+get_rhythmic_summary_and_scores <- function(rhythmic_melodies, rhythmic_melody_tmp) {
+  if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(rhythmic_melodies$error))) {
+
+    rhythmic_melody_model_prediction <- rhythmic_melody_tmp %>%
+      dplyr::select(-proportion_of_correct_note_events) %>%
+      psychTestRCATME::predict_based_on_mixed_effects_rhythmic_model(musicassessr::lm3.2, .)
+
+    rhythmic_melody_summary <- rhythmic_melody_tmp %>%
+      dplyr::select(opti3, proportion_of_correct_note_events) %>%
+      dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
+      dplyr::mutate(SAA_Ability_Rhythmic = rhythmic_melody_model_prediction)
+
+    rhythmic_melody_score <- rhythmic_melody_summary$SAA_Ability_Rhythmic
+
+  } else {
+    rhythmic_melody_score <- NA
+    rhythmic_melody_summary <- NA
+  }
+  list(
+    rhythmic_melody_score = rhythmic_melody_score,
+    rhythmic_melody_summary = rhythmic_melody_summary
+    )
+}
+
+get_arrhythmic_summary_and_scores <- function(arrhythmic_melodies, arrhythmic_melody_tmp) {
+  if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(arrhythmic_melodies$error))) {
+
+    arrhythmic_melody_model_prediction <- arrhythmic_melody_tmp %>%
+      dplyr::select(-proportion_of_correct_note_events) %>%
+      psychTestRCATME::predict_based_on_mixed_effects_arrhythmic_model(musicassessr::lm2.2, .)
+
+    arrhythmic_melody_summary <- arrhythmic_melody_tmp %>%
+      dplyr::select(opti3, proportion_of_correct_note_events) %>%
+      dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
+      dplyr::mutate(SAA_Ability_Arrhythmic = arrhythmic_melody_model_prediction)
+
+    arrhythmic_melody_score <- arrhythmic_melody_summary$SAA_Ability_Arrhythmic
+
+  } else {
+    arrhythmic_melody_score <- NA
+    arrhythmic_melody_summary <- NA
+  }
+  list(
+    arrhythmic_melody_score = arrhythmic_melody_score,
+    arrhythmic_melody_summary = arrhythmic_melody_summary
+  )
+}
+
+
+get_rhythmic_summary_and_scores <- function(rhythmic_melodies, rhythmic_melody_tmp) {
+  if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(rhythmic_melodies$error))) {
+
+    rhythmic_melody_model_prediction <- rhythmic_melody_tmp %>%
+      dplyr::select(-proportion_of_correct_note_events) %>%
+      psychTestRCATME::predict_based_on_mixed_effects_rhythmic_model(musicassessr::lm3.2, .)
+
+    rhythmic_melody_summary <- rhythmic_melody_tmp %>%
+      dplyr::select(opti3, proportion_of_correct_note_events) %>%
+      dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
+      dplyr::mutate(SAA_Ability_Rhythmic = rhythmic_melody_model_prediction)
+
+    rhythmic_melody_score <- rhythmic_melody_summary$SAA_Ability_Rhythmic
+
+  } else {
+    rhythmic_melody_score <- NA
+    rhythmic_melody_summary <- NA
+  }
+  list(
+    rhythmic_melody_score = rhythmic_melody_score,
+    rhythmic_melody_summary = rhythmic_melody_summary
+  )
+}
+
 
 
 
@@ -904,6 +947,11 @@ weight_final_SAA_score <- function(num_items_long_tone, num_items_arrhythmic, nu
   round(Final_SAA_Score, 2)
 }
 
+
+
+
+# r <- readRDS("/Users/sebsilas/SAA/test_apps/example/output/results/id=2&p_id=364814f4daf3585347c3b169c29e29ae128e4da159870984351b5b0948c862b7&save_id=6&pilot=false&complete=true.rds")
+# t <- present_scores_saa(r, 2, 2, 2)
 
 
 # SAA_standalone(get_range = FALSE, SNR_test = FALSE,

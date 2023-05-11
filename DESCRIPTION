@@ -12,7 +12,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 Imports: 
     assertthat,
     Berkowitz (>= 0.1.0),
@@ -27,7 +27,7 @@ Depends:
     R (>= 2.10),
     musicassessr (>= 0.0.0.9000),
     Berkowitz
-Remotes:  
+Remotes: 
     sebsilas/musicassessr@master,
     pmcharrison/psychTestR,
     sebsilas/Berkowitz,

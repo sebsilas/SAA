@@ -7,7 +7,7 @@
 SAA(
   app_name,
   num_items = list(long_tones = 6L, arrhythmic = 10L, rhythmic = 10L),
-  arrhythmic_item_bank = Berkowitz::ngram_item_bank,
+  arrhythmic_item_bank = Berkowitz::combined_item_bank,
   rhythmic_item_bank = Berkowitz::combined_item_bank,
   demographics = TRUE,
   demo = FALSE,
@@ -22,7 +22,7 @@ SAA(
   store_results_in_db = FALSE,
   test_username = character(),
   gold_msi = TRUE,
-  with_final_page = TRUE,
+  with_final_page = FALSE,
   melody_length = c(4, 20),
   melody_sound = "piano",
   adjust_range = TRUE,
@@ -127,9 +127,6 @@ SAA(
 \item{default_range}{A list of the range that stimuli should be presented in, if not collected at test time.}
 
 \item{long_tone_paradigm}{Can be sing_along or call_and_response.}
-}
-\value{
-
 }
 \description{
 Deploy the SAA

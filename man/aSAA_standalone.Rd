@@ -116,9 +116,6 @@ aSAA_standalone(
 
 \item{...}{}
 }
-\value{
-
-}
 \description{
 Deploy adaptive SAA (aSAA) as standalone test
 }

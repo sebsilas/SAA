@@ -137,9 +137,6 @@ SAA_standalone(
 
 \item{...}{}
 }
-\value{
-
-}
 \description{
 Deploy SAA as standalone test
 }
