@@ -212,7 +212,7 @@ SAA <- function(app_name,
                 num_items = list("long_tones" = 6L,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
-                arrhythmic_item_bank = Berkowitz::combined_item_bank,
+                arrhythmic_item_bank = Berkowitz::ngram_item_bank, # N.B. this has a log_freq column, which is required. No other itembankr columns do
                 rhythmic_item_bank = Berkowitz::combined_item_bank,
                 demographics = TRUE,
                 demo = FALSE,
