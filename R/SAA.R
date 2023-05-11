@@ -212,7 +212,7 @@ SAA <- function(app_name,
                 num_items = list("long_tones" = 6L,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
-                arrhythmic_item_bank = Berkowitz::ngram_item_bank,
+                arrhythmic_item_bank = Berkowitz::combined_item_bank,
                 rhythmic_item_bank = Berkowitz::combined_item_bank,
                 demographics = TRUE,
                 demo = FALSE,
@@ -294,7 +294,8 @@ SAA <- function(app_name,
     is.logical(skip_setup),
     is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures),
     is.list(default_range) & length(default_range) == 2 & setequal(names(default_range), c("bottom_range", "top_range")),
-    assertthat::is.string(match.arg(long_tone_paradigm))
+    assertthat::is.string(match.arg(long_tone_paradigm)),
+    "log_freq" %in% names(arrhythmic_item_bank)
     )
 
   shiny::addResourcePath(
@@ -667,9 +668,9 @@ sort_arrhythmic_scores <- function(num_items_arrhythmic, res) {
       unique() %>%
       dplyr::mutate(tmp_scores = opti3) # to match what psychTestRCAT/ME expects
 
-    as <- get_rhythmic_summary_and_scores(rhythmic_melodies, rhythmic_melody_tmp)
-    rhythmic_melody_summary <- as$rhythmic_melody_summary
-    rhythmic_melody_score <- as$rhythmic_melody_score
+    as <- get_arrhythmic_summary_and_scores(arrhythmic_melodies, arrhythmic_melody_tmp)
+    arrhythmic_melody_summary <- as$arrhythmic_melody_summary
+    arrhythmic_melody_score <- as$arrhythmic_melody_score
   } else {
     arrhythmic_melodies <- NA
     arrhythmic_melody_summary <- NA
@@ -715,30 +716,6 @@ sort_rhythmic_scores <- function(num_items_rhythmic, res) {
 }
 
 
-get_rhythmic_summary_and_scores <- function(rhythmic_melodies, rhythmic_melody_tmp) {
-  if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(rhythmic_melodies$error))) {
-
-    rhythmic_melody_model_prediction <- rhythmic_melody_tmp %>%
-      dplyr::select(-proportion_of_correct_note_events) %>%
-      psychTestRCATME::predict_based_on_mixed_effects_rhythmic_model(musicassessr::lm3.2, .)
-
-    rhythmic_melody_summary <- rhythmic_melody_tmp %>%
-      dplyr::select(opti3, proportion_of_correct_note_events) %>%
-      dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = TRUE)) %>%
-      dplyr::mutate(SAA_Ability_Rhythmic = rhythmic_melody_model_prediction)
-
-    rhythmic_melody_score <- rhythmic_melody_summary$SAA_Ability_Rhythmic
-
-  } else {
-    rhythmic_melody_score <- NA
-    rhythmic_melody_summary <- NA
-  }
-  list(
-    rhythmic_melody_score = rhythmic_melody_score,
-    rhythmic_melody_summary = rhythmic_melody_summary
-    )
-}
-
 get_arrhythmic_summary_and_scores <- function(arrhythmic_melodies, arrhythmic_melody_tmp) {
   if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(arrhythmic_melodies$error))) {
 
@@ -764,6 +741,7 @@ get_arrhythmic_summary_and_scores <- function(arrhythmic_melodies, arrhythmic_me
 }
 
 
+
 get_rhythmic_summary_and_scores <- function(rhythmic_melodies, rhythmic_melody_tmp) {
   if(suppressWarnings(musicassessr::is_null_or_not_all_TRUE(rhythmic_melodies$error))) {
 
@@ -785,9 +763,8 @@ get_rhythmic_summary_and_scores <- function(rhythmic_melodies, rhythmic_melody_t
   list(
     rhythmic_melody_score = rhythmic_melody_score,
     rhythmic_melody_summary = rhythmic_melody_summary
-  )
+    )
 }
-
 
 
 
