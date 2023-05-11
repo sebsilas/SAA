@@ -26,7 +26,8 @@ Imports:
 Depends: 
     R (>= 2.10),
     musicassessr (>= 0.0.0.9000),
-    Berkowitz
+    Berkowitz,
+    psych
 Remotes: 
     sebsilas/musicassessr@master,
     pmcharrison/psychTestR,
