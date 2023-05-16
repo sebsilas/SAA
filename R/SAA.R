@@ -341,7 +341,7 @@ SAA <- function(app_name,
     psychTestR::new_timeline(
       psychTestR::join(
 
-        if(get_p_id) psychTestR::get_p_id(),
+        if(get_p_id) psychTestR::get_p_id(prompt = psychTestR::i18n("enter_id"), button_text = psychTestR::i18n("Next")),
 
         psychTestR::module("SAA",
                            # introduction, same for all users
