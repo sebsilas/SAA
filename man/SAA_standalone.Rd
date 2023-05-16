@@ -48,6 +48,7 @@ SAA_standalone(
   default_range = list(bottom_range = 48, top_range = 72),
   long_tone_paradigm = c("sing_along", "call_and_response"),
   get_p_id = FALSE,
+  languages = c("en", "de", "it"),
   ...
 )
 }
@@ -137,6 +138,8 @@ SAA_standalone(
 \item{long_tone_paradigm}{Can be sing_along or call_and_response.}
 
 \item{get_p_id}{if TRUE, get the participant to enter their ID at the beginning of the test.}
+
+\item{languages}{The available languages.}
 
 \item{...}{}
 }

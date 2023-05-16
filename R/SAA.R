@@ -45,6 +45,7 @@
 #' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
 #' @param long_tone_paradigm Can be sing_along or call_and_response.
 #' @param get_p_id if TRUE, get the participant to enter their ID at the beginning of the test.
+#' @param languages The available languages.
 #' @param ...
 #'
 #' @return
@@ -95,7 +96,8 @@ SAA_standalone <- function(app_name,
                            additional_scoring_measures = NULL,
                            default_range = list(bottom_range = 48, top_range = 72),
                            long_tone_paradigm = c("sing_along", "call_and_response"),
-                           get_p_id = FALSE, ...) {
+                           get_p_id = FALSE,
+                           languages = c("en", "de", "it"), ...) {
 
   timeline <- SAA(app_name,
                   num_items,
@@ -152,7 +154,7 @@ SAA_standalone <- function(app_name,
                                      right_margin = 1L,
                                      css = system.file('www/css/musicassessr.css', package = "musicassessr")
                                    ),
-                                   languages = c("en", "de", "it"),
+                                   languages = languages,
                                    additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
                                                                                       app_name = app_name,
                                                                                       visual_notation = feedback), ...))
