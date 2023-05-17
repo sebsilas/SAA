@@ -10,7 +10,11 @@
 #' @examples
 run_saa_admin_app <- function(app_locations) {
 
-  app_locations <- setNames(app_locations, basename(app_locations))
+  if(Sys.getenv("CONFIG") == "local") {
+    app_locations <- setNames(app_locations, basename(app_locations))
+  } else {
+    stringr::str_remove('/srv/shiny-server/macgregor-2023/output/results', '/srv/shiny-server/') %>% stringr::str_remove('/output/results')
+  }
 
   # Define the UI
   ui <- shiny::fluidPage(
@@ -18,8 +22,8 @@ run_saa_admin_app <- function(app_locations) {
     shiny::textOutput("no_responses"),
     shiny::textOutput("no_complete"),
     shiny::textOutput("pr_complete"),
-    shiny::plotOutput('hist_plot'),
-    shiny::plotOutput('error_pr_plot')
+    shiny::plotOutput('hist_plot') %>% shinycssloaders::withSpinner(),
+    shiny::plotOutput('error_pr_plot')  %>% shinycssloaders::withSpinner()
   )
 
 
@@ -48,7 +52,7 @@ run_saa_admin_app <- function(app_locations) {
       paste0("No. Complete Responses: ", data()$no_complete)
     })
     output$pr_complete  <- shiny::renderText({
-      paste0("Proportion Complete Responses: ", data()$pr_complete)
+      paste0("Proportion Complete Responses: ", round(data()$pr_complete, 2), "%")
     })
 
 
