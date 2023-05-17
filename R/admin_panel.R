@@ -218,7 +218,7 @@ read_p <- function(f) {
     }
 
     joined <- if(!is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
-      arrhythmic_melodies %>% left_join(rhythmic_melodies, by = "p_id")
+      arrhythmic_melodies %>% dplyr::left_join(rhythmic_melodies, by = "p_id")
     } else if(is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
       rhythmic_melodies
     } else if(!is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
