@@ -82,11 +82,9 @@ sort_saa_results_data <- function(results_dir) {
 
   files <- list.files(results_dir, pattern = "\\.rds$", full.names = TRUE)
 
-  #files <- list.files('/srv/shiny-server/italian_saa/output/results', pattern = "\\.rds$", full.names = TRUE)
-
   dat <- purrr::map_dfr(files, read_p)
 
-  if(is.null(dat$no_data)) {
+  if(is.null(dat$no_data) | any(dat$no_data[!is.na(dat$no_data)])) {
 
     dat <- dat %>%
       dplyr::select(num_restarts, complete, error, p_id, answer_meta_data.abs_melody,
@@ -168,7 +166,6 @@ read_p <- function(f) {
   platform <- user_info$userAgentData$platform
   user_info$userAgentData <- NULL
 
-
   user_info <- purrr::map(user_info, function(x) {
     if(length(x) == 0) {
       NA
@@ -223,7 +220,10 @@ read_p <- function(f) {
     }
 
     joined <- if(!is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
-      arrhythmic_melodies %>% dplyr::left_join(rhythmic_melodies, by = "p_id")
+      int_names <- intersect(names(arrhythmic_melodies), names(rhythmic_melodies))
+      arrhythmic_melodies <- arrhythmic_melodies %>% dplyr::select(dplyr::all_of(int_names))
+      rhythmic_melodies <- rhythmic_melodies %>% dplyr::select(dplyr::all_of(int_names))
+      rbind(arrhythmic_melodies, rhythmic_melodies)
     } else if(is_na_scalar(arrhythmic_melodies) & !is_na_scalar(rhythmic_melodies)) {
       rhythmic_melodies
     } else if(!is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
@@ -241,8 +241,10 @@ read_p <- function(f) {
 
 }
 
+#
+# run_saa_admin_app(c('/Users/sebsilas/Singing-Tests/input/SAA_data',
+#                     '/Users/sebsilas/Downloads/italian_saa/output/results'))
 
-# run_saa_admin_app(c('/Users/sebsilas/Singing-Tests/input/SAA_data'))
 
 
 
