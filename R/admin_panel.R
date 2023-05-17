@@ -13,7 +13,8 @@ run_saa_admin_app <- function(app_locations) {
   if(Sys.getenv("CONFIG") == "local") {
     app_locations <- setNames(app_locations, basename(app_locations))
   } else {
-    app_locations <- stringr::str_remove(app_locations, '/srv/shiny-server/') %>% stringr::str_remove('/output/results')
+    nms <- stringr::str_remove(app_locations, '/srv/shiny-server/') %>% stringr::str_remove('/output/results')
+    app_locations <- setNames(app_locations, nms)
   }
 
   # Define the UI
