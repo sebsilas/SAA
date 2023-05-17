@@ -82,14 +82,19 @@ sort_saa_results_data <- function(results_dir) {
 
   files <- list.files(results_dir, pattern = "\\.rds$", full.names = TRUE)
 
-  dat <- purrr::map_dfr(files, read_p) %>%
-    dplyr::select(num_restarts, complete, error, p_id, answer_meta_data.abs_melody,
-                  opti3, attempt, answer_meta_data.trial_no, answer_meta_data.N,
-                  no_note_events, trial_length) %>%
-    unique() %>%
-    dplyr::mutate(dplyr::across(opti3:answer_meta_data.trial_no, as.numeric))
+  #files <- list.files('/srv/shiny-server/italian_saa/output/results', pattern = "\\.rds$", full.names = TRUE)
+
+  dat <- purrr::map_dfr(files, read_p)
 
   if(is.null(dat$no_data)) {
+
+    dat <- dat %>%
+      dplyr::select(num_restarts, complete, error, p_id, answer_meta_data.abs_melody,
+                    opti3, attempt, answer_meta_data.trial_no, answer_meta_data.N,
+                    no_note_events, trial_length) %>%
+      unique() %>%
+      dplyr::mutate(dplyr::across(opti3:answer_meta_data.trial_no, as.numeric))
+
     no_responses <- unique(dat$p_id) %>% length()
 
     no_complete <- dat %>%
