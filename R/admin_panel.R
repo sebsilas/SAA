@@ -182,7 +182,7 @@ read_p <- function(f) {
     }
 
     rhythmic_melodies <- if(is.null(res$SAA.rhythmic_melodies)) NA else {
-      res$SAA.arrhythmic_melodies %>%
+      res$SAA.rhythmic_melodies %>%
         musicassessr::tidy_melodies(use_for_production = "production")  %>%
         dplyr::mutate(p_id = !! p_id)
     }
