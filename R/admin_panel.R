@@ -20,6 +20,7 @@ run_saa_admin_app <- function(app_locations) {
   # Define the UI
   ui <- shiny::fluidPage(
     shiny::selectInput("app_to_monitor", label = "App to Monitor", choices = app_locations),
+    shiny::textOutput("success"),
     shiny::textOutput("no_responses"),
     shiny::textOutput("no_complete"),
     shiny::textOutput("pr_complete"),
@@ -38,11 +39,13 @@ run_saa_admin_app <- function(app_locations) {
     })
 
     output$hist_plot <- shiny::renderPlot({
-      data()$hist_plot
+      plot <- data()$hist_plot
+      if(is_na_scalar(plot)) plot.new() else plot
     })
 
     output$error_pr_plot <- shiny::renderPlot({
-      data()$error_pr_plot
+      plot <- data()$error_pr_plot
+      if(is_na_scalar(plot)) plot.new() else plot
     })
 
     output$no_responses  <- shiny::renderText({
@@ -54,6 +57,16 @@ run_saa_admin_app <- function(app_locations) {
     })
     output$pr_complete  <- shiny::renderText({
       paste0("Proportion Complete Responses: ", round(data()$pr_complete, 2), "%")
+    })
+
+    output$success  <- shiny::renderText({
+      if(is_na_scalar(data()$pr_complete) & is_na_scalar(data()$hist_plot)) {
+        t <- "There is not sufficient data to present results yet."
+      }
+      else {
+        t <- " "
+      }
+      t
     })
 
 
@@ -76,43 +89,55 @@ sort_saa_results_data <- function(results_dir) {
     unique() %>%
     dplyr::mutate(dplyr::across(opti3:answer_meta_data.trial_no, as.numeric))
 
+  if(is.null(dat$no_data)) {
+    no_responses <- unique(dat$p_id) %>% length()
 
-  no_responses <- unique(dat$p_id) %>% length()
+    no_complete <- dat %>%
+      dplyr::select(p_id, complete) %>%
+      unique() %>%
+      dplyr::filter(complete == TRUE) %>%
+      nrow()
 
-  no_complete <- dat %>%
-    dplyr::select(p_id, complete) %>%
-    unique() %>%
-    dplyr::filter(complete == TRUE) %>%
-    nrow()
+    pr_complete <- (no_complete/no_responses) * 100
 
-  pr_complete <- (no_complete/no_responses) * 100
+    avg_num_restarts <- dat %>%
+      dplyr::select(p_id, num_restarts) %>%
+      unique() %>%
+      dplyr::summarise(avg_num_restarts = mean(num_restarts, na.rm = TRUE)) %>%
+      dplyr::pull(avg_num_restarts)
 
-  avg_num_restarts <- dat %>%
-    dplyr::select(p_id, num_restarts) %>%
-    unique() %>%
-    dplyr::summarise(avg_num_restarts = mean(num_restarts, na.rm = TRUE)) %>%
-    dplyr::pull(avg_num_restarts)
+    hist_plot <- dat %>%
+      dplyr::select(answer_meta_data.trial_no, opti3, attempt, answer_meta_data.N, no_note_events, trial_length) %>%
+      dplyr::mutate(dplyr::across(dplyr::everything(), as.numeric)) %>%
+      itembankr::hist_item_bank()
 
-  hist_plot <- dat %>%
-    dplyr::select(answer_meta_data.trial_no, opti3, attempt, answer_meta_data.N, no_note_events, trial_length) %>%
-    dplyr::mutate(dplyr::across(dplyr::everything(), as.numeric)) %>%
-    itembankr::hist_item_bank()
-
-  error_pr_plot <- dat %>%
-    dplyr::rename(Error = error) %>%
-    dplyr::count(Error) %>%
-    ggplot2::ggplot(ggplot2::aes(x="", y=n, fill=Error)) +
-    ggplot2::geom_bar(stat="identity", width=1) +
-    ggplot2::coord_polar("y", start=0) +
-    ggplot2::theme_void() +
-    ggplot2::scale_fill_manual(values = c("green", "red"))
+    error_pr_plot <- dat %>%
+      dplyr::rename(Error = error) %>%
+      dplyr::count(Error) %>%
+      ggplot2::ggplot(ggplot2::aes(x="", y=n, fill=Error)) +
+      ggplot2::geom_bar(stat="identity", width=1) +
+      ggplot2::coord_polar("y", start=0) +
+      ggplot2::theme_void() +
+      ggplot2::scale_fill_manual(values = c("green", "red"))
 
 
-  list(hist_plot = hist_plot,
-       error_pr_plot = error_pr_plot,
-       no_responses = no_responses,
-       no_complete = no_complete,
-       pr_complete = pr_complete)
+    list(hist_plot = hist_plot,
+         error_pr_plot = error_pr_plot,
+         no_responses = no_responses,
+         no_complete = no_complete,
+         pr_complete = pr_complete)
+
+  } else {
+
+    list(hist_plot = NA,
+         error_pr_plot = NA,
+         no_responses = NA,
+         no_complete = NA,
+         pr_complete = NA)
+  }
+
+
+
 
 
 }
@@ -199,7 +224,8 @@ read_p <- function(f) {
     } else if(!is_na_scalar(arrhythmic_melodies) & is_na_scalar(rhythmic_melodies)) {
       arrhythmic_melodies
     } else {
-      stop('Something went wrong')
+      warning('There is currently no usable data.')
+      return(tibble::tibble(no_data = TRUE))
     }
 
     joined <- joined %>%
