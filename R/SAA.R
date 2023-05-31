@@ -46,6 +46,12 @@
 #' @param long_tone_paradigm Can be sing_along or call_and_response.
 #' @param get_p_id if TRUE, get the participant to enter their ID at the beginning of the test.
 #' @param languages The available languages.
+#' @param volume_meter_on_melody_trials Should there be a volume meter displayed on melody trial pages?
+#' @param volume_meter_on_melody_trials_type If so, what type? Can be 'default' or 'playful'.
+#' @param long_tone_length How long should the long tone be in seconds? Default: 5
+#' @param allow_SNR_failure If TRUE, allow a participant/researcher to proceed, even if the SNR test is failed.
+#' @param requirements_page Show a requirements page?
+#' @param report_SNR Report SNR after test?
 #' @param ...
 #'
 #' @return
@@ -97,7 +103,13 @@ SAA_standalone <- function(app_name,
                            default_range = list(bottom_range = 48, top_range = 72),
                            long_tone_paradigm = c("sing_along", "call_and_response"),
                            get_p_id = FALSE,
-                           languages = c("en", "de", "it"), ...) {
+                           languages = c("en", "de", "it"),
+                           volume_meter_on_melody_trials = FALSE,
+                           volume_meter_on_melody_trials_type = 'default',
+                           long_tone_length = 5,
+                           allow_SNR_failure = FALSE,
+                           requirements_page = TRUE,
+                           report_SNR = FALSE, ...) {
 
   timeline <- SAA(app_name,
                   num_items,
@@ -139,7 +151,13 @@ SAA_standalone <- function(app_name,
                   additional_scoring_measures,
                   default_range,
                   long_tone_paradigm,
-                  get_p_id)
+                  get_p_id,
+                  volume_meter_on_melody_trials,
+                  volume_meter_on_melody_trials_type,
+                  long_tone_length,
+                  allow_SNR_failure,
+                  requirements_page,
+                  report_SNR)
 
 
   # run the test
@@ -210,6 +228,12 @@ SAA_standalone <- function(app_name,
 #' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
 #' @param long_tone_paradigm Can be sing_along or call_and_response.
 #' @param get_p_id if TRUE, get the participant to enter their ID at the beginning of the test.
+#' @param volume_meter_on_melody_trials Should there be a volume meter displayed on melody trial pages?
+#' @param volume_meter_on_melody_trials_type = If so, what type? Can be 'default' or 'playful'.
+#' @param long_tone_length How long should the long tone be in seconds? Default: 5
+#' @param allow_SNR_failure If TRUE, allow a participant/researcher to proceed, even if the SNR test is failed.
+#' @param requirements_page Show a requirements page on the setup?
+#' @param report_SNR Report SNR after test?
 #' @return
 #' @export
 #'
@@ -256,8 +280,13 @@ SAA <- function(app_name,
                 additional_scoring_measures = NULL,
                 default_range = list(bottom_range = 48, top_range = 72),
                 long_tone_paradigm = c("sing_along", "call_and_response"),
-                get_p_id = FALSE
-                ) {
+                get_p_id = FALSE,
+                volume_meter_on_melody_trials = FALSE,
+                volume_meter_on_melody_trials_type = 'default',
+                long_tone_length = 5,
+                allow_SNR_failure = FALSE,
+                requirements_page = TRUE,
+                report_SNR = FALSE) {
 
 
   stopifnot(
@@ -298,12 +327,18 @@ SAA <- function(app_name,
     is.character(long_tone_trials_as_screening_failure_page),
     is.character(success_on_completion_page),
     is.logical(concise_wording),
-    is.logical(skip_setup),
+    is.logical(skip_setup) | skip_setup == "except_microphone",
     is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures),
     is.list(default_range) & length(default_range) == 2 & setequal(names(default_range), c("bottom_range", "top_range")),
     assertthat::is.string(match.arg(long_tone_paradigm)),
     "log_freq" %in% names(arrhythmic_item_bank),
-    is.scalar.logical(get_p_id)
+    is.scalar.logical(get_p_id),
+    is.scalar.logical(volume_meter_on_melody_trials),
+    assertthat::is.string(volume_meter_on_melody_trials_type),
+    dplyr::between(long_tone_length, 1, 10),
+    is.scalar.logical(allow_SNR_failure),
+    is.scalar.logical(requirements_page),
+    is.scalar.logical(report_SNR)
     )
 
   shiny::addResourcePath(
@@ -362,7 +397,11 @@ SAA <- function(app_name,
                                      max_goes,
                                      skip_setup,
                                      app_name,
-                                     default_range),
+                                     default_range,
+                                     allow_SNR_failure,
+                                     requirements_page,
+                                     report_SNR,
+                                     volume_meter_on_melody_trials_type),
 
                            # arbitrary and optional trial block to go first
                            append_trial_block_before,
@@ -374,7 +413,8 @@ SAA <- function(app_name,
                                                           feedback = feedback,
                                                           long_tone_trials_as_screening = long_tone_trials_as_screening,
                                                           long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page,
-                                                          paradigm = long_tone_paradigm),
+                                                          paradigm = long_tone_paradigm,
+                                                          long_tone_length = long_tone_length),
 
                            # arrhythmic
                            musicassessr::arrhythmic_melody_trials(item_bank = arrhythmic_item_bank_subset,
@@ -387,7 +427,9 @@ SAA <- function(app_name,
                                                                   instruction_text = psychTestR::i18n("sing_melody_instruction_text"),
                                                                   max_goes = max_goes,
                                                                   max_goes_forced = max_goes_forced,
-                                                                  get_answer = pyin_with_additional),
+                                                                  get_answer = pyin_with_additional,
+                                                                  volume_meter = volume_meter_on_melody_trials,
+                                                                  volume_meter_type = volume_meter_on_melody_trials_type),
 
                            # rhythmic
                            musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank_subset,
@@ -400,7 +442,9 @@ SAA <- function(app_name,
                                                                 instruction_text = psychTestR::i18n("sing_rhythmic_melodies_instruction_text"),
                                                                 max_goes = max_goes,
                                                                 max_goes_forced = max_goes_forced,
-                                                                get_answer = pyin_with_additional),
+                                                                get_answer = pyin_with_additional,
+                                                                volume_meter = volume_meter_on_melody_trials,
+                                                                volume_meter_type = volume_meter_on_melody_trials_type),
 
                            # arbitrary and optional trial block to go after
                            append_trial_block_after,
@@ -420,7 +464,9 @@ SAA <- function(app_name,
     if(gold_msi) psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),
     psychTestR::elt_save_results_to_disk(complete = TRUE),
-    psychTestR::new_timeline(musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name), dict = musicassessr::dict(NULL))
+    psychTestR::new_timeline(
+                    musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name, img = 'https://adaptiveeartraining.com/assets/img/SAA_intro.png'),
+                    dict = musicassessr::dict(NULL))
   )
 
 }
@@ -444,7 +490,11 @@ SAA_intro <- function(demo = FALSE,
                       max_goes,
                       skip_setup = FALSE,
                       app_name,
-                      default_range = list(bottom_range = 48, top_range = 72)) {
+                      default_range = list(bottom_range = 48, top_range = 72),
+                      allow_SNR_failure = FALSE,
+                      requirements_page = TRUE,
+                      report_SNR = FALSE,
+                      volume_meter_on_melody_trials_type = FALSE) {
 
   if(test_name == "Singing Ability Assessment") test_name <- psychTestR::i18n("SAA_test_name")
 
@@ -474,9 +524,13 @@ SAA_intro <- function(demo = FALSE,
                               allow_repeat_SNR_tests = allow_repeat_SNR_tests,
                               concise_wording = concise_wording,
                               skip_setup = skip_setup,
-                              default_range = default_range),
+                              default_range = default_range,
+                              allow_SNR_failure = allow_SNR_failure,
+                              requirements_page = requirements_page,
+                              report_SNR = report_SNR,
+                              playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful'),
     # instructions
-    if(!skip_setup) SAA_instructions(max_goes_forced, max_goes)
+    if(skip_setup == FALSE) SAA_instructions(max_goes_forced, max_goes)
   )
 
 }

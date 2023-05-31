@@ -45,7 +45,12 @@ SAA(
   additional_scoring_measures = NULL,
   default_range = list(bottom_range = 48, top_range = 72),
   long_tone_paradigm = c("sing_along", "call_and_response"),
-  get_p_id = FALSE
+  get_p_id = FALSE,
+  volume_meter_on_melody_trials = FALSE,
+  volume_meter_on_melody_trials_type = "default",
+  long_tone_length = 5,
+  allow_SNR_failure = FALSE,
+  requirements_page = TRUE
 )
 }
 \arguments{
@@ -130,6 +135,16 @@ SAA(
 \item{long_tone_paradigm}{Can be sing_along or call_and_response.}
 
 \item{get_p_id}{if TRUE, get the participant to enter their ID at the beginning of the test.}
+
+\item{volume_meter_on_melody_trials}{Should there be a volume meter displayed on melody trial pages?}
+
+\item{volume_meter_on_melody_trials_type}{= If so, what type? Can be 'default' or 'playful'.}
+
+\item{long_tone_length}{How long should the long tone be in seconds? Default: 5}
+
+\item{allow_SNR_failure}{If TRUE, allow a participant/researcher to proceed, even if the SNR test is failed.}
+
+\item{requirements_page}{Show a requirements page on the setup?}
 }
 \description{
 Deploy the SAA

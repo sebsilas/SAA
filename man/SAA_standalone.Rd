@@ -49,6 +49,11 @@ SAA_standalone(
   long_tone_paradigm = c("sing_along", "call_and_response"),
   get_p_id = FALSE,
   languages = c("en", "de", "it"),
+  volume_meter_on_melody_trials = FALSE,
+  volume_meter_on_melody_trials_type = "default",
+  long_tone_length = 5,
+  allow_SNR_failure = FALSE,
+  requirements_page = TRUE,
   ...
 )
 }
@@ -140,6 +145,16 @@ SAA_standalone(
 \item{get_p_id}{if TRUE, get the participant to enter their ID at the beginning of the test.}
 
 \item{languages}{The available languages.}
+
+\item{volume_meter_on_melody_trials}{Should there be a volume meter displayed on melody trial pages?}
+
+\item{volume_meter_on_melody_trials_type}{If so, what type? Can be 'default' or 'playful'.}
+
+\item{long_tone_length}{How long should the long tone be in seconds? Default: 5}
+
+\item{allow_SNR_failure}{If TRUE, allow a participant/researcher to proceed, even if the SNR test is failed.}
+
+\item{requirements_page}{Show a requirements page?}
 
 \item{...}{}
 }
