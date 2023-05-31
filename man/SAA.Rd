@@ -50,7 +50,8 @@ SAA(
   volume_meter_on_melody_trials_type = "default",
   long_tone_length = 5,
   allow_SNR_failure = FALSE,
-  requirements_page = TRUE
+  requirements_page = TRUE,
+  report_SNR = FALSE
 )
 }
 \arguments{
@@ -145,6 +146,8 @@ SAA(
 \item{allow_SNR_failure}{If TRUE, allow a participant/researcher to proceed, even if the SNR test is failed.}
 
 \item{requirements_page}{Show a requirements page on the setup?}
+
+\item{report_SNR}{Report SNR after test?}
 }
 \description{
 Deploy the SAA
