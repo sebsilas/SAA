@@ -16,7 +16,7 @@
 #' @param examples No of examples.
 #' @param final_results Display final results?
 #' @param musicassessr_aws Is this being deployed on AWS via the musicassessr setup?
-#' @param store_results_in_db Store results in a database?
+#' @param use_musicassessr_db Store results in a database?
 #' @param test_username Is there a username for the user? This is different from a p_id.
 #' @param gold_msi Deploy Gold-MSI form?
 #' @param with_final_page Should there be a final page? FALSE if there will be more pages in the timeline.
@@ -52,6 +52,8 @@
 #' @param allow_SNR_failure If TRUE, allow a participant/researcher to proceed, even if the SNR test is failed.
 #' @param requirements_page Show a requirements page?
 #' @param report_SNR Report SNR after test?
+#' @param show_introduction Should introduction be shown (or skipped)?
+#' @param show_instructions Should instructions be shown (or skipped)?
 #' @param ...
 #'
 #' @return
@@ -74,7 +76,7 @@ SAA_standalone <- function(app_name,
                            examples = 2L,
                            final_results = TRUE,
                            musicassessr_aws = FALSE,
-                           store_results_in_db = FALSE,
+                           use_musicassessr_db = FALSE,
                            test_username = character(),
                            gold_msi = TRUE,
                            with_final_page = TRUE,
@@ -100,7 +102,7 @@ SAA_standalone <- function(app_name,
                            full_screen = FALSE,
                            validate_user_entry_into_test = FALSE,
                            additional_scoring_measures = NULL,
-                           default_range = list(bottom_range = 48, top_range = 72),
+                           default_range = NULL,
                            long_tone_paradigm = c("sing_along", "call_and_response"),
                            get_p_id = FALSE,
                            languages = c("en", "de", "it"),
@@ -109,7 +111,9 @@ SAA_standalone <- function(app_name,
                            long_tone_length = 5,
                            allow_SNR_failure = FALSE,
                            requirements_page = TRUE,
-                           report_SNR = FALSE, ...) {
+                           report_SNR = FALSE,
+                           show_introduction = TRUE,
+                           show_instructions = TRUE, ...) {
 
   timeline <- SAA(app_name,
                   num_items,
@@ -125,7 +129,7 @@ SAA_standalone <- function(app_name,
                   examples,
                   final_results,
                   musicassessr_aws,
-                  store_results_in_db,
+                  use_musicassessr_db,
                   test_username,
                   gold_msi,
                   with_final_page,
@@ -157,7 +161,9 @@ SAA_standalone <- function(app_name,
                   long_tone_length,
                   allow_SNR_failure,
                   requirements_page,
-                  report_SNR)
+                  report_SNR,
+                  show_introduction,
+                  show_instructions)
 
 
   # run the test
@@ -200,7 +206,7 @@ SAA_standalone <- function(app_name,
 #' @param examples No of examples.
 #' @param final_results Display final results?
 #' @param musicassessr_aws Is this being deployed on AWS via the musicassessr setup?
-#' @param store_results_in_db Store results in a database?
+#' @param use_musicassessr_db Store results in a database?
 #' @param test_username Is there a username for the user? This is different from a p_id.
 #' @param gold_msi Deploy Gold-MSI form?
 #' @param with_final_page Should there be a final page? FALSE if there will be more pages in the timeline.
@@ -234,6 +240,8 @@ SAA_standalone <- function(app_name,
 #' @param allow_SNR_failure If TRUE, allow a participant/researcher to proceed, even if the SNR test is failed.
 #' @param requirements_page Show a requirements page on the setup?
 #' @param report_SNR Report SNR after test?
+#' @param show_introduction Should introduction be shown (or skipped)?
+#' @param show_instructions Should instructions be shown (or skipped)?
 #' @return
 #' @export
 #'
@@ -254,7 +262,7 @@ SAA <- function(app_name,
                 examples = 2,
                 final_results = TRUE,
                 musicassessr_aws = FALSE,
-                store_results_in_db = FALSE,
+                use_musicassessr_db = FALSE,
                 test_username = character(),
                 gold_msi = TRUE,
                 with_final_page = FALSE,
@@ -278,7 +286,7 @@ SAA <- function(app_name,
                 concise_wording = TRUE,
                 skip_setup = FALSE,
                 additional_scoring_measures = NULL,
-                default_range = list(bottom_range = 48, top_range = 72),
+                default_range = NULL,
                 long_tone_paradigm = c("sing_along", "call_and_response"),
                 get_p_id = FALSE,
                 volume_meter_on_melody_trials = FALSE,
@@ -286,7 +294,9 @@ SAA <- function(app_name,
                 long_tone_length = 5,
                 allow_SNR_failure = FALSE,
                 requirements_page = TRUE,
-                report_SNR = FALSE) {
+                report_SNR = FALSE,
+                show_introduction = TRUE,
+                show_instructions = TRUE) {
 
 
   stopifnot(
@@ -305,7 +315,7 @@ SAA <- function(app_name,
     is.numeric(examples) & length(examples) == 1L,
     is.logical(final_results),
     is.logical(musicassessr_aws),
-    is.logical(store_results_in_db),
+    is.logical(use_musicassessr_db),
     is.character(test_username),
     is.logical(gold_msi),
     is.logical(with_final_page),
@@ -338,7 +348,12 @@ SAA <- function(app_name,
     dplyr::between(long_tone_length, 1, 10),
     is.scalar.logical(allow_SNR_failure),
     is.scalar.logical(requirements_page),
-    is.scalar.logical(report_SNR)
+    is.scalar.logical(report_SNR),
+    is.null.or(default_range, function(x)   {
+      is.list(x) & length(x) == 2 & setequal(names(x), c('bottom_range', 'top_range'))
+    }),
+    is.scalar.logical(show_introduction),
+    is.scalar.logical(show_instructions)
     )
 
   shiny::addResourcePath(
@@ -378,45 +393,56 @@ SAA <- function(app_name,
 
         if(get_p_id) psychTestR::get_p_id(prompt = psychTestR::i18n("enter_id"), button_text = psychTestR::i18n("Next")),
 
-        psychTestR::module("SAA",
-                           # introduction, same for all users
-                           SAA_intro(demo,
-                                     SNR_test,
-                                     get_range,
-                                     absolute_url,
-                                     test_username,
-                                     store_results_in_db,
-                                     adjust_range,
-                                     headphones_test,
-                                     get_user_info,
-                                     microphone_test,
-                                     allow_repeat_SNR_tests,
-                                     concise_wording,
-                                     test_name,
-                                     max_goes_forced,
-                                     max_goes,
-                                     skip_setup,
-                                     app_name,
-                                     default_range,
-                                     allow_SNR_failure,
-                                     requirements_page,
-                                     report_SNR,
-                                     volume_meter_on_melody_trials_type),
+        # Init musicassessr
+        musicassessr::musicassessr_init(use_musicassessr_db = use_musicassessr_db, app_name = app_name),
 
-                           # arbitrary and optional trial block to go first
+        # Set Test
+        musicassessr::set_test(test_name = "SAA", test_id = 1L),
+
+        # Set default range
+        if(!is.null(default_range)) musicassessr::set_instrument_range(bottom_range = default_range$bottom_range, top_range = default_range$top_range),
+
+
+        psychTestR::module("SAA",
+                           # Introduction, same for all users
+                           if (show_introduction) { SAA_intro(demo,
+                                                               SNR_test,
+                                                               get_range,
+                                                               absolute_url,
+                                                               test_username,
+                                                               use_musicassessr_db,
+                                                               adjust_range,
+                                                               headphones_test,
+                                                               get_user_info,
+                                                               microphone_test,
+                                                               allow_repeat_SNR_tests,
+                                                               concise_wording,
+                                                               test_name,
+                                                               max_goes_forced,
+                                                               max_goes,
+                                                               skip_setup,
+                                                               app_name,
+                                                               allow_SNR_failure,
+                                                               requirements_page,
+                                                               report_SNR,
+                                                               volume_meter_on_melody_trials_type,
+                                                              show_instructions) },
+
+                           # Arbitrary and optional trial block to go first
                            append_trial_block_before,
 
 
-                           # long tone trials
+                           # Long tone trials
                            musicassessr::long_tone_trials(num_items = num_items$long_tones,
                                                           num_examples = examples,
                                                           feedback = feedback,
                                                           long_tone_trials_as_screening = long_tone_trials_as_screening,
                                                           long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page,
                                                           paradigm = long_tone_paradigm,
-                                                          long_tone_length = long_tone_length),
+                                                          long_tone_length = long_tone_length,
+                                                          show_instructions = show_instructions),
 
-                           # arrhythmic
+                           # Arrhythmic melody trials
                            musicassessr::arrhythmic_melody_trials(item_bank = arrhythmic_item_bank_subset,
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
@@ -431,7 +457,7 @@ SAA <- function(app_name,
                                                                   volume_meter = volume_meter_on_melody_trials,
                                                                   volume_meter_type = volume_meter_on_melody_trials_type),
 
-                           # rhythmic
+                           # Rhythmic melody trials
                            musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank_subset,
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = 0, # because it's effectively the same task as arrhythmic
@@ -446,10 +472,11 @@ SAA <- function(app_name,
                                                                 volume_meter = volume_meter_on_melody_trials,
                                                                 volume_meter_type = volume_meter_on_melody_trials_type),
 
-                           # arbitrary and optional trial block to go after
+                           # Arbitrary and optional trial block to go after other trial blocks
                            append_trial_block_after,
 
-                           musicassessr::elt_add_session_to_db(),
+                           # Add final session information to DB (if use_musicassessr_db)
+                           musicassessr::elt_add_final_session_info_to_db(),
 
 
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
@@ -478,7 +505,7 @@ SAA_intro <- function(demo = FALSE,
                       get_range = TRUE,
                       absolute_url = character(),
                       test_username = NULL,
-                      store_results_in_db = FALSE,
+                      use_musicassessr_db = FALSE,
                       adjust_range = TRUE,
                       headphones_test,
                       get_user_info,
@@ -490,28 +517,25 @@ SAA_intro <- function(demo = FALSE,
                       max_goes,
                       skip_setup = FALSE,
                       app_name,
-                      default_range = list(bottom_range = 48, top_range = 72),
                       allow_SNR_failure = FALSE,
                       requirements_page = TRUE,
                       report_SNR = FALSE,
-                      volume_meter_on_melody_trials_type = FALSE) {
+                      volume_meter_on_melody_trials_type = FALSE,
+                      show_instructions = TRUE) {
 
   if(test_name == "Singing Ability Assessment") test_name <- psychTestR::i18n("SAA_test_name")
 
 
   psychTestR::join(
-    musicassessr::musicassessr_init(test = "SAA",
-                                    test_username = test_username,
-                                    store_results_in_db,
-                                    app_name),
 
-    # introduction page
+    # Introduction page
     psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(paste0(psychTestR::i18n("SAA_welcome"), ' ', test_name, "!")),
                                                        shiny::tags$img(src = 'https://adaptiveeartraining.com/assets/img/SAA_intro.png', height = 100, width = 100),
                                                        shiny::tags$p(psychTestR::i18n("SAA_welcome_1")),
                                                        shiny::tags$p(psychTestR::i18n("SAA_welcome_2"))),
                                 button_text = psychTestR::i18n("Next")),
 
+    # Setup pages
     musicassessr::setup_pages(input = "microphone",
                               demo = demo,
                               get_instrument_range = get_range,
@@ -524,13 +548,12 @@ SAA_intro <- function(demo = FALSE,
                               allow_repeat_SNR_tests = allow_repeat_SNR_tests,
                               concise_wording = concise_wording,
                               skip_setup = skip_setup,
-                              default_range = default_range,
                               allow_SNR_failure = allow_SNR_failure,
                               requirements_page = requirements_page,
                               report_SNR = report_SNR,
                               playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful'),
-    # instructions
-    if(skip_setup == FALSE) SAA_instructions(max_goes_forced, max_goes)
+    # Instructions
+    if(show_instructions) SAA_instructions(max_goes_forced, max_goes)
   )
 
 }

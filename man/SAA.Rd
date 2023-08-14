@@ -19,7 +19,7 @@ SAA(
   examples = 2,
   final_results = TRUE,
   musicassessr_aws = FALSE,
-  store_results_in_db = FALSE,
+  use_musicassessr_db = FALSE,
   test_username = character(),
   gold_msi = TRUE,
   with_final_page = FALSE,
@@ -43,7 +43,7 @@ SAA(
   concise_wording = TRUE,
   skip_setup = FALSE,
   additional_scoring_measures = NULL,
-  default_range = list(bottom_range = 48, top_range = 72),
+  default_range = NULL,
   long_tone_paradigm = c("sing_along", "call_and_response"),
   get_p_id = FALSE,
   volume_meter_on_melody_trials = FALSE,
@@ -51,7 +51,9 @@ SAA(
   long_tone_length = 5,
   allow_SNR_failure = FALSE,
   requirements_page = TRUE,
-  report_SNR = FALSE
+  report_SNR = FALSE,
+  show_introduction = TRUE,
+  show_instructions = TRUE
 )
 }
 \arguments{
@@ -83,7 +85,7 @@ SAA(
 
 \item{musicassessr_aws}{Is this being deployed on AWS via the musicassessr setup?}
 
-\item{store_results_in_db}{Store results in a database?}
+\item{use_musicassessr_db}{Store results in a database?}
 
 \item{test_username}{Is there a username for the user? This is different from a p_id.}
 
@@ -148,6 +150,10 @@ SAA(
 \item{requirements_page}{Show a requirements page on the setup?}
 
 \item{report_SNR}{Report SNR after test?}
+
+\item{show_introduction}{Should introduction be shown (or skipped)?}
+
+\item{show_instructions}{Should instructions be shown (or skipped)?}
 }
 \description{
 Deploy the SAA
