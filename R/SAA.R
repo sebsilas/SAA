@@ -43,7 +43,7 @@
 #' @param validate_user_entry_into_test Should the user be validated against a session token?
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
 #' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
-#' @param long_tone_paradigm Can be sing_along or call_and_response.
+#' @param long_tone_paradigm Can be simultaneous_recall or call_and_response.
 #' @param get_p_id if TRUE, get the participant to enter their ID at the beginning of the test.
 #' @param languages The available languages.
 #' @param volume_meter_on_melody_trials Should there be a volume meter displayed on melody trial pages?
@@ -103,7 +103,7 @@ SAA_standalone <- function(app_name,
                            validate_user_entry_into_test = FALSE,
                            additional_scoring_measures = NULL,
                            default_range = NULL,
-                           long_tone_paradigm = c("sing_along", "call_and_response"),
+                           long_tone_paradigm = c("simultaneous_recall", "call_and_response"),
                            get_p_id = FALSE,
                            languages = c("en", "de", "it"),
                            volume_meter_on_melody_trials = FALSE,
@@ -232,7 +232,7 @@ SAA_standalone <- function(app_name,
 #' @param skip_setup TRUE to skip setup steps.
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
 #' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
-#' @param long_tone_paradigm Can be sing_along or call_and_response.
+#' @param long_tone_paradigm Can be simultaneous_recall or call_and_response.
 #' @param get_p_id if TRUE, get the participant to enter their ID at the beginning of the test.
 #' @param volume_meter_on_melody_trials Should there be a volume meter displayed on melody trial pages?
 #' @param volume_meter_on_melody_trials_type = If so, what type? Can be 'default' or 'playful'.
@@ -287,7 +287,7 @@ SAA <- function(app_name,
                 skip_setup = FALSE,
                 additional_scoring_measures = NULL,
                 default_range = NULL,
-                long_tone_paradigm = c("sing_along", "call_and_response"),
+                long_tone_paradigm = c("simultaneous_recall", "call_and_response"),
                 get_p_id = FALSE,
                 volume_meter_on_melody_trials = FALSE,
                 volume_meter_on_melody_trials_type = 'default',
@@ -298,6 +298,7 @@ SAA <- function(app_name,
                 show_introduction = TRUE,
                 show_instructions = TRUE) {
 
+  long_tone_paradigm <- match.arg(long_tone_paradigm)
 
   stopifnot(
     melody_length[1] > 3,
@@ -339,8 +340,8 @@ SAA <- function(app_name,
     is.logical(concise_wording),
     is.logical(skip_setup) | skip_setup == "except_microphone",
     is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures),
-    is.list(default_range) & length(default_range) == 2 & setequal(names(default_range), c("bottom_range", "top_range")),
-    assertthat::is.string(match.arg(long_tone_paradigm)),
+    is.null.or(default_range, function(x) is.list(x) && length(x) == 2 && setequal(names(x), c("bottom_range", "top_range")) ),
+    assertthat::is.string(long_tone_paradigm),
     "log_freq" %in% names(arrhythmic_item_bank),
     is.scalar.logical(get_p_id),
     is.scalar.logical(volume_meter_on_melody_trials),
@@ -397,7 +398,7 @@ SAA <- function(app_name,
         musicassessr::musicassessr_init(use_musicassessr_db = use_musicassessr_db, app_name = app_name),
 
         # Set Test
-        musicassessr::set_test(test_name = "SAA", test_id = 1L),
+        if(use_musicassessr_db) musicassessr::set_test(test_name = "SAA", test_id = 1L),
 
         # Set default range
         if(!is.null(default_range)) musicassessr::set_instrument_range(bottom_range = default_range$bottom_range, top_range = default_range$top_range),
@@ -426,7 +427,7 @@ SAA <- function(app_name,
                                                                requirements_page,
                                                                report_SNR,
                                                                volume_meter_on_melody_trials_type,
-                                                              show_instructions) },
+                                                               show_instructions) },
 
                            # Arbitrary and optional trial block to go first
                            append_trial_block_before,

@@ -44,7 +44,7 @@ SAA(
   skip_setup = FALSE,
   additional_scoring_measures = NULL,
   default_range = NULL,
-  long_tone_paradigm = c("sing_along", "call_and_response"),
+  long_tone_paradigm = c("simultaneous_recall", "call_and_response"),
   get_p_id = FALSE,
   volume_meter_on_melody_trials = FALSE,
   volume_meter_on_melody_trials_type = "default",
@@ -135,7 +135,7 @@ SAA(
 
 \item{default_range}{A list of the range that stimuli should be presented in, if not collected at test time.}
 
-\item{long_tone_paradigm}{Can be sing_along or call_and_response.}
+\item{long_tone_paradigm}{Can be simultaneous_recall or call_and_response.}
 
 \item{get_p_id}{if TRUE, get the participant to enter their ID at the beginning of the test.}
 
