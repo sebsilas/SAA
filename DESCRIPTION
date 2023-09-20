@@ -18,6 +18,7 @@ Imports:
     Berkowitz (>= 0.1.0),
     dplyr,
     magrittr,
+    memoise,
     musicassessr (>= 0.0.0.9000),
     psychTestR (>= 2.23.0),
     psychTestRCATME (>= 1.6.2),

@@ -54,6 +54,7 @@
 #' @param report_SNR Report SNR after test?
 #' @param show_introduction Should introduction be shown (or skipped)?
 #' @param show_instructions Should instructions be shown (or skipped)?
+#' @param use_memoise Should memoise be used?
 #' @param ...
 #'
 #' @return
@@ -113,7 +114,121 @@ SAA_standalone <- function(app_name,
                            requirements_page = TRUE,
                            report_SNR = FALSE,
                            show_introduction = TRUE,
-                           show_instructions = TRUE, ...) {
+                           show_instructions = TRUE,
+                           use_memoise = FALSE, ...) {
+
+  # tictoc::tic("Timing timeline build")
+  #
+  #
+  # if(use_memoise) {
+  #
+  #   timeline <- SAA_m(app_name,
+  #                     num_items,
+  #                     arrhythmic_item_bank,
+  #                     rhythmic_item_bank,
+  #                     demographics,
+  #                     demo,
+  #                     feedback,
+  #                     admin_password,
+  #                     SNR_test,
+  #                     get_range,
+  #                     absolute_url,
+  #                     examples,
+  #                     final_results,
+  #                     musicassessr_aws,
+  #                     use_musicassessr_db,
+  #                     test_username,
+  #                     gold_msi,
+  #                     with_final_page,
+  #                     melody_length,
+  #                     melody_sound,
+  #                     adjust_range,
+  #                     test_name,
+  #                     show_socials,
+  #                     headphones_test,
+  #                     get_user_info,
+  #                     microphone_test,
+  #                     allow_repeat_SNR_tests,
+  #                     append_trial_block_before,
+  #                     append_trial_block_after,
+  #                     stop_recording_after,
+  #                     max_goes,
+  #                     max_goes_forced,
+  #                     long_tone_trials_as_screening,
+  #                     long_tone_trials_as_screening_failure_page,
+  #                     success_on_completion_page,
+  #                     concise_wording,
+  #                     skip_setup,
+  #                     additional_scoring_measures,
+  #                     default_range,
+  #                     long_tone_paradigm,
+  #                     get_p_id,
+  #                     volume_meter_on_melody_trials,
+  #                     volume_meter_on_melody_trials_type,
+  #                     long_tone_length,
+  #                     allow_SNR_failure,
+  #                     requirements_page,
+  #                     report_SNR,
+  #                     show_introduction,
+  #                     show_instructions)
+  #
+  # } else {
+  #
+  #   timeline <- SAA(app_name,
+  #                   num_items,
+  #                   arrhythmic_item_bank,
+  #                   rhythmic_item_bank,
+  #                   demographics,
+  #                   demo,
+  #                   feedback,
+  #                   admin_password,
+  #                   SNR_test,
+  #                   get_range,
+  #                   absolute_url,
+  #                   examples,
+  #                   final_results,
+  #                   musicassessr_aws,
+  #                   use_musicassessr_db,
+  #                   test_username,
+  #                   gold_msi,
+  #                   with_final_page,
+  #                   melody_length,
+  #                   melody_sound,
+  #                   adjust_range,
+  #                   test_name,
+  #                   show_socials,
+  #                   headphones_test,
+  #                   get_user_info,
+  #                   microphone_test,
+  #                   allow_repeat_SNR_tests,
+  #                   append_trial_block_before,
+  #                   append_trial_block_after,
+  #                   stop_recording_after,
+  #                   max_goes,
+  #                   max_goes_forced,
+  #                   long_tone_trials_as_screening,
+  #                   long_tone_trials_as_screening_failure_page,
+  #                   success_on_completion_page,
+  #                   concise_wording,
+  #                   skip_setup,
+  #                   additional_scoring_measures,
+  #                   default_range,
+  #                   long_tone_paradigm,
+  #                   get_p_id,
+  #                   volume_meter_on_melody_trials,
+  #                   volume_meter_on_melody_trials_type,
+  #                   long_tone_length,
+  #                   allow_SNR_failure,
+  #                   requirements_page,
+  #                   report_SNR,
+  #                   show_introduction,
+  #                   show_instructions)
+  #
+  # }
+  #
+  #
+  # tictoc::toc()
+
 
   timeline <- SAA(app_name,
                   num_items,
@@ -166,7 +281,7 @@ SAA_standalone <- function(app_name,
                   show_instructions)
 
 
-  # run the test
+  # Run the test
   timeline %>%
     musicassessr::validate_user_entry_into_test(validate_user_entry_into_test, .) %>%
   psychTestR::make_test(
@@ -373,21 +488,20 @@ SAA <- function(app_name,
   pyin_with_additional <- musicassessr::get_answer_pyin_melodic_production_additional_measures(type = "both", melconv = FALSE, additional_scoring_measures = additional_scoring_measures)
 
 
-  # Subset item banks
-  arrhythmic_item_bank_subset <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
-  rhythmic_item_bank_subset <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
+  # This code SLOWS things a lot. The subset should be done a priori, not at test time.
+  # # Subset item banks
+  # arrhythmic_item_bank_subset <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
+  # rhythmic_item_bank_subset <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
+  #
+  # # Check there is enough stimuli
+  # if(nrow(arrhythmic_item_bank_subset) < num_items$arrhythmic)  stop("There are too few items using your item constraints for the arrhythmic_item_bank. Try making your melody length constraints less restrictive, or using another item bank.")
+  # if(nrow(rhythmic_item_bank_subset) < num_items$rhythmic)  stop("There are too few items using your item constraints for the rhythmic_item_bank. Try making your melody length constraints less restrictive, or using another item bank.")
+  #
+  # # Clean up
+  # rm(arrhythmic_item_bank, rhythmic_item_bank)
+  # gc()
 
-  # Check there is enough stimuli
-  if(nrow(arrhythmic_item_bank_subset) < num_items$arrhythmic)  stop("There are too few items using your item constraints for the arrhythmic_item_bank. Try making your melody length constraints less restrictive, or using another item bank.")
-  if(nrow(rhythmic_item_bank_subset) < num_items$rhythmic)  stop("There are too few items using your item constraints for the rhythmic_item_bank. Try making your melody length constraints less restrictive, or using another item bank.")
-
-  # Clean up
-  rm(arrhythmic_item_bank, rhythmic_item_bank)
-  gc()
-
-  # Start test
-
-
+  # Start test timeline
   timeline <- psychTestR::join(
     psychTestR::new_timeline(
       psychTestR::join(
@@ -444,7 +558,7 @@ SAA <- function(app_name,
                                                           show_instructions = show_instructions),
 
                            # Arrhythmic melody trials
-                           musicassessr::arrhythmic_melody_trials(item_bank = arrhythmic_item_bank_subset,
+                           musicassessr::arrhythmic_melody_trials(item_bank = arrhythmic_item_bank,
                                                                   num_items = num_items$arrhythmic,
                                                                   num_examples = examples,
                                                                   feedback = feedback,
@@ -459,7 +573,7 @@ SAA <- function(app_name,
                                                                   volume_meter_type = volume_meter_on_melody_trials_type),
 
                            # Rhythmic melody trials
-                           musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank_subset,
+                           musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank,
                                                                 num_items = num_items$rhythmic,
                                                                 num_examples = 0, # because it's effectively the same task as arrhythmic
                                                                 feedback = feedback,
@@ -477,13 +591,12 @@ SAA <- function(app_name,
                            append_trial_block_after,
 
                            # Add final session information to DB (if use_musicassessr_db)
-                           musicassessr::elt_add_final_session_info_to_db(),
+                           if(use_musicassessr_db) musicassessr::elt_add_final_session_info_to_db(),
 
 
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
 
-                           final_results_saa(final_results, test_name = test_name,  url = absolute_url,
-                                             num_items$long_tones, num_items$arrhythmic, num_items$rhythmic, show_socials)
+                           final_results_saa(final_results, test_name = test_name,  url = absolute_url, num_items$long_tones, num_items$arrhythmic, num_items$rhythmic, show_socials)
 
         )
       ),
@@ -494,7 +607,7 @@ SAA <- function(app_name,
     psychTestR::elt_save_results_to_disk(complete = TRUE),
     psychTestR::new_timeline(
                     musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name, img = 'https://adaptiveeartraining.com/assets/img/SAA_intro.png'),
-                    dict = musicassessr::dict(NULL))
+                    dict = musicassessr::musicassessr_dict)
   )
 
 }

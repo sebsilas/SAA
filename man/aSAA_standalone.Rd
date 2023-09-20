@@ -7,6 +7,8 @@
 aSAA_standalone(
   app_name,
   num_items = list(long_tones = 6L, arrhythmic = 15L, rhythmic = 10L),
+  item_bank = Berkowitz::Berkowitz_IRT_arrhythmic_scaled,
+  irt_model = Berkowitz::lm2.2_scaled,
   demographics = TRUE,
   demo = FALSE,
   feedback = FALSE,
@@ -47,6 +49,10 @@ aSAA_standalone(
 \item{app_name}{Name of app.}
 
 \item{num_items}{The number of items as a list.}
+
+\item{item_bank}{The (IRT) item bank that will be used for selecting items.}
+
+\item{irt_model}{The IRT model that will be used for selecting items.}
 
 \item{demographics}{Deploy demographic form?}
 

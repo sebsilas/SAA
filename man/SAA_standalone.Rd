@@ -57,6 +57,7 @@ SAA_standalone(
   report_SNR = FALSE,
   show_introduction = TRUE,
   show_instructions = TRUE,
+  use_memoise = FALSE,
   ...
 )
 }
@@ -164,6 +165,8 @@ SAA_standalone(
 \item{show_introduction}{Should introduction be shown (or skipped)?}
 
 \item{show_instructions}{Should instructions be shown (or skipped)?}
+
+\item{use_memoise}{Should memoise be used?}
 
 \item{...}{}
 }
