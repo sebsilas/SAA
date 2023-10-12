@@ -1,6 +1,6 @@
 # Singing Ability Assessment (SAA)
 
-The `SAA` is a test of singing ability which can be launched in R/Shiny via the [`psychTestR`](https://github.com/pmcharrison/psychTestR) package.
+The *Singing Ability Assessment* (`SAA`; Silas, Müllensiefen, & Kopiez, 2023) is a test of singing ability which can be launched in R/Shiny via the [`psychTestR`](https://github.com/pmcharrison/psychTestR) package.
 
 ## Author
 
@@ -71,9 +71,9 @@ If not, go to our [Troubleshooting]() page or [raise an issue on Github](https:/
 
 ## Usage notes
 
-- This has not yet been tested on Windows. We will be doing this very soon.
+- This has not yet been comprehensively tested on Windows. Please get in touch if you have any issues.
 
-- The test requires internet connectivity. 
+- The test requires internet connectivity.
 
 - The *SAA* runs in your web browser. It is only recommended to run the test in [Google Chrome](https://www.google.com/chrome/) or [Opera](https://www.opera.com/download). You will need to set one of these to be your default browser for *RStudio* to launch the test there (restart *RStudio* after doing this).
 
@@ -97,5 +97,5 @@ x$packages[x$packages$package %in% c("SAA", "psychTestR", "psychTestRCAT"), ]
 ## References
  
  
-Silas, S., Müllensiefen, D., & Kopiez, R. (2022). Singing Ability Assessment: Development and validation of an open-source testing environment for singing data. In prep.
+Silas, S., Müllensiefen, D., & Kopiez, R. (2023). Singing Ability Assessment: Development and validation of a singing test based on item response theory and a general open-source software environment for singing data. Behaviour Research Methods. https://doi.org/10.3758/s13428-023-02188-0
 

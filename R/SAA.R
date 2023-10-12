@@ -357,6 +357,8 @@ SAA_standalone <- function(app_name,
 #' @param report_SNR Report SNR after test?
 #' @param show_introduction Should introduction be shown (or skipped)?
 #' @param show_instructions Should instructions be shown (or skipped)?
+#' @param experiment_id The experiment ID, if using musicassessr_db and applicable.
+#' @param user_id The user's ID, if using musicassessr_db and applicable.
 #' @return
 #' @export
 #'
@@ -374,7 +376,7 @@ SAA <- function(app_name,
                 SNR_test = TRUE,
                 get_range = TRUE,
                 absolute_url = character(),
-                examples = 2,
+                examples = 2L,
                 final_results = TRUE,
                 musicassessr_aws = FALSE,
                 use_musicassessr_db = FALSE,
@@ -411,7 +413,9 @@ SAA <- function(app_name,
                 requirements_page = TRUE,
                 report_SNR = FALSE,
                 show_introduction = TRUE,
-                show_instructions = TRUE) {
+                show_instructions = TRUE,
+                experiment_id = NULL,
+                user_id = NULL) {
 
   long_tone_paradigm <- match.arg(long_tone_paradigm)
 
@@ -428,7 +432,7 @@ SAA <- function(app_name,
     is.logical(SNR_test),
     is.logical(get_range) | is.character(get_range) & length(get_range) == 1,
     is.character(absolute_url),
-    is.numeric(examples) & length(examples) == 1L,
+    is.scalar.numeric(examples),
     is.logical(final_results),
     is.logical(musicassessr_aws),
     is.logical(use_musicassessr_db),
@@ -469,7 +473,9 @@ SAA <- function(app_name,
       is.list(x) & length(x) == 2 & setequal(names(x), c('bottom_range', 'top_range'))
     }),
     is.scalar.logical(show_introduction),
-    is.scalar.logical(show_instructions)
+    is.scalar.logical(show_instructions),
+    is.null.or(experiment_id, is.integer),
+    is.null.or(user_id, is.integer)
     )
 
   shiny::addResourcePath(
@@ -509,7 +515,8 @@ SAA <- function(app_name,
         if(get_p_id) psychTestR::get_p_id(prompt = psychTestR::i18n("enter_id"), button_text = psychTestR::i18n("Next")),
 
         # Init musicassessr
-        musicassessr::musicassessr_init(use_musicassessr_db = use_musicassessr_db, app_name = app_name),
+        musicassessr::musicassessr_init(use_musicassessr_db = use_musicassessr_db, app_name = app_name,
+                                        experiment_id = experiment_id, user_id = user_id),
 
         # Set Test
         if(use_musicassessr_db) musicassessr::set_test(test_name = "SAA", test_id = 1L),

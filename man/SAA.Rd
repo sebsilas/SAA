@@ -16,7 +16,7 @@ SAA(
   SNR_test = TRUE,
   get_range = TRUE,
   absolute_url = character(),
-  examples = 2,
+  examples = 2L,
   final_results = TRUE,
   musicassessr_aws = FALSE,
   use_musicassessr_db = FALSE,
@@ -53,7 +53,9 @@ SAA(
   requirements_page = TRUE,
   report_SNR = FALSE,
   show_introduction = TRUE,
-  show_instructions = TRUE
+  show_instructions = TRUE,
+  experiment_id = NULL,
+  user_id = NULL
 )
 }
 \arguments{
@@ -154,6 +156,10 @@ SAA(
 \item{show_introduction}{Should introduction be shown (or skipped)?}
 
 \item{show_instructions}{Should instructions be shown (or skipped)?}
+
+\item{experiment_id}{The experiment ID, if using musicassessr_db and applicable.}
+
+\item{user_id}{The user's ID, if using musicassessr_db and applicable.}
 }
 \description{
 Deploy the SAA
