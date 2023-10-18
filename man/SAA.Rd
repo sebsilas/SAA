@@ -7,6 +7,7 @@
 SAA(
   app_name,
   num_items = list(long_tones = 6L, arrhythmic = 10L, rhythmic = 10L),
+  num_examples = list(long_tones = 2L, arrhythmic = 2L, rhythmic = 0L),
   arrhythmic_item_bank = Berkowitz::ngram_item_bank,
   rhythmic_item_bank = Berkowitz::combined_item_bank,
   demographics = TRUE,
@@ -62,6 +63,8 @@ SAA(
 \item{app_name}{Name of app.}
 
 \item{num_items}{The number of items as a list.}
+
+\item{num_examples}{The number of example items as a list.}
 
 \item{arrhythmic_item_bank}{The item bank (created with itembankr) to deployed with the test.}
 
