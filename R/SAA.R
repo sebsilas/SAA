@@ -4,6 +4,7 @@
 #'
 #' @param app_name Name of app.
 #' @param num_items The number of items as a list.
+#' @param num_examples The number of example items as a list.
 #' @param arrhythmic_item_bank The item bank (created with itembankr) to deployed with the test.
 #' @param rhythmic_item_bank The item bank (created with itembankr) to deployed with the test.
 #' @param demographics Deploy demographic form?
@@ -65,6 +66,9 @@ SAA_standalone <- function(app_name,
                            num_items = list("long_tones" = 6L,
                                             "arrhythmic" = 10L,
                                             "rhythmic" = 10L),
+                           num_examples = list("long_tones" = 2L,
+                                               "arrhythmic" = 2L,
+                                               "rhythmic" = 0L),
                            arrhythmic_item_bank = Berkowitz::ngram_item_bank, # N.B. this has a log_freq column, which is required. No other itembankr columns do
                            rhythmic_item_bank = Berkowitz::combined_item_bank,
                            demographics = TRUE,
@@ -120,6 +124,7 @@ SAA_standalone <- function(app_name,
 
   timeline <- SAA(app_name,
                   num_items,
+                  num_examples,
                   arrhythmic_item_bank,
                   rhythmic_item_bank,
                   demographics,
@@ -197,6 +202,7 @@ SAA_standalone <- function(app_name,
 #'
 #' @param app_name Name of app.
 #' @param num_items The number of items as a list.
+#' @param num_examples The number of example items as a list.
 #' @param arrhythmic_item_bank The item bank (created with itembankr) to deployed with the test.
 #' @param rhythmic_item_bank The item bank (created with itembankr) to deployed with the test.
 #' @param demographics Deploy demographic form?
@@ -255,6 +261,9 @@ SAA <- function(app_name,
                 num_items = list("long_tones" = 6L,
                                  "arrhythmic" = 10L,
                                  "rhythmic" = 10L),
+                num_examples = list("long_tones" = 2L,
+                                    "arrhythmic" = 2L,
+                                    "rhythmic" = 0L),
                 arrhythmic_item_bank = Berkowitz::ngram_item_bank, # N.B. this has a log_freq column, which is required. No other itembankr columns do
                 rhythmic_item_bank = Berkowitz::combined_item_bank,
                 demographics = TRUE,
@@ -311,6 +320,7 @@ SAA <- function(app_name,
     melody_length[1] > 3,
     assertthat::is.string(app_name),
     is.list(num_items) && length(num_items) == 3L && setequal(names(num_items), c("long_tones", "arrhythmic", "rhythmic")),
+    is.list(num_examples) && length(num_examples) == 3L && setequal(names(num_examples), c("long_tones", "arrhythmic", "rhythmic")),
     is(arrhythmic_item_bank, "item_bank"),
     is(rhythmic_item_bank, "item_bank"),
     is.logical(demographics),
@@ -444,7 +454,7 @@ SAA <- function(app_name,
 
                            # Long tone trials
                            musicassessr::long_tone_trials(num_items = num_items$long_tones,
-                                                          num_examples = examples,
+                                                          num_examples = num_examples$long_tones,
                                                           feedback = feedback,
                                                           long_tone_trials_as_screening = long_tone_trials_as_screening,
                                                           long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page,
@@ -455,7 +465,7 @@ SAA <- function(app_name,
                            # Arrhythmic melody trials
                            musicassessr::arrhythmic_melody_trials(item_bank = arrhythmic_item_bank,
                                                                   num_items = num_items$arrhythmic,
-                                                                  num_examples = examples,
+                                                                  num_examples = num_examples$arrhythmic,
                                                                   feedback = feedback,
                                                                   sound = melody_sound,
                                                                   page_text = psychTestR::i18n("sing_melody_page_text"),
@@ -470,7 +480,7 @@ SAA <- function(app_name,
                            # Rhythmic melody trials
                            musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank,
                                                                 num_items = num_items$rhythmic,
-                                                                num_examples = num_examples,
+                                                                num_examples = num_examples$rhythmic,
                                                                 feedback = feedback,
                                                                 sound = melody_sound,
                                                                 page_text = psychTestR::i18n("sing_rhythmic_melodies_page_text"),
