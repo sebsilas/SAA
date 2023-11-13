@@ -176,7 +176,7 @@ SAA_standalone <- function(app_name,
 
   # Run the test
   timeline %>%
-    musicassessr::validate_user_entry_into_test(validate_user_entry_into_test, .) %>%
+    musicassessrdb::validate_user_entry_into_test(validate_user_entry_into_test, .) %>%
   psychTestR::make_test(
     opt = psychTestR::test_options(title = test_name,
                                    admin_password = admin_password,
