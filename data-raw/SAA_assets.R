@@ -2,6 +2,7 @@
 
 library(musicassessr)
 library(tidyverse)
+library(lme4)
 
 SAA_dict_df <- readxl::read_excel("data-raw/SAA.xlsx")
 
@@ -90,8 +91,14 @@ hist(percentile_dist$Final_SAA_Score)
 Final_SAA_Score_m <- mean(percentile_dist$Final_SAA_Score, na.rm = TRUE)
 Final_SAA_Score_sd <- sd(percentile_dist$Final_SAA_Score, na.rm = TRUE)
 
+
+Berkowitz_item_bank_subset <- itembankr::subset_item_bank(Berkowitz::ngram_item_bank, item_length = c(4,20), return_as_item_bank_class = TRUE)
+
+
+
 usethis::use_data(SAA_dict_df, SAA_dict,
                   get_arrhythmic_score_percentile, get_rhythmic_score_percentile, get_long_note_score_percentile,
                   Final_SAA_Score_m, Final_SAA_Score_sd,
                   overwrite = TRUE, internal = TRUE)
 
+usethis::use_data(Berkowitz_item_bank_subset)

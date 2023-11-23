@@ -69,8 +69,8 @@ SAA_standalone <- function(app_name,
                            num_examples = list("long_tones" = 2L,
                                                "arrhythmic" = 2L,
                                                "rhythmic" = 0L),
-                           arrhythmic_item_bank = Berkowitz::ngram_item_bank, # N.B. this has a log_freq column, which is required. No other itembankr columns do
-                           rhythmic_item_bank = Berkowitz::combined_item_bank,
+                           arrhythmic_item_bank = SAA::Berkowitz_item_bank_subset, # N.B. this has a log_freq column, which is required. No other itembankr columns do
+                           rhythmic_item_bank = SAA::Berkowitz_item_bank_subset,
                            demographics = TRUE,
                            demo = FALSE,
                            feedback = FALSE,
@@ -391,19 +391,9 @@ SAA <- function(app_name,
 
   pyin_with_additional <- musicassessr::get_answer_pyin_melodic_production_additional_measures(type = "both", melconv = FALSE, additional_scoring_measures = additional_scoring_measures)
 
-
-  # This code SLOWS things a lot. The subset should be done a priori, not at test time.
-  # # Subset item banks
-  # arrhythmic_item_bank_subset <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
-  # rhythmic_item_bank_subset <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
-  #
-  # # Check there is enough stimuli
-  # if(nrow(arrhythmic_item_bank_subset) < num_items$arrhythmic)  stop("There are too few items using your item constraints for the arrhythmic_item_bank. Try making your melody length constraints less restrictive, or using another item bank.")
-  # if(nrow(rhythmic_item_bank_subset) < num_items$rhythmic)  stop("There are too few items using your item constraints for the rhythmic_item_bank. Try making your melody length constraints less restrictive, or using another item bank.")
-  #
-  # # Clean up
-  # rm(arrhythmic_item_bank, rhythmic_item_bank)
-  # gc()
+  # Subset item bank
+  arrhythmic_item_bank <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length)
+  rhythmic_item_bank <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length)
 
   # Start test timeline
   timeline <- psychTestR::join(
