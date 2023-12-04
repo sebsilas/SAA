@@ -187,6 +187,8 @@ SAA_standalone <- function(app_name,
                                      css = system.file('www/css/musicassessr.css', package = "musicassessr")
                                    ),
                                    languages = languages,
+                                   on_start_fun = if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_init else NULL,
+                                   on_stop_fun =  if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_on_stop else NULL,
                                    additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
                                                                                       app_name = app_name,
                                                                                       visual_notation = feedback), ...))
@@ -488,7 +490,7 @@ SAA <- function(app_name,
                            append_trial_block_after,
 
                            # Add final session information to DB (if use_musicassessr_db)
-                           if(use_musicassessr_db) musicassessr::elt_add_final_session_info_to_db(),
+                           if(use_musicassessr_db) musicassessrdb::elt_add_final_session_info_to_db(),
 
 
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
