@@ -264,8 +264,8 @@ SAA <- function(app_name,
                 num_examples = list("long_tones" = 2L,
                                     "arrhythmic" = 2L,
                                     "rhythmic" = 0L),
-                arrhythmic_item_bank = Berkowitz::ngram_item_bank, # N.B. this has a log_freq column, which is required. No other itembankr columns do
-                rhythmic_item_bank = Berkowitz::combined_item_bank,
+                arrhythmic_item_bank = SAA::Berkowitz_item_bank_subset, # N.B. this has a log_freq column, which is required. No other itembankr columns do
+                rhythmic_item_bank = SAA::Berkowitz_item_bank_subset,
                 demographics = TRUE,
                 demo = FALSE,
                 feedback = FALSE,
@@ -392,8 +392,8 @@ SAA <- function(app_name,
   pyin_with_additional <- musicassessr::get_answer_pyin_melodic_production_additional_measures(type = "both", melconv = FALSE, additional_scoring_measures = additional_scoring_measures)
 
   # Subset item bank
-  arrhythmic_item_bank <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length)
-  rhythmic_item_bank <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length)
+  arrhythmic_item_bank <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
+  rhythmic_item_bank <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
 
   # Start test timeline
   timeline <- psychTestR::join(
@@ -403,8 +403,10 @@ SAA <- function(app_name,
         if(get_p_id) psychTestR::get_p_id(prompt = psychTestR::i18n("enter_id"), button_text = psychTestR::i18n("Next")),
 
         # Init musicassessr
-        musicassessr::musicassessr_init(use_musicassessr_db = use_musicassessr_db, app_name = app_name,
-                                        experiment_id = experiment_id, user_id = user_id),
+        musicassessr::musicassessr_init(use_musicassessr_db = use_musicassessr_db,
+                                        app_name = app_name,
+                                        experiment_id = experiment_id,
+                                        user_id = user_id),
 
         # Set Test
         if(use_musicassessr_db) musicassessr::set_test(test_name = "SAA", test_id = 1L),
