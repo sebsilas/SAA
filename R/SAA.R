@@ -55,7 +55,9 @@
 #' @param report_SNR Report SNR after test?
 #' @param show_introduction Should introduction be shown (or skipped)?
 #' @param show_instructions Should instructions be shown (or skipped)?
-#' @param use_memoise Should memoise be used?
+#' @param asynchronous_api_mode If musicassessr_db, should DB storing be done via the musicassessr API (asynchronously)?
+#' @param experiment_id Manually give an experiment ID when using musicassessrdb.
+#' @param user_id Manually give a user ID when using musicassessrdb.
 #' @param ...
 #'
 #' @return
@@ -119,7 +121,9 @@ SAA_standalone <- function(app_name,
                            report_SNR = FALSE,
                            show_introduction = TRUE,
                            show_instructions = TRUE,
-                           use_memoise = FALSE, ...) {
+                           asynchronous_api_mode = FALSE,
+                           experiment_id = NULL,
+                           user_id = NULL, ...) {
 
 
   timeline <- SAA(app_name,
@@ -171,7 +175,10 @@ SAA_standalone <- function(app_name,
                   requirements_page,
                   report_SNR,
                   show_introduction,
-                  show_instructions)
+                  show_instructions,
+                  asynchronous_api_mode,
+                  experiment_id,
+                  user_id)
 
 
   # Run the test
@@ -253,6 +260,7 @@ SAA_standalone <- function(app_name,
 #' @param report_SNR Report SNR after test?
 #' @param show_introduction Should introduction be shown (or skipped)?
 #' @param show_instructions Should instructions be shown (or skipped)?
+#' @param asynchronous_api_mode Should asynchronous API mode be used when using musicassessrdb?
 #' @param experiment_id The experiment ID, if using musicassessr_db and applicable.
 #' @param user_id The user's ID, if using musicassessr_db and applicable.
 #' @return
@@ -313,6 +321,7 @@ SAA <- function(app_name,
                 report_SNR = FALSE,
                 show_introduction = TRUE,
                 show_instructions = TRUE,
+                asynchronous_api_mode = FALSE,
                 experiment_id = NULL,
                 user_id = NULL) {
 
@@ -374,6 +383,7 @@ SAA <- function(app_name,
     }),
     is.scalar.logical(show_introduction),
     is.scalar.logical(show_instructions),
+    is.scalar.logical(asynchronous_api_mode),
     is.null.or(experiment_id, is.integer),
     is.null.or(user_id, is.integer)
     )
@@ -408,7 +418,8 @@ SAA <- function(app_name,
         musicassessr::musicassessr_init(use_musicassessr_db = use_musicassessr_db,
                                         app_name = app_name,
                                         experiment_id = experiment_id,
-                                        user_id = user_id),
+                                        user_id = user_id,
+                                        asynchronous_api_mode = asynchronous_api_mode),
 
         # Set Test
         if(use_musicassessr_db) musicassessr::set_test(test_name = "SAA", test_id = 1L),
@@ -420,27 +431,27 @@ SAA <- function(app_name,
         psychTestR::module("SAA",
                            # Introduction, same for all users
                            if (show_introduction) { SAA_intro(demo,
-                                                               SNR_test,
-                                                               get_range,
-                                                               absolute_url,
-                                                               test_username,
-                                                               use_musicassessr_db,
-                                                               adjust_range,
-                                                               headphones_test,
-                                                               get_user_info,
-                                                               microphone_test,
-                                                               allow_repeat_SNR_tests,
-                                                               concise_wording,
-                                                               test_name,
-                                                               max_goes_forced,
-                                                               max_goes,
-                                                               skip_setup,
-                                                               app_name,
-                                                               allow_SNR_failure,
-                                                               requirements_page,
-                                                               report_SNR,
-                                                               volume_meter_on_melody_trials_type,
-                                                               show_instructions) },
+                                                              SNR_test,
+                                                              get_range,
+                                                              absolute_url,
+                                                              test_username,
+                                                              use_musicassessr_db,
+                                                              adjust_range,
+                                                              headphones_test,
+                                                              get_user_info,
+                                                              microphone_test,
+                                                              allow_repeat_SNR_tests,
+                                                              concise_wording,
+                                                              test_name,
+                                                              max_goes_forced,
+                                                              max_goes,
+                                                              skip_setup,
+                                                              app_name,
+                                                              allow_SNR_failure,
+                                                              requirements_page,
+                                                              report_SNR,
+                                                              volume_meter_on_melody_trials_type,
+                                                              show_instructions) },
 
                            # Arbitrary and optional trial block to go first
                            append_trial_block_before,

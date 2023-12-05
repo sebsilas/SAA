@@ -55,6 +55,7 @@ SAA(
   report_SNR = FALSE,
   show_introduction = TRUE,
   show_instructions = TRUE,
+  asynchronous_api_mode = FALSE,
   experiment_id = NULL,
   user_id = NULL
 )
@@ -159,6 +160,8 @@ SAA(
 \item{show_introduction}{Should introduction be shown (or skipped)?}
 
 \item{show_instructions}{Should instructions be shown (or skipped)?}
+
+\item{asynchronous_api_mode}{Should asynchronous API mode be used when using musicassessrdb?}
 
 \item{experiment_id}{The experiment ID, if using musicassessr_db and applicable.}
 

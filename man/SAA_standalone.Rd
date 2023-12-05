@@ -58,7 +58,9 @@ SAA_standalone(
   report_SNR = FALSE,
   show_introduction = TRUE,
   show_instructions = TRUE,
-  use_memoise = FALSE,
+  asynchronous_api_mode = FALSE,
+  experiment_id = NULL,
+  user_id = NULL,
   ...
 )
 }
@@ -169,7 +171,11 @@ SAA_standalone(
 
 \item{show_instructions}{Should instructions be shown (or skipped)?}
 
-\item{use_memoise}{Should memoise be used?}
+\item{asynchronous_api_mode}{If musicassessr_db, should DB storing be done via the musicassessr API (asynchronously)?}
+
+\item{experiment_id}{Manually give an experiment ID when using musicassessrdb.}
+
+\item{user_id}{Manually give a user ID when using musicassessrdb.}
 
 \item{...}{}
 }
