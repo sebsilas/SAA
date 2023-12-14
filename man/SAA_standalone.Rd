@@ -62,6 +62,8 @@ SAA_standalone(
   experiment_id = NULL,
   user_id = NULL,
   get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
+  content_border = "1px solid #e8e8e8",
+  css = system.file("www/css/musicassessr.css", package = "musicassessr"),
   ...
 )
 }
@@ -179,6 +181,10 @@ SAA_standalone(
 \item{user_id}{Manually give a user ID when using musicassessrdb.}
 
 \item{get_answer_melodic}{The get_answer function for melodic trials.}
+
+\item{content_border}{The psychTestR border style.}
+
+\item{css}{Path to css stylesheet.}
 
 \item{...}{}
 }

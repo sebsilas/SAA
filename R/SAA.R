@@ -59,6 +59,8 @@
 #' @param experiment_id Manually give an experiment ID when using musicassessrdb.
 #' @param user_id Manually give a user ID when using musicassessrdb.
 #' @param get_answer_melodic The get_answer function for melodic trials.
+#' @param content_border The psychTestR border style.
+#' @param css Path to css stylesheet.
 #' @param ...
 #'
 #' @return
@@ -125,7 +127,9 @@ SAA_standalone <- function(app_name,
                            asynchronous_api_mode = FALSE,
                            experiment_id = NULL,
                            user_id = NULL,
-                           get_answer_melodic = musicassessr::get_answer_pyin_melodic_production, ...) {
+                           get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
+                           content_border = "1px solid #e8e8e8",
+                           css = system.file('www/css/musicassessr.css', package = "musicassessr"), ...) {
 
 
   timeline <- SAA(app_name,
@@ -194,7 +198,8 @@ SAA_standalone <- function(app_name,
                                      full_screen = full_screen,
                                      left_margin = 1L,
                                      right_margin = 1L,
-                                     css = system.file('www/css/musicassessr.css', package = "musicassessr")
+                                     css = css,
+                                     content_border = content_border
                                    ),
                                    languages = languages,
                                    on_start_fun = if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_init else NULL,
@@ -330,7 +335,7 @@ SAA <- function(app_name,
                 user_id = NULL,
                 get_answer_melodic = musicassessr::get_answer_pyin_melodic_production) {
 
-  lobstr::mem_used()
+  #logging::loginfo(str(lobstr::mem_used()))
 
   long_tone_paradigm <- match.arg(long_tone_paradigm)
 
@@ -434,7 +439,7 @@ SAA <- function(app_name,
 
 
         # Set Test
-        if(use_musicassessr_db) musicassessr::set_test(test_name = "SAA", test_id = 1L),
+        musicassessr::set_test(test_name = "SAA", test_id = 1L),
 
         # Set default range
         if(!is.null(default_range)) musicassessr::set_instrument_range(bottom_range = default_range$bottom_range, top_range = default_range$top_range),
@@ -467,7 +472,9 @@ SAA <- function(app_name,
                                                               report_SNR,
                                                               volume_meter_on_melody_trials_type,
                                                               show_instructions,
-                                                              asynchronous_api_mode) },
+                                                              asynchronous_api_mode,
+                                                              (num_items$arrhythmic + num_items$rhythmic),
+                                                              melody_length) },
 
                            # Arbitrary and optional trial block to go first
                            append_trial_block_before,
@@ -563,7 +570,10 @@ SAA_intro <- function(demo = FALSE,
                       report_SNR = FALSE,
                       volume_meter_on_melody_trials_type = FALSE,
                       show_instructions = TRUE,
-                      asynchronous_api_mode = FALSE) {
+                      asynchronous_api_mode = FALSE,
+                      num_items = NULL, # Only needed for async API mode
+                      melody_length = NULL # Only needed for async API mode
+                      ) {
 
   if(test_name == "Singing Ability Assessment") {
     test_name <- psychTestR::i18n("SAA_test_name")
@@ -599,7 +609,7 @@ SAA_intro <- function(demo = FALSE,
                               playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful'),
 
     # Sample from item bank now we have range
-    if(asynchronous_api_mode) sample_from_item_bank_elts(item_bank_name = "WJD_ngram", num_items, melody_length),
+    if(asynchronous_api_mode) musicassessrdb::sample_from_item_bank_elts(item_bank_name = "WJD_ngram", num_items, melody_length),
 
     # Instructions
     if(show_instructions) SAA_instructions(max_goes_forced, max_goes)
