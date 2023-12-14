@@ -57,7 +57,8 @@ SAA(
   show_instructions = TRUE,
   asynchronous_api_mode = FALSE,
   experiment_id = NULL,
-  user_id = NULL
+  user_id = NULL,
+  get_answer_melodic = musicassessr::get_answer_pyin_melodic_production
 )
 }
 \arguments{
@@ -166,6 +167,8 @@ SAA(
 \item{experiment_id}{The experiment ID, if using musicassessr_db and applicable.}
 
 \item{user_id}{The user's ID, if using musicassessr_db and applicable.}
+
+\item{get_answer_melodic}{The get_answer function for melodic files.}
 }
 \description{
 Deploy the SAA

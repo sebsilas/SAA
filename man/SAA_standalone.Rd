@@ -61,6 +61,7 @@ SAA_standalone(
   asynchronous_api_mode = FALSE,
   experiment_id = NULL,
   user_id = NULL,
+  get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
   ...
 )
 }
@@ -176,6 +177,8 @@ SAA_standalone(
 \item{experiment_id}{Manually give an experiment ID when using musicassessrdb.}
 
 \item{user_id}{Manually give a user ID when using musicassessrdb.}
+
+\item{get_answer_melodic}{The get_answer function for melodic trials.}
 
 \item{...}{}
 }
