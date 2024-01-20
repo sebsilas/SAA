@@ -203,7 +203,7 @@ SAA_standalone <- function(app_name,
                                    ),
                                    languages = languages,
                                    on_start_fun = if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_init else NULL,
-                                   on_stop_fun =  if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_on_stop else NULL,
+                                   on_stop_fun = if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_on_stop else NULL,
                                    additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
                                                                                       app_name = app_name,
                                                                                       visual_notation = feedback), ...))
@@ -479,7 +479,6 @@ SAA <- function(app_name,
                            # Arbitrary and optional trial block to go first
                            append_trial_block_before,
 
-
                            # Long tone trials
                            musicassessr::long_tone_trials(num_items = num_items$long_tones,
                                                           num_examples = num_examples$long_tones,
@@ -606,10 +605,11 @@ SAA_intro <- function(demo = FALSE,
                               allow_SNR_failure = allow_SNR_failure,
                               requirements_page = requirements_page,
                               report_SNR = report_SNR,
-                              playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful'),
+                              playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful',
+                              use_musicassessr_db = use_musicassessr_db),
 
     # Sample from item bank now we have range
-    if(asynchronous_api_mode) musicassessrdb::sample_from_item_bank_elts(item_bank_name = "WJD_ngram", num_items, melody_length),
+    if(asynchronous_api_mode) musicassessrdb::sample_from_item_bank_elts(item_bank_name = "Berkowitz_ngram", num_items, melody_length),
 
     # Instructions
     if(show_instructions) SAA_instructions(max_goes_forced, max_goes)
