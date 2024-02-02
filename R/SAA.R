@@ -523,7 +523,7 @@ SAA <- function(app_name,
                            append_trial_block_after,
 
                            # Add final session information to DB (if use_musicassessr_db)
-                           if(use_musicassessr_db) musicassessrdb::elt_add_final_session_info_to_db(),
+                           if(use_musicassessr_db) musicassessrdb::elt_add_final_session_info_to_db(asynchronous_api_mode),
 
 
                            psychTestR::elt_save_results_to_disk(complete = TRUE),
