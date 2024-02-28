@@ -526,9 +526,9 @@ SAA <- function(app_name,
                            if(use_musicassessr_db) musicassessrdb::elt_add_final_session_info_to_db(asynchronous_api_mode),
 
 
-                           psychTestR::elt_save_results_to_disk(complete = TRUE),
+                           if(!asynchronous_api_mode) psychTestR::elt_save_results_to_disk(complete = TRUE),
 
-                           final_results_saa(final_results, test_name = test_name,  url = absolute_url, num_items$long_tones, num_items$arrhythmic, num_items$rhythmic, show_socials)
+                           if(!asynchronous_api_mode) final_results_saa(final_results, test_name = test_name,  url = absolute_url, num_items$long_tones, num_items$arrhythmic, num_items$rhythmic, show_socials)
 
         )
        )
