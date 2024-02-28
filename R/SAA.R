@@ -439,7 +439,7 @@ SAA <- function(app_name,
 
 
         # Set Test
-        musicassessr::set_test(test_name = "SAA", test_id = 1L),
+        if(use_musicassessr_db) musicassessr::set_test(test_name = "SAA", test_id = 1L),
 
         # Set default range
         if(!is.null(default_range)) musicassessr::set_instrument_range(bottom_range = default_range$bottom_range, top_range = default_range$top_range),
