@@ -40,7 +40,7 @@ SAA_standalone(
   max_goes_forced = FALSE,
   long_tone_trials_as_screening = FALSE,
   long_tone_trials_as_screening_failure_page = "http://www.google.com",
-  success_on_completion_page = "https://adaptiveeartraining.com",
+  success_on_completion_page = NULL,
   concise_wording = TRUE,
   skip_setup = FALSE,
   full_screen = FALSE,
@@ -64,6 +64,9 @@ SAA_standalone(
   get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
   content_border = "1px solid #e8e8e8",
   css = system.file("www/css/musicassessr.css", package = "musicassessr"),
+  sample_item_bank_via_api = FALSE,
+  pass_items_through_url_parameter = FALSE,
+  show_intro_text = TRUE,
   ...
 )
 }
@@ -185,6 +188,12 @@ SAA_standalone(
 \item{content_border}{The psychTestR border style.}
 
 \item{css}{Path to css stylesheet.}
+
+\item{sample_item_bank_via_api}{Is the item bank being sampled via an API?}
+
+\item{pass_items_through_url_parameter}{Are items being passed through a URL parameter?}
+
+\item{show_intro_text}{Should intro text be shown?}
 
 \item{...}{}
 }

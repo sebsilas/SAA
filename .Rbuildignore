@@ -11,4 +11,4 @@
 node
 tmp
 test_apps
-
+^www$

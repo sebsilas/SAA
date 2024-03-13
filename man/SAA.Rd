@@ -40,7 +40,7 @@ SAA(
   max_goes_forced = FALSE,
   long_tone_trials_as_screening = FALSE,
   long_tone_trials_as_screening_failure_page = "http://www.google.com",
-  success_on_completion_page = character(),
+  success_on_completion_page = NULL,
   concise_wording = TRUE,
   skip_setup = FALSE,
   additional_scoring_measures = NULL,
@@ -58,7 +58,10 @@ SAA(
   asynchronous_api_mode = FALSE,
   experiment_id = NULL,
   user_id = NULL,
-  get_answer_melodic = musicassessr::get_answer_pyin_melodic_production
+  get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
+  sample_item_bank_via_api = FALSE,
+  pass_items_through_url_parameter = FALSE,
+  show_intro_text = TRUE
 )
 }
 \arguments{
@@ -169,6 +172,12 @@ SAA(
 \item{user_id}{The user's ID, if using musicassessr_db and applicable.}
 
 \item{get_answer_melodic}{The get_answer function for melodic files.}
+
+\item{sample_item_bank_via_api}{Is the item bank being sampled via an API?}
+
+\item{pass_items_through_url_parameter}{Are items being passed through a URL parameter?}
+
+\item{show_intro_text}{Should intro text be shown?}
 }
 \description{
 Deploy the SAA
