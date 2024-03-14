@@ -64,6 +64,7 @@
 #' @param sample_item_bank_via_api Is the item bank being sampled via an API?
 #' @param pass_items_through_url_parameter Are items being passed through a URL parameter?
 #' @param show_intro_text Should intro text be shown?
+#' @param show_microphone_type_page Should you ask the participant what kind of microphone they are using?
 #' @param ...
 #'
 #' @return
@@ -136,7 +137,7 @@ SAA_standalone <- function(app_name,
                            sample_item_bank_via_api = FALSE,
                            pass_items_through_url_parameter = FALSE,
                            show_intro_text = TRUE,
-                           ...) {
+                           show_microphone_type_page = TRUE, ...) {
 
 
   timeline <- SAA(app_name,
@@ -195,7 +196,8 @@ SAA_standalone <- function(app_name,
                   get_answer_melodic,
                   sample_item_bank_via_api,
                   pass_items_through_url_parameter,
-                  show_intro_text)
+                  show_intro_text,
+                  show_microphone_type_page)
 
 
   # Run the test
@@ -285,6 +287,7 @@ SAA_standalone <- function(app_name,
 #' @param sample_item_bank_via_api Is the item bank being sampled via an API?
 #' @param pass_items_through_url_parameter Are items being passed through a URL parameter?
 #' @param show_intro_text Should intro text be shown?
+#' @param show_microphone_type_page Should you ask the participant what kind of microphone they are using?
 #' @return
 #' @export
 #'
@@ -349,7 +352,8 @@ SAA <- function(app_name,
                 get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
                 sample_item_bank_via_api = FALSE,
                 pass_items_through_url_parameter = FALSE,
-                show_intro_text = TRUE) {
+                show_intro_text = TRUE,
+                show_microphone_type_page = TRUE) {
 
   long_tone_paradigm <- match.arg(long_tone_paradigm)
 
@@ -412,7 +416,8 @@ SAA <- function(app_name,
     is.function(get_answer_melodic),
     is.scalar.logical(sample_item_bank_via_api),
     is.scalar.logical(pass_items_through_url_parameter),
-    is.scalar.logical(show_intro_text)
+    is.scalar.logical(show_intro_text),
+    is.scalar.logical(show_microphone_type_page)
     )
 
   shiny::addResourcePath(
@@ -492,7 +497,8 @@ SAA <- function(app_name,
                                                               (num_items$arrhythmic + num_items$rhythmic + num_examples$arrhythmic + num_examples$rhythmic),
                                                               melody_length,
                                                               sample_item_bank_via_api,
-                                                              show_intro_text) },
+                                                              show_intro_text,
+                                                              show_microphone_type_page) },
 
                            # Arbitrary and optional trial block to go first
                            append_trial_block_before,
@@ -598,7 +604,8 @@ SAA_intro <- function(demo = FALSE,
                       num_items = NULL, # Only needed for async API mode
                       melody_length = NULL, # Only needed for async API mode
                       sample_item_bank_via_api = FALSE,
-                      show_intro_text = TRUE) {
+                      show_intro_text = TRUE,
+                      show_microphone_type_page = TRUE) {
 
   if(test_name == "Singing Ability Assessment") {
     test_name <- psychTestR::i18n("SAA_test_name")
@@ -632,7 +639,8 @@ SAA_intro <- function(demo = FALSE,
                               requirements_page = requirements_page,
                               report_SNR = report_SNR,
                               playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful',
-                              use_musicassessr_db = use_musicassessr_db),
+                              use_musicassessr_db = use_musicassessr_db,
+                              show_microphone_type_page = show_microphone_type_page),
 
     # Sample from item bank now we have range
     #if(asynchronous_api_mode && sample_item_bank_via_api) musicassessrdb::sample_from_item_bank_elts(item_bank_name = "Berkowitz_ngram", num_items, melody_length),

@@ -61,7 +61,8 @@ SAA(
   get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
   sample_item_bank_via_api = FALSE,
   pass_items_through_url_parameter = FALSE,
-  show_intro_text = TRUE
+  show_intro_text = TRUE,
+  show_microphone_type_page = TRUE
 )
 }
 \arguments{
@@ -178,6 +179,8 @@ SAA(
 \item{pass_items_through_url_parameter}{Are items being passed through a URL parameter?}
 
 \item{show_intro_text}{Should intro text be shown?}
+
+\item{show_microphone_type_page}{Should you ask the participant what kind of microphone they are using?}
 }
 \description{
 Deploy the SAA
