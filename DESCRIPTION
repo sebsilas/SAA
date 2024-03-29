@@ -24,11 +24,13 @@ Imports:
     psychTestRCATME (>= 1.6.2),
     psyquest (>= 1.3.0),
     readxl,
-    shinycssloaders
+    shinycssloaders,
+    stringr
 Depends: 
     R (>= 2.10),
     musicassessr (>= 0.0.0.9000),
-    psych
+    psych,
+    stringr
 Suggests:
     Berkowitz
 Remotes: 
