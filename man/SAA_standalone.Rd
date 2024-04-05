@@ -40,7 +40,7 @@ SAA_standalone(
   max_goes_forced = FALSE,
   long_tone_trials_as_screening = FALSE,
   long_tone_trials_as_screening_failure_page = "http://www.google.com",
-  success_on_completion_page = "https://adaptiveeartraining.com",
+  success_on_completion_page = NULL,
   concise_wording = TRUE,
   skip_setup = FALSE,
   full_screen = FALSE,
@@ -58,7 +58,16 @@ SAA_standalone(
   report_SNR = FALSE,
   show_introduction = TRUE,
   show_instructions = TRUE,
-  use_memoise = FALSE,
+  asynchronous_api_mode = FALSE,
+  experiment_id = NULL,
+  user_id = NULL,
+  get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
+  content_border = "1px solid #e8e8e8",
+  css = system.file("www/css/musicassessr.css", package = "musicassessr"),
+  sample_item_bank_via_api = FALSE,
+  pass_items_through_url_parameter = FALSE,
+  show_intro_text = TRUE,
+  show_microphone_type_page = TRUE,
   ...
 )
 }
@@ -169,7 +178,25 @@ SAA_standalone(
 
 \item{show_instructions}{Should instructions be shown (or skipped)?}
 
-\item{use_memoise}{Should memoise be used?}
+\item{asynchronous_api_mode}{If musicassessr_db, should DB storing be done via the musicassessr API (asynchronously)?}
+
+\item{experiment_id}{Manually give an experiment ID when using musicassessrdb.}
+
+\item{user_id}{Manually give a user ID when using musicassessrdb.}
+
+\item{get_answer_melodic}{The get_answer function for melodic trials.}
+
+\item{content_border}{The psychTestR border style.}
+
+\item{css}{Path to css stylesheet.}
+
+\item{sample_item_bank_via_api}{Is the item bank being sampled via an API?}
+
+\item{pass_items_through_url_parameter}{Are items being passed through a URL parameter?}
+
+\item{show_intro_text}{Should intro text be shown?}
+
+\item{show_microphone_type_page}{Should you ask the participant what kind of microphone they are using?}
 
 \item{...}{}
 }

@@ -55,7 +55,16 @@
 #' @param report_SNR Report SNR after test?
 #' @param show_introduction Should introduction be shown (or skipped)?
 #' @param show_instructions Should instructions be shown (or skipped)?
-#' @param use_memoise Should memoise be used?
+#' @param asynchronous_api_mode If musicassessr_db, should DB storing be done via the musicassessr API (asynchronously)?
+#' @param experiment_id Manually give an experiment ID when using musicassessrdb.
+#' @param user_id Manually give a user ID when using musicassessrdb.
+#' @param get_answer_melodic The get_answer function for melodic trials.
+#' @param content_border The psychTestR border style.
+#' @param css Path to css stylesheet.
+#' @param sample_item_bank_via_api Is the item bank being sampled via an API?
+#' @param pass_items_through_url_parameter Are items being passed through a URL parameter?
+#' @param show_intro_text Should intro text be shown?
+#' @param show_microphone_type_page Should you ask the participant what kind of microphone they are using?
 #' @param ...
 #'
 #' @return
@@ -101,7 +110,7 @@ SAA_standalone <- function(app_name,
                            max_goes_forced = FALSE,
                            long_tone_trials_as_screening = FALSE,
                            long_tone_trials_as_screening_failure_page = "http://www.google.com",
-                           success_on_completion_page = "https://adaptiveeartraining.com",
+                           success_on_completion_page = NULL,
                            concise_wording = TRUE,
                            skip_setup = FALSE,
                            full_screen = FALSE,
@@ -119,7 +128,16 @@ SAA_standalone <- function(app_name,
                            report_SNR = FALSE,
                            show_introduction = TRUE,
                            show_instructions = TRUE,
-                           use_memoise = FALSE, ...) {
+                           asynchronous_api_mode = FALSE,
+                           experiment_id = NULL,
+                           user_id = NULL,
+                           get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
+                           content_border = "1px solid #e8e8e8",
+                           css = system.file('www/css/musicassessr.css', package = "musicassessr"),
+                           sample_item_bank_via_api = FALSE,
+                           pass_items_through_url_parameter = FALSE,
+                           show_intro_text = TRUE,
+                           show_microphone_type_page = TRUE, ...) {
 
 
   timeline <- SAA(app_name,
@@ -171,7 +189,15 @@ SAA_standalone <- function(app_name,
                   requirements_page,
                   report_SNR,
                   show_introduction,
-                  show_instructions)
+                  show_instructions,
+                  asynchronous_api_mode,
+                  experiment_id,
+                  user_id,
+                  get_answer_melodic,
+                  sample_item_bank_via_api,
+                  pass_items_through_url_parameter,
+                  show_intro_text,
+                  show_microphone_type_page)
 
 
   # Run the test
@@ -184,11 +210,13 @@ SAA_standalone <- function(app_name,
                                      full_screen = full_screen,
                                      left_margin = 1L,
                                      right_margin = 1L,
-                                     css = system.file('www/css/musicassessr.css', package = "musicassessr")
+                                     css = css,
+                                     content_border = content_border
                                    ),
                                    languages = languages,
-                                   on_start_fun = if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_init else NULL,
-                                   on_stop_fun =  if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_on_stop else NULL,
+                                   # We only connect to the DB temporarily in async mode, via musicassessrdb::validate_user_entry_into test. We don't want to initiate a persistent connection. However, we do want to be safe and make sure that if the app closes, any open DB conns are terminated.
+                                   on_start_fun = if(use_musicassessr_db && asynchronous_api_mode) function() { musicassessrdb::musicassessr_shiny_init(connect_to_db = FALSE) } else if(use_musicassessr_db && ! asynchronous_api_mode) musicassessrdb::musicassessr_shiny_init else NULL,
+                                   on_stop_fun = if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_on_stop else NULL,
                                    additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
                                                                                       app_name = app_name,
                                                                                       visual_notation = feedback), ...))
@@ -253,8 +281,14 @@ SAA_standalone <- function(app_name,
 #' @param report_SNR Report SNR after test?
 #' @param show_introduction Should introduction be shown (or skipped)?
 #' @param show_instructions Should instructions be shown (or skipped)?
+#' @param asynchronous_api_mode Should asynchronous API mode be used when using musicassessrdb?
 #' @param experiment_id The experiment ID, if using musicassessr_db and applicable.
 #' @param user_id The user's ID, if using musicassessr_db and applicable.
+#' @param get_answer_melodic The get_answer function for melodic files.
+#' @param sample_item_bank_via_api Is the item bank being sampled via an API?
+#' @param pass_items_through_url_parameter Are items being passed through a URL parameter?
+#' @param show_intro_text Should intro text be shown?
+#' @param show_microphone_type_page Should you ask the participant what kind of microphone they are using?
 #' @return
 #' @export
 #'
@@ -298,7 +332,7 @@ SAA <- function(app_name,
                 max_goes_forced = FALSE,
                 long_tone_trials_as_screening = FALSE,
                 long_tone_trials_as_screening_failure_page = "http://www.google.com",
-                success_on_completion_page = character(),
+                success_on_completion_page = NULL,
                 concise_wording = TRUE,
                 skip_setup = FALSE,
                 additional_scoring_measures = NULL,
@@ -313,8 +347,14 @@ SAA <- function(app_name,
                 report_SNR = FALSE,
                 show_introduction = TRUE,
                 show_instructions = TRUE,
+                asynchronous_api_mode = FALSE,
                 experiment_id = NULL,
-                user_id = NULL) {
+                user_id = NULL,
+                get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
+                sample_item_bank_via_api = FALSE,
+                pass_items_through_url_parameter = FALSE,
+                show_intro_text = TRUE,
+                show_microphone_type_page = TRUE) {
 
   long_tone_paradigm <- match.arg(long_tone_paradigm)
 
@@ -355,11 +395,11 @@ SAA <- function(app_name,
     is.logical(max_goes_forced),
     is.logical(long_tone_trials_as_screening),
     is.character(long_tone_trials_as_screening_failure_page),
-    is.character(success_on_completion_page),
+    is.null.or(success_on_completion_page, is.character),
     is.logical(concise_wording),
     is.logical(skip_setup) | skip_setup == "except_microphone",
     is.null(additional_scoring_measures) | is.function(additional_scoring_measures) | is.list(additional_scoring_measures),
-    is.null.or(default_range, function(x) is.list(x) && length(x) == 2 && setequal(names(x), c("bottom_range", "top_range")) ),
+    is.null.or(default_range, function(x) is.list(x) && length(x) == 3 && setequal(names(x), c("bottom_range", "top_range", "clef")) ),
     assertthat::is.string(long_tone_paradigm),
     "log_freq" %in% names(arrhythmic_item_bank),
     is.scalar.logical(get_p_id),
@@ -369,13 +409,16 @@ SAA <- function(app_name,
     is.scalar.logical(allow_SNR_failure),
     is.scalar.logical(requirements_page),
     is.scalar.logical(report_SNR),
-    is.null.or(default_range, function(x)   {
-      is.list(x) & length(x) == 2 & setequal(names(x), c('bottom_range', 'top_range'))
-    }),
     is.scalar.logical(show_introduction),
     is.scalar.logical(show_instructions),
+    is.scalar.logical(asynchronous_api_mode),
     is.null.or(experiment_id, is.integer),
-    is.null.or(user_id, is.integer)
+    is.null.or(user_id, is.integer),
+    is.function(get_answer_melodic),
+    is.scalar.logical(sample_item_bank_via_api),
+    is.scalar.logical(pass_items_through_url_parameter),
+    is.scalar.logical(show_intro_text),
+    is.scalar.logical(show_microphone_type_page)
     )
 
   shiny::addResourcePath(
@@ -387,15 +430,18 @@ SAA <- function(app_name,
     stop("long_tone_trials_as_screening currently cannot be used, as the functionality is subject to reanalysis.")
   }
 
-  if(demo) warning('Running SAA in demo mode!')
-
   # Instantiate the enclosure/function factory:
 
-  pyin_with_additional <- musicassessr::get_answer_pyin_melodic_production_additional_measures(type = "both", melconv = FALSE, additional_scoring_measures = additional_scoring_measures)
+  if(!is.null(additional_scoring_measures)) {
+    get_answer_melodic <- musicassessr::get_answer_pyin_melodic_production_additional_measures(type = "both", melconv = FALSE, additional_scoring_measures = additional_scoring_measures)
+  }
 
-  # Subset item bank
-  arrhythmic_item_bank <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
-  rhythmic_item_bank <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
+
+  if(!asynchronous_api_mode) {
+    # Subset item bank
+    arrhythmic_item_bank <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
+    rhythmic_item_bank <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
+  }
 
   # Start test timeline
   timeline <- psychTestR::join(
@@ -408,7 +454,11 @@ SAA <- function(app_name,
         musicassessr::musicassessr_init(use_musicassessr_db = use_musicassessr_db,
                                         app_name = app_name,
                                         experiment_id = experiment_id,
-                                        user_id = user_id),
+                                        user_id = user_id,
+                                        asynchronous_api_mode = asynchronous_api_mode,
+                                        instrument_id = 1,
+                                        inst = "Voice"),
+
 
         # Set Test
         if(use_musicassessr_db) musicassessr::set_test(test_name = "SAA", test_id = 1L),
@@ -418,33 +468,41 @@ SAA <- function(app_name,
 
 
         psychTestR::module("SAA",
+
+                           psychTestR::join(
+
                            # Introduction, same for all users
                            if (show_introduction) { SAA_intro(demo,
-                                                               SNR_test,
-                                                               get_range,
-                                                               absolute_url,
-                                                               test_username,
-                                                               use_musicassessr_db,
-                                                               adjust_range,
-                                                               headphones_test,
-                                                               get_user_info,
-                                                               microphone_test,
-                                                               allow_repeat_SNR_tests,
-                                                               concise_wording,
-                                                               test_name,
-                                                               max_goes_forced,
-                                                               max_goes,
-                                                               skip_setup,
-                                                               app_name,
-                                                               allow_SNR_failure,
-                                                               requirements_page,
-                                                               report_SNR,
-                                                               volume_meter_on_melody_trials_type,
-                                                               show_instructions) },
+                                                              SNR_test,
+                                                              get_range,
+                                                              absolute_url,
+                                                              test_username,
+                                                              use_musicassessr_db,
+                                                              adjust_range,
+                                                              headphones_test,
+                                                              get_user_info,
+                                                              microphone_test,
+                                                              allow_repeat_SNR_tests,
+                                                              concise_wording,
+                                                              test_name,
+                                                              max_goes_forced,
+                                                              max_goes,
+                                                              skip_setup,
+                                                              app_name,
+                                                              allow_SNR_failure,
+                                                              requirements_page,
+                                                              report_SNR,
+                                                              volume_meter_on_melody_trials_type,
+                                                              show_instructions,
+                                                              asynchronous_api_mode,
+                                                              (num_items$arrhythmic + num_items$rhythmic + num_examples$arrhythmic + num_examples$rhythmic),
+                                                              melody_length,
+                                                              sample_item_bank_via_api,
+                                                              show_intro_text,
+                                                              show_microphone_type_page) },
 
                            # Arbitrary and optional trial block to go first
                            append_trial_block_before,
-
 
                            # Long tone trials
                            musicassessr::long_tone_trials(num_items = num_items$long_tones,
@@ -467,9 +525,12 @@ SAA <- function(app_name,
                                                                   instruction_text = psychTestR::i18n("sing_melody_instruction_text"),
                                                                   max_goes = max_goes,
                                                                   max_goes_forced = max_goes_forced,
-                                                                  get_answer = pyin_with_additional,
+                                                                  get_answer = get_answer_melodic,
                                                                   volume_meter = volume_meter_on_melody_trials,
-                                                                  volume_meter_type = volume_meter_on_melody_trials_type),
+                                                                  volume_meter_type = volume_meter_on_melody_trials_type,
+                                                                  sample_item_bank_via_api = sample_item_bank_via_api,
+                                                                  presampled = sample_item_bank_via_api,
+                                                                  pass_items_through_url_parameter = pass_items_through_url_parameter),
 
                            # Rhythmic melody trials
                            musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank,
@@ -482,30 +543,35 @@ SAA <- function(app_name,
                                                                 instruction_text = psychTestR::i18n("sing_rhythmic_melodies_instruction_text"),
                                                                 max_goes = max_goes,
                                                                 max_goes_forced = max_goes_forced,
-                                                                get_answer = pyin_with_additional,
+                                                                get_answer = get_answer_melodic,
                                                                 volume_meter = volume_meter_on_melody_trials,
-                                                                volume_meter_type = volume_meter_on_melody_trials_type),
+                                                                volume_meter_type = volume_meter_on_melody_trials_type,
+                                                                sample_item_bank_via_api = sample_item_bank_via_api,
+                                                                presampled = sample_item_bank_via_api,
+                                                                start_from_sampled_trial_no = num_items$arrhythmic + num_examples$arrhythmic,
+                                                                pass_items_through_url_parameter = pass_items_through_url_parameter),
 
                            # Arbitrary and optional trial block to go after other trial blocks
                            append_trial_block_after,
 
                            # Add final session information to DB (if use_musicassessr_db)
-                           if(use_musicassessr_db) musicassessrdb::elt_add_final_session_info_to_db(),
+                           if(use_musicassessr_db) musicassessrdb::elt_add_final_session_info_to_db(asynchronous_api_mode),
 
 
-                           psychTestR::elt_save_results_to_disk(complete = TRUE),
+                           if(!asynchronous_api_mode) psychTestR::elt_save_results_to_disk(complete = TRUE),
 
-                           final_results_saa(final_results, test_name = test_name,  url = absolute_url, num_items$long_tones, num_items$arrhythmic, num_items$rhythmic, show_socials)
+                           if(!asynchronous_api_mode) final_results_saa(final_results, test_name = test_name,  url = absolute_url, num_items$long_tones, num_items$arrhythmic, num_items$rhythmic, show_socials)
 
         )
+       )
       ),
       dict = SAA_dict
     ),
     if(gold_msi) psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),
-    psychTestR::elt_save_results_to_disk(complete = TRUE),
+    if(!asynchronous_api_mode) psychTestR::elt_save_results_to_disk(complete = TRUE),
     psychTestR::new_timeline(
-                    musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name, img = 'https://adaptiveeartraining.com/assets/img/SAA_intro.png'),
+                    musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name, img = 'https://adaptiveeartraining.com/assets/img/bird.png', redirect_url = success_on_completion_page),
                     dict = musicassessr::musicassessr_dict)
   )
 
@@ -534,19 +600,28 @@ SAA_intro <- function(demo = FALSE,
                       requirements_page = TRUE,
                       report_SNR = FALSE,
                       volume_meter_on_melody_trials_type = FALSE,
-                      show_instructions = TRUE) {
+                      show_instructions = TRUE,
+                      asynchronous_api_mode = FALSE,
+                      num_items = NULL, # Only needed for async API mode
+                      melody_length = NULL, # Only needed for async API mode
+                      sample_item_bank_via_api = FALSE,
+                      show_intro_text = TRUE,
+                      show_microphone_type_page = TRUE) {
 
-  if(test_name == "Singing Ability Assessment") test_name <- psychTestR::i18n("SAA_test_name")
+  if(test_name == "Singing Ability Assessment") {
+    test_name <- psychTestR::i18n("SAA_test_name")
+  }
 
 
   psychTestR::join(
 
     # Introduction page
     psychTestR::one_button_page(body = shiny::tags$div(shiny::tags$h2(paste0(psychTestR::i18n("SAA_welcome"), ' ', test_name, "!")),
-                                                       shiny::tags$img(src = 'https://adaptiveeartraining.com/assets/img/SAA_intro.png', height = 100, width = 100),
-                                                       shiny::tags$p(psychTestR::i18n("SAA_welcome_1")),
-                                                       shiny::tags$p(psychTestR::i18n("SAA_welcome_2"))),
+                                                       shiny::tags$img(src = 'https://adaptiveeartraining.com/assets/img/bird.png', height = 100, width = 100),
+                                                       if(show_intro_text) shiny::tags$p(psychTestR::i18n("SAA_welcome_1")),
+                                                       if(show_intro_text) shiny::tags$p(psychTestR::i18n("SAA_welcome_2"))),
                                 button_text = psychTestR::i18n("Next")),
+
 
     # Setup pages
     musicassessr::setup_pages(input = "microphone",
@@ -564,10 +639,118 @@ SAA_intro <- function(demo = FALSE,
                               allow_SNR_failure = allow_SNR_failure,
                               requirements_page = requirements_page,
                               report_SNR = report_SNR,
-                              playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful'),
+                              playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful',
+                              use_musicassessr_db = use_musicassessr_db,
+                              show_microphone_type_page = show_microphone_type_page),
+
+    # Sample from item bank now we have range
+    #if(asynchronous_api_mode && sample_item_bank_via_api) musicassessrdb::sample_from_item_bank_elts(item_bank_name = "Berkowitz_ngram", num_items, melody_length),
+
+
+    #if(asynchronous_api_mode && sample_item_bank_via_api) sample_from_item_bank_elts_saa(item_bank_name = "Berkowitz_ngram", num_items, melody_length),
+
+
+    # psychTestR::code_block(function(state, ...) {
+    #
+    #   span <- psychTestR::get_global('span', state)
+    #
+    #   span <- 10
+    #   item_bank_name <- "Berkowitz_ngram"
+    #   num_items <- 4
+    #   melody_length <- "5,15"
+    #
+    #   logging::logwarn("Forcing span of 10 for now..")
+    #
+    #   logging::loginfo("Sampling %s items from %s item bank via API", num_items, item_bank_name)
+    #   logging::loginfo("Melody length: %s", melody_length)
+    #   logging::loginfo("Span: %s", span)
+    #
+    #   # Make sure in correct future mode...
+    #   future::plan(future::multisession)
+    #
+    #   item_bank_sample <- future::future({
+    #
+    #     musicassessrdb::sample_from_item_bank_api(item_bank_name, num_items, span, melody_length)
+    #
+    #     # store_db_session_api(condition_id = NA,
+    #     #                      user_id = 1L,
+    #     #                      psychTestR_session_id = "00",
+    #     #                      time_started = Sys.time(),
+    #     #                      experiment_id = NA)
+    #
+    #   }) %...>% (function(result) {
+    #
+    #     logging::loginfo("Returning promise message: %s", result$message)
+    #
+    #     if(result$status == 200) {
+    #       sample <- result
+    #       #sample <- dplyr::bind_rows(result$sample)
+    #       logging::loginfo("Returning promise result: %s", sample)
+    #
+    #       return(sample)
+    #     } else {
+    #       return(NA)
+    #     }
+    #   })
+    #
+    #   psychTestR::set_global('sampled_item_bank_from_api', item_bank_sample, state)
+    #
+    #
+    # }),
+
     # Instructions
     if(show_instructions) SAA_instructions(max_goes_forced, max_goes)
   )
+
+}
+
+
+sample_from_item_bank_elts_saa <- function(item_bank_name = "WJD_ngram", num_items, melody_length) {
+
+  psychTestR::code_block(function(state, ...) {
+
+    span <- psychTestR::get_global('span', state)
+
+    span <- 10
+
+    logging::logwarn("Forcing span of 10 for now..")
+
+    logging::loginfo("Sampling %s items from %s item bank via API", num_items, item_bank_name)
+    logging::loginfo("Melody length: %s", melody_length)
+    logging::loginfo("Span: %s", span)
+
+    # Make sure in correct future mode...
+    future::plan(future::multisession)
+
+    item_bank_sample <- future::future({
+
+      #sample_from_item_bank_api(item_bank_name, num_items, span, melody_length)
+
+      store_db_session_api(condition_id = NA,
+                           user_id = 1L,
+                           psychTestR_session_id = "00",
+                           time_started = Sys.time(),
+                           experiment_id = NA)
+
+    }) %...>% (function(result) {
+
+      logging::loginfo("Returning promise message: %s", result$message)
+
+      if(result$status == 200) {
+        sample <- result
+        #sample <- dplyr::bind_rows(result$sample)
+        logging::loginfo("Returning promise result: %s", sample)
+
+        return(sample)
+      } else {
+        return(NA)
+      }
+    })
+
+    psychTestR::set_global('sampled_item_bank_from_api', item_bank_sample, state)
+
+
+  })
 
 }
 
