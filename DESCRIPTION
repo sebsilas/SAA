@@ -1,6 +1,6 @@
 Package: SAA
 Title: Singing Ability Assessment
-Version: 1.3.1
+Version: 2.0.0
 Authors@R: 
     person(given = "Sebastian",
            family = "Silas",
@@ -33,7 +33,7 @@ Depends:
     stringr
 Suggests:
     Berkowitz
-Remotes:  
+Remotes: 
     sebsilas/musicassessr@master,
     pmcharrison/psychTestR,
     sebsilas/Berkowitz,

@@ -1,3 +1,7 @@
+# SAA 2.0.0
+
+Large updates to facilitate "api-mode" - a way of using APIs to manage results storing and processing.
+
 # SAA 1.3.1
 
 # SAA 1.3.0
