@@ -65,6 +65,7 @@
 #' @param pass_items_through_url_parameter Are items being passed through a URL parameter?
 #' @param show_intro_text Should intro text be shown?
 #' @param show_microphone_type_page Should you ask the participant what kind of microphone they are using?
+#' @param num_items_review Number of review items.
 #' @param ...
 #'
 #' @return
@@ -137,7 +138,10 @@ SAA_standalone <- function(app_name,
                            sample_item_bank_via_api = FALSE,
                            pass_items_through_url_parameter = FALSE,
                            show_intro_text = TRUE,
-                           show_microphone_type_page = TRUE, ...) {
+                           show_microphone_type_page = TRUE,
+                           num_items_review = list("long_tones" = 0L,
+                                                   "arrhythmic" = 0L,
+                                                   "rhythmic" = 0L), ...) {
 
 
   timeline <- SAA(app_name,
@@ -197,7 +201,8 @@ SAA_standalone <- function(app_name,
                   sample_item_bank_via_api,
                   pass_items_through_url_parameter,
                   show_intro_text,
-                  show_microphone_type_page)
+                  show_microphone_type_page,
+                  num_items_review)
 
 
   # Run the test
@@ -289,6 +294,7 @@ SAA_standalone <- function(app_name,
 #' @param pass_items_through_url_parameter Are items being passed through a URL parameter?
 #' @param show_intro_text Should intro text be shown?
 #' @param show_microphone_type_page Should you ask the participant what kind of microphone they are using?
+#' @param num_items_review Number of review items.
 #' @return
 #' @export
 #'
@@ -354,7 +360,9 @@ SAA <- function(app_name,
                 sample_item_bank_via_api = FALSE,
                 pass_items_through_url_parameter = FALSE,
                 show_intro_text = TRUE,
-                show_microphone_type_page = TRUE) {
+                show_microphone_type_page = TRUE,
+                num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L)
+                ) {
 
   long_tone_paradigm <- match.arg(long_tone_paradigm)
 
@@ -418,7 +426,8 @@ SAA <- function(app_name,
     is.scalar.logical(sample_item_bank_via_api),
     is.scalar.logical(pass_items_through_url_parameter),
     is.scalar.logical(show_intro_text),
-    is.scalar.logical(show_microphone_type_page)
+    is.scalar.logical(show_microphone_type_page),
+    is.list(num_items_review) && length(num_items_review) == 3L && setequal(names(num_items_review), c("long_tones", "arrhythmic", "rhythmic")),
     )
 
   shiny::addResourcePath(
@@ -530,7 +539,8 @@ SAA <- function(app_name,
                                                                   volume_meter_type = volume_meter_on_melody_trials_type,
                                                                   sample_item_bank_via_api = sample_item_bank_via_api,
                                                                   presampled = sample_item_bank_via_api,
-                                                                  pass_items_through_url_parameter = pass_items_through_url_parameter),
+                                                                  pass_items_through_url_parameter = pass_items_through_url_parameter,
+                                                                  asynchronous_api_mode = asynchronous_api_mode),
 
                            # Rhythmic melody trials
                            musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank,
@@ -548,8 +558,35 @@ SAA <- function(app_name,
                                                                 volume_meter_type = volume_meter_on_melody_trials_type,
                                                                 sample_item_bank_via_api = sample_item_bank_via_api,
                                                                 presampled = sample_item_bank_via_api,
-                                                                start_from_sampled_trial_no = num_items$arrhythmic + num_examples$arrhythmic,
-                                                                pass_items_through_url_parameter = pass_items_through_url_parameter),
+                                                                start_from_sampled_trial_no = num_items$rhythmic + num_examples$rhythmic,
+                                                                pass_items_through_url_parameter = pass_items_through_url_parameter,
+                                                                asynchronous_api_mode = asynchronous_api_mode),
+
+
+
+                           # Review (only supporting rhythmic melody trials currently)
+                           if (num_items_review$rhythmic > 0L) {
+                             musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank,
+                                                                  num_items = num_items$rhythmic,
+                                                                  num_examples = num_examples$rhythmic,
+                                                                  feedback = feedback,
+                                                                  sound = melody_sound,
+                                                                  page_text = psychTestR::i18n("sing_rhythmic_melodies_page_text"),
+                                                                  page_title = psychTestR::i18n("sing_rhythmic_melodies_page_title"),
+                                                                  instruction_text = psychTestR::i18n("sing_rhythmic_melodies_instruction_text"),
+                                                                  max_goes = max_goes,
+                                                                  max_goes_forced = max_goes_forced,
+                                                                  get_answer = get_answer_melodic,
+                                                                  volume_meter = volume_meter_on_melody_trials,
+                                                                  volume_meter_type = volume_meter_on_melody_trials_type,
+                                                                  sample_item_bank_via_api = sample_item_bank_via_api,
+                                                                  presampled = sample_item_bank_via_api,
+                                                                  start_from_sampled_trial_no = num_items$rhythmic + num_examples$rhythmic,
+                                                                  pass_items_through_url_parameter = pass_items_through_url_parameter,
+                                                                  asynchronous_api_mode = asynchronous_api_mode,
+                                                                  review = TRUE,
+                                                                  phase = "review")
+                           },
 
                            # Arbitrary and optional trial block to go after other trial blocks
                            append_trial_block_after,

@@ -62,7 +62,8 @@ SAA(
   sample_item_bank_via_api = FALSE,
   pass_items_through_url_parameter = FALSE,
   show_intro_text = TRUE,
-  show_microphone_type_page = TRUE
+  show_microphone_type_page = TRUE,
+  num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L)
 )
 }
 \arguments{
@@ -181,6 +182,8 @@ SAA(
 \item{show_intro_text}{Should intro text be shown?}
 
 \item{show_microphone_type_page}{Should you ask the participant what kind of microphone they are using?}
+
+\item{num_items_review}{Number of review items.}
 }
 \description{
 Deploy the SAA

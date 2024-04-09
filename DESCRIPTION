@@ -34,7 +34,7 @@ Depends:
 Suggests:
     Berkowitz
 Remotes: 
-    sebsilas/musicassessr@master,
+    sebsilas/musicassessr,
     pmcharrison/psychTestR,
     sebsilas/Berkowitz,
     sebsilas/psychTestRCATME,
