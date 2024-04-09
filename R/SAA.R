@@ -427,7 +427,7 @@ SAA <- function(app_name,
     is.scalar.logical(pass_items_through_url_parameter),
     is.scalar.logical(show_intro_text),
     is.scalar.logical(show_microphone_type_page),
-    is.list(num_items_review) && length(num_items_review) == 3L && setequal(names(num_items_review), c("long_tones", "arrhythmic", "rhythmic")),
+    is.list(num_items_review) && length(num_items_review) == 3L && setequal(names(num_items_review), c("long_tones", "arrhythmic", "rhythmic"))
     )
 
   shiny::addResourcePath(
