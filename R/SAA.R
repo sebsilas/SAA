@@ -472,9 +472,13 @@ SAA <- function(app_name,
         # Set Test
         if(use_musicassessr_db) musicassessr::set_test(test_name = "SAA", test_id = 1L),
 
+        musicassessr::print_code_block(),
+
         # Set default range
         if(!is.null(default_range)) musicassessr::set_instrument_range(bottom_range = default_range$bottom_range, top_range = default_range$top_range),
 
+
+        musicassessr::print_code_block("test2"),
 
         psychTestR::module("SAA",
 
@@ -659,6 +663,7 @@ SAA_intro <- function(demo = FALSE,
                                                        if(show_intro_text) shiny::tags$p(psychTestR::i18n("SAA_welcome_2"))),
                                 button_text = psychTestR::i18n("Next")),
 
+    musicassessr::print_code_block('test3'),
 
     # Setup pages
     musicassessr::setup_pages(input = "microphone",
@@ -679,6 +684,9 @@ SAA_intro <- function(demo = FALSE,
                               playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful',
                               use_musicassessr_db = use_musicassessr_db,
                               show_microphone_type_page = show_microphone_type_page),
+
+    musicassessr::print_code_block('test4'),
+
 
     # Sample from item bank now we have range
     #if(asynchronous_api_mode && sample_item_bank_via_api) musicassessrdb::sample_from_item_bank_elts(item_bank_name = "Berkowitz_ngram", num_items, melody_length),
@@ -736,7 +744,10 @@ SAA_intro <- function(demo = FALSE,
     # }),
 
     # Instructions
-    if(show_instructions) SAA_instructions(max_goes_forced, max_goes)
+    if(show_instructions) SAA_instructions(max_goes_forced, max_goes),
+
+    musicassessr::print_code_block('test5')
+
   )
 
 }
