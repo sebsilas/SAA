@@ -221,7 +221,7 @@ SAA_standalone <- function(app_name,
                                    languages = languages,
                                    # We only connect to the DB temporarily in async mode, via musicassessrdb::validate_user_entry_into test. We don't want to initiate a persistent connection. However, we do want to be safe and make sure that if the app closes, any open DB conns are terminated.
                                    on_start_fun = if(use_musicassessr_db && asynchronous_api_mode) function() { musicassessrdb::musicassessr_shiny_init(connect_to_db = FALSE) } else if(use_musicassessr_db && ! asynchronous_api_mode) musicassessrdb::musicassessr_shiny_init else NULL,
-                                   on_stop_fun = if(use_musicassessr_db) musicassessrdb::musicassessr_shiny_on_stop else NULL,
+                                   on_session_ended_fun = musicassessr::end_session(use_musicassessr_db, asynchronous_api_mode),
                                    additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
                                                                                       app_name = app_name,
                                                                                       visual_notation = feedback), ...))
