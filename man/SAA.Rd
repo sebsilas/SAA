@@ -19,8 +19,6 @@ SAA(
   absolute_url = character(),
   examples = 2L,
   final_results = TRUE,
-  musicassessr_aws = FALSE,
-  use_musicassessr_db = FALSE,
   test_username = character(),
   gold_msi = TRUE,
   with_final_page = FALSE,
@@ -95,10 +93,6 @@ SAA(
 
 \item{final_results}{Display final results?}
 
-\item{musicassessr_aws}{Is this being deployed on AWS via the musicassessr setup?}
-
-\item{use_musicassessr_db}{Store results in a database?}
-
 \item{test_username}{Is there a username for the user? This is different from a p_id.}
 
 \item{gold_msi}{Deploy Gold-MSI form?}
@@ -169,9 +163,9 @@ SAA(
 
 \item{asynchronous_api_mode}{Should asynchronous API mode be used when using musicassessrdb?}
 
-\item{experiment_id}{The experiment ID, if using musicassessr_db and applicable.}
+\item{experiment_id}{The experiment ID, if using asynchronous_api_mode and applicable.}
 
-\item{user_id}{The user's ID, if using musicassessr_db and applicable.}
+\item{user_id}{The user's ID, if using asynchronous_api_mode and applicable.}
 
 \item{get_answer_melodic}{The get_answer function for melodic files.}
 

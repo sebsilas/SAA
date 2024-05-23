@@ -15,8 +15,6 @@
 #' @param absolute_url If using online, absolute URL?
 #' @param examples No of examples.
 #' @param final_results Display final results?
-#' @param musicassessr_aws Is this being deployed on AWS via the musicassessr setup?
-#' @param store_results_in_db Store results in a database?
 #' @param test_username Is there a username for the user? This is different from a p_id.
 #' @param gold_msi Deploy Gold-MSI form?
 #' @param with_final_page Should there be a final page? FALSE if there will be more pages in the timeline.
@@ -60,8 +58,6 @@ aSAA_standalone <- function(app_name,
                            absolute_url = "",
                            examples = 2L,
                            final_results = TRUE,
-                           musicassessr_aws = FALSE,
-                           store_results_in_db = FALSE,
                            test_username = "",
                            gold_msi = TRUE,
                            with_final_page = TRUE,
@@ -99,8 +95,6 @@ aSAA_standalone <- function(app_name,
                     absolute_url,
                     examples,
                     final_results,
-                    musicassessr_aws,
-                    store_results_in_db,
                     test_username,
                     gold_msi,
                     with_final_page,
@@ -136,8 +130,7 @@ aSAA_standalone <- function(app_name,
                                      css = system.file('www/css/musicassessr.css', package = "musicassessr")
                                    ),
                                    languages = c("en", "de", "it"),
-                                   additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
-                                                                                      app_name = app_name), ...))
+                                   additional_scripts = musicassessr::musicassessr_js(app_name = app_name), ...))
 }
 
 
@@ -161,8 +154,6 @@ aSAA_standalone <- function(app_name,
 #' @param absolute_url
 #' @param examples
 #' @param final_results
-#' @param musicassessr_aws
-#' @param store_results_in_db
 #' @param test_username
 #' @param gold_msi
 #' @param with_final_page
@@ -205,8 +196,6 @@ aSAA <- function(app_name,
                 absolute_url = "",
                 examples = 2,
                 final_results = TRUE,
-                musicassessr_aws = FALSE,
-                store_results_in_db = FALSE,
                 test_username = "",
                 gold_msi = TRUE,
                 with_final_page = TRUE,
@@ -242,8 +231,6 @@ aSAA <- function(app_name,
     is.scalar.character(absolute_url),
     is.scalar.numeric(examples),
     is.scalar.logical(final_results),
-    is.scalar.logical(musicassessr_aws),
-    is.scalar.logical(store_results_in_db),
     is.scalar.character(test_username),
     is.scalar.logical(gold_msi),
     is.scalar.logical(with_final_page),
@@ -282,7 +269,6 @@ aSAA <- function(app_name,
                                      get_range,
                                      absolute_url,
                                      test_username,
-                                     store_results_in_db,
                                      adjust_range,
                                      headphones_test,
                                      get_user_info,

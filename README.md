@@ -53,7 +53,6 @@ SAA_standalone(app_name = "my_SAA_app",
                feedback = TRUE,
                SNR_test = FALSE,
                get_range = FALSE,
-               musicassessr_aws = FALSE,
                examples = 0)
 
 ```

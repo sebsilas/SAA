@@ -18,8 +18,6 @@ aSAA_standalone(
   absolute_url = "",
   examples = 2L,
   final_results = TRUE,
-  musicassessr_aws = FALSE,
-  store_results_in_db = FALSE,
   test_username = "",
   gold_msi = TRUE,
   with_final_page = TRUE,
@@ -71,10 +69,6 @@ aSAA_standalone(
 \item{examples}{No of examples.}
 
 \item{final_results}{Display final results?}
-
-\item{musicassessr_aws}{Is this being deployed on AWS via the musicassessr setup?}
-
-\item{store_results_in_db}{Store results in a database?}
 
 \item{test_username}{Is there a username for the user? This is different from a p_id.}
 

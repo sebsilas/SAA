@@ -16,8 +16,6 @@
 #' @param absolute_url If using online, absolute URL?
 #' @param examples No of examples.
 #' @param final_results Display final results?
-#' @param musicassessr_aws Is this being deployed on AWS via the musicassessr setup?
-#' @param use_musicassessr_db Store results in a database?
 #' @param test_username Is there a username for the user? This is different from a p_id.
 #' @param gold_msi Deploy Gold-MSI form?
 #' @param with_final_page Should there be a final page? FALSE if there will be more pages in the timeline.
@@ -55,7 +53,7 @@
 #' @param report_SNR Report SNR after test?
 #' @param show_introduction Should introduction be shown (or skipped)?
 #' @param show_instructions Should instructions be shown (or skipped)?
-#' @param asynchronous_api_mode If musicassessr_db, should DB storing be done via the musicassessr API (asynchronously)?
+#' @param asynchronous_api_mode Should asynchronous API mode br shown?
 #' @param experiment_id Manually give an experiment ID when using musicassessrdb.
 #' @param user_id Manually give a user ID when using musicassessrdb.
 #' @param get_answer_melodic The get_answer function for melodic trials.
@@ -90,8 +88,6 @@ SAA_standalone <- function(app_name,
                            absolute_url = character(),
                            examples = 2L,
                            final_results = TRUE,
-                           musicassessr_aws = FALSE,
-                           use_musicassessr_db = FALSE,
                            test_username = character(),
                            gold_msi = TRUE,
                            with_final_page = TRUE,
@@ -158,8 +154,6 @@ SAA_standalone <- function(app_name,
                   absolute_url,
                   examples,
                   final_results,
-                  musicassessr_aws,
-                  use_musicassessr_db,
                   test_username,
                   gold_msi,
                   with_final_page,
@@ -204,6 +198,10 @@ SAA_standalone <- function(app_name,
                   show_microphone_type_page,
                   num_items_review)
 
+  if(asynchronous_api_mode) {
+    call_api_on_start_fun <- musicassessr::call_api_on_start(experiment_id = experiment_id, user_id = user_id)
+  }
+
 
   # Run the test
   timeline %>%
@@ -219,11 +217,9 @@ SAA_standalone <- function(app_name,
                                      content_border = content_border
                                    ),
                                    languages = languages,
-                                   # We only connect to the DB temporarily in async mode, via musicassessrdb::validate_user_entry_into test. We don't want to initiate a persistent connection. However, we do want to be safe and make sure that if the app closes, any open DB conns are terminated.
-                                   on_start_fun = if(use_musicassessr_db && asynchronous_api_mode) function() { musicassessrdb::musicassessr_shiny_init(connect_to_db = FALSE) } else if(use_musicassessr_db && ! asynchronous_api_mode) musicassessrdb::musicassessr_shiny_init else NULL,
-                                   on_session_ended_fun = musicassessr::end_session(use_musicassessr_db, asynchronous_api_mode),
-                                   additional_scripts = musicassessr::musicassessr_js(musicassessr_aws = musicassessr_aws,
-                                                                                      app_name = app_name,
+                                   on_start_fun = if(asynchronous_api_mode) call_api_on_start_fun else NULL,
+                                   on_session_ended_fun = musicassessr::end_session(asynchronous_api_mode),
+                                   additional_scripts = musicassessr::musicassessr_js(app_name = app_name,
                                                                                       visual_notation = feedback), ...))
 }
 
@@ -249,8 +245,6 @@ SAA_standalone <- function(app_name,
 #' @param absolute_url If using online, absolute URL?
 #' @param examples No of examples.
 #' @param final_results Display final results?
-#' @param musicassessr_aws Is this being deployed on AWS via the musicassessr setup?
-#' @param use_musicassessr_db Store results in a database?
 #' @param test_username Is there a username for the user? This is different from a p_id.
 #' @param gold_msi Deploy Gold-MSI form?
 #' @param with_final_page Should there be a final page? FALSE if there will be more pages in the timeline.
@@ -287,8 +281,8 @@ SAA_standalone <- function(app_name,
 #' @param show_introduction Should introduction be shown (or skipped)?
 #' @param show_instructions Should instructions be shown (or skipped)?
 #' @param asynchronous_api_mode Should asynchronous API mode be used when using musicassessrdb?
-#' @param experiment_id The experiment ID, if using musicassessr_db and applicable.
-#' @param user_id The user's ID, if using musicassessr_db and applicable.
+#' @param experiment_id The experiment ID, if using asynchronous_api_mode and applicable.
+#' @param user_id The user's ID, if using asynchronous_api_mode and applicable.
 #' @param get_answer_melodic The get_answer function for melodic files.
 #' @param sample_item_bank_via_api Is the item bank being sampled via an API?
 #' @param pass_items_through_url_parameter Are items being passed through a URL parameter?
@@ -317,8 +311,6 @@ SAA <- function(app_name,
                 absolute_url = character(),
                 examples = 2L,
                 final_results = TRUE,
-                musicassessr_aws = FALSE,
-                use_musicassessr_db = FALSE,
                 test_username = character(),
                 gold_msi = TRUE,
                 with_final_page = FALSE,
@@ -382,8 +374,6 @@ SAA <- function(app_name,
     is.character(absolute_url),
     is.scalar.numeric(examples),
     is.logical(final_results),
-    is.logical(musicassessr_aws),
-    is.logical(use_musicassessr_db),
     is.character(test_username),
     is.logical(gold_msi),
     is.logical(with_final_page),
@@ -460,8 +450,7 @@ SAA <- function(app_name,
         if(get_p_id) psychTestR::get_p_id(prompt = psychTestR::i18n("enter_id"), button_text = psychTestR::i18n("Next")),
 
         # Init musicassessr
-        musicassessr::musicassessr_init(use_musicassessr_db = use_musicassessr_db,
-                                        app_name = app_name,
+        musicassessr::musicassessr_init(app_name = app_name,
                                         experiment_id = experiment_id,
                                         user_id = user_id,
                                         asynchronous_api_mode = asynchronous_api_mode,
@@ -470,7 +459,7 @@ SAA <- function(app_name,
 
 
         # Set Test
-        if(use_musicassessr_db) musicassessr::set_test(test_name = "SAA", test_id = 1L),
+        if(asynchronous_api_mode) musicassessr::set_test(test_name = "SAA", test_id = 1L),
 
         # Set default range
         if(!is.null(default_range)) musicassessr::set_instrument_range(bottom_range = default_range$bottom_range, top_range = default_range$top_range),
@@ -485,7 +474,6 @@ SAA <- function(app_name,
                                                               get_range,
                                                               absolute_url,
                                                               test_username,
-                                                              use_musicassessr_db,
                                                               adjust_range,
                                                               headphones_test,
                                                               get_user_info,
@@ -590,9 +578,8 @@ SAA <- function(app_name,
                            # Arbitrary and optional trial block to go after other trial blocks
                            append_trial_block_after,
 
-                           # Add final session information to DB (if use_musicassessr_db)
-                           if(use_musicassessr_db) musicassessrdb::elt_add_final_session_info_to_db(asynchronous_api_mode),
-
+                           # Add final session information to DB (if asynchronous_api_mode)
+                           if(asynchronous_api_mode) musicassessrdb::elt_add_final_session_info_to_db(asynchronous_api_mode),
 
                            if(!asynchronous_api_mode) psychTestR::elt_save_results_to_disk(complete = TRUE),
 
@@ -620,7 +607,6 @@ SAA_intro <- function(demo = FALSE,
                       get_range = TRUE,
                       absolute_url = character(),
                       test_username = NULL,
-                      use_musicassessr_db = FALSE,
                       adjust_range = TRUE,
                       headphones_test,
                       get_user_info,
@@ -675,7 +661,6 @@ SAA_intro <- function(demo = FALSE,
                               requirements_page = requirements_page,
                               report_SNR = report_SNR,
                               playful_volume_meter_setup = volume_meter_on_melody_trials_type == 'playful',
-                              use_musicassessr_db = use_musicassessr_db,
                               show_microphone_type_page = show_microphone_type_page),
 
 

@@ -1,12 +1,12 @@
-pandoc: 2.19.2
-pkgdown: 2.0.6
+pandoc: 3.1.1
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   SAA_with_other_tests: SAA_with_other_tests.html
   additional_scoring_measures: additional_scoring_measures.html
   online_testing_aws: online_testing_aws.html
   sing_happy_birthday_page: sing_happy_birthday_page.html
-last_built: 2023-01-07T19:44Z
+last_built: 2024-05-09T19:55Z
 urls:
   reference: https://musicassessr.com/SAA/reference
   article: https://musicassessr.com/SAA/articles

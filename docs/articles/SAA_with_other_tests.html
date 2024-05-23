@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SAA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -62,6 +62,9 @@
       <a href="../articles/sing_happy_birthday_page.html">Creating custom pages to collect singing data.</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -105,72 +108,72 @@ several <code>psychTestR</code> tests together alongside the
 <p>First we install some tests. These tests were the ones used in
 Experiment 1 of our paper.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
-    <span class="st">'pmcharrison/piat'</span>,
-    <span class="st">'sebsilas/SAA'</span>,
-    <span class="st">'pmcharrison/piat'</span>,
-    <span class="st">'pmcharrison/mdt'</span>,
-    <span class="st">'pmcharrison/mpt'</span>,
-    <span class="st">'klausfrieler/JAJ'</span>,
-    <span class="st">'fmhoeger/psyquest'</span>
-<span class="op">)</span>
-
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="va">tests</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">'pmcharrison/piat'</span>,</span>
+<span>    <span class="st">'sebsilas/SAA'</span>,</span>
+<span>    <span class="st">'pmcharrison/piat'</span>,</span>
+<span>    <span class="st">'pmcharrison/mdt'</span>,</span>
+<span>    <span class="st">'pmcharrison/mpt'</span>,</span>
+<span>    <span class="st">'klausfrieler/JAJ'</span>,</span>
+<span>    <span class="st">'fmhoeger/psyquest'</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="va">tests</span><span class="op">)</span></span></code></pre></div>
 <p>If they all installed correctly, we can proceed to put the tests
 together in a single timeline:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Import the test libraries</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestR" class="external-link">psychTestR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">PDT</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">piat</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mdt</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mpt</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">JAJ</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/fmhoeger/psyquest" class="external-link">psyquest</a></span><span class="op">)</span>
-
-<span class="co"># For now, we need to do this:</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestRCAT" class="external-link">psychTestRCAT</a></span><span class="op">)</span> <span class="co"># call this after SAA for now</span>
-
-<span class="co"># A global password for all tests</span>
-<span class="va">password</span> <span class="op">&lt;-</span> <span class="st">"demo"</span>
-
-
-<span class="va">timeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/join.html" class="external-link">join</a></span><span class="op">(</span>
-
-  <span class="fu"><a href="../reference/SAA.html">SAA</a></span><span class="op">(</span>app_name <span class="op">=</span> <span class="st">"my_research_project"</span><span class="op">)</span>,
-  <span class="co"># The SAA num_items defaults are the same as used in the experiment: 6 long notes, 10 arrhythmic and 10 rhythmic melodies</span>
-  <span class="co"># By default, the SAA deploys the Goldsmiths Musical Sophistication Index Musical Training and Singing Abilities subscales</span>
-
-   <span class="co"># The code to do this manually (commented out) is:</span>
-  <span class="co"># GMS(admin_password = password, subscales = c("Musical Training", "Singing Abilities")),</span>
-
-  <span class="co"># Pitch Discrimination Task</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/PDT/man/PDT.html" class="external-link">PDT</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"PDCT"</span>, num_items <span class="op">=</span> <span class="fl">15L</span><span class="op">)</span>,
-
-  <span class="co"># Pitch Imagery Arrow Task</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/piat/man/piat.html" class="external-link">piat</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"PIAT"</span>, num_items <span class="op">=</span> <span class="fl">15L</span><span class="op">)</span>,
-
-  <span class="co"># Melodic Discrimination Test</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/mdt/man/mdt.html" class="external-link">mdt</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"MDT"</span>, num_items <span class="op">=</span> <span class="fl">11L</span><span class="op">)</span>,
-
-  <span class="co"># Mistuning Perception Test</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/mpt/man/mpt.html" class="external-link">mpt</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"MPT"</span>, num_items <span class="op">=</span> <span class="fl">15L</span><span class="op">)</span>,
-
-  <span class="co"># Jack and Jill Working Memory Test</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/JAJ/man/JAJ.html" class="external-link">JAJ</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"JAJ"</span>, num_items <span class="op">=</span> <span class="fl">8L</span><span class="op">)</span>,
-
-  <span class="co"># Make sure results are saved to disk</span>
-  <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/elt_save_results_to_disk.html" class="external-link">elt_save_results_to_disk</a></span><span class="op">(</span>complete <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-
-  <span class="co"># A "final_page" is required at the end of a psychTestR timeline</span>
-  <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/final_page.html" class="external-link">final_page</a></span><span class="op">(</span><span class="st">"You have completed the study!"</span><span class="op">)</span>
-<span class="op">)</span>
-
-
-<span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/make_test.html" class="external-link">make_test</a></span><span class="op">(</span>
-  elts <span class="op">=</span> <span class="va">timeline</span>,
-  opt <span class="op">=</span> <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/test_options.html" class="external-link">test_options</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Melody Singing Battery"</span>, admin_password <span class="op">=</span> <span class="va">password</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Import the test libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestR" class="external-link">psychTestR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">PDT</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">piat</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mdt</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mpt</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">JAJ</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/klausfrieler/psyquest" class="external-link">psyquest</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># For now, we need to do this:</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestRCAT" class="external-link">psychTestRCAT</a></span><span class="op">)</span> <span class="co"># call this after SAA for now</span></span>
+<span></span>
+<span><span class="co"># A global password for all tests</span></span>
+<span><span class="va">password</span> <span class="op">&lt;-</span> <span class="st">"demo"</span></span>
+<span></span>
+<span></span>
+<span><span class="va">timeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/join.html" class="external-link">join</a></span><span class="op">(</span></span>
+<span></span>
+<span>  <span class="fu"><a href="../reference/SAA.html">SAA</a></span><span class="op">(</span>app_name <span class="op">=</span> <span class="st">"my_research_project"</span><span class="op">)</span>,</span>
+<span>  <span class="co"># The SAA num_items defaults are the same as used in the experiment: 6 long notes, 10 arrhythmic and 10 rhythmic melodies</span></span>
+<span>  <span class="co"># By default, the SAA deploys the Goldsmiths Musical Sophistication Index Musical Training and Singing Abilities subscales</span></span>
+<span></span>
+<span>   <span class="co"># The code to do this manually (commented out) is:</span></span>
+<span>  <span class="co"># GMS(admin_password = password, subscales = c("Musical Training", "Singing Abilities")),</span></span>
+<span></span>
+<span>  <span class="co"># Pitch Discrimination Task</span></span>
+<span>  <span class="fu">PDT</span><span class="op">(</span>label <span class="op">=</span> <span class="st">"PDCT"</span>, num_items <span class="op">=</span> <span class="fl">15L</span><span class="op">)</span>,</span>
+<span></span>
+<span>  <span class="co"># Pitch Imagery Arrow Task</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/piat/man/piat.html" class="external-link">piat</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"PIAT"</span>, num_items <span class="op">=</span> <span class="fl">15L</span><span class="op">)</span>,</span>
+<span></span>
+<span>  <span class="co"># Melodic Discrimination Test</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/mdt/man/mdt.html" class="external-link">mdt</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"MDT"</span>, num_items <span class="op">=</span> <span class="fl">11L</span><span class="op">)</span>,</span>
+<span></span>
+<span>  <span class="co"># Mistuning Perception Test</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/mpt/man/mpt.html" class="external-link">mpt</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"MPT"</span>, num_items <span class="op">=</span> <span class="fl">15L</span><span class="op">)</span>,</span>
+<span></span>
+<span>  <span class="co"># Jack and Jill Working Memory Test</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/JAJ/man/JAJ.html" class="external-link">JAJ</a></span><span class="op">(</span>label <span class="op">=</span> <span class="st">"JAJ"</span>, num_items <span class="op">=</span> <span class="fl">8L</span><span class="op">)</span>,</span>
+<span></span>
+<span>  <span class="co"># Make sure results are saved to disk</span></span>
+<span>  <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/elt_save_results_to_disk.html" class="external-link">elt_save_results_to_disk</a></span><span class="op">(</span>complete <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span></span>
+<span>  <span class="co"># A "final_page" is required at the end of a psychTestR timeline</span></span>
+<span>  <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/final_page.html" class="external-link">final_page</a></span><span class="op">(</span><span class="st">"You have completed the study!"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/make_test.html" class="external-link">make_test</a></span><span class="op">(</span></span>
+<span>  elts <span class="op">=</span> <span class="va">timeline</span>,</span>
+<span>  opt <span class="op">=</span> <span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/test_options.html" class="external-link">test_options</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Melody Singing Battery"</span>, admin_password <span class="op">=</span> <span class="va">password</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -188,7 +191,7 @@ together in a single timeline:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -19,8 +19,6 @@ SAA_standalone(
   absolute_url = character(),
   examples = 2L,
   final_results = TRUE,
-  musicassessr_aws = FALSE,
-  use_musicassessr_db = FALSE,
   test_username = character(),
   gold_msi = TRUE,
   with_final_page = TRUE,
@@ -101,10 +99,6 @@ SAA_standalone(
 
 \item{final_results}{Display final results?}
 
-\item{musicassessr_aws}{Is this being deployed on AWS via the musicassessr setup?}
-
-\item{use_musicassessr_db}{Store results in a database?}
-
 \item{test_username}{Is there a username for the user? This is different from a p_id.}
 
 \item{gold_msi}{Deploy Gold-MSI form?}
@@ -179,7 +173,7 @@ SAA_standalone(
 
 \item{show_instructions}{Should instructions be shown (or skipped)?}
 
-\item{asynchronous_api_mode}{If musicassessr_db, should DB storing be done via the musicassessr API (asynchronously)?}
+\item{asynchronous_api_mode}{Should asynchronous API mode br shown?}
 
 \item{experiment_id}{Manually give an experiment ID when using musicassessrdb.}
 

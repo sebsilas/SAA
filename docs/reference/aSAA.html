@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SAA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -44,6 +44,9 @@
       <a href="../articles/sing_happy_birthday_page.html">Creating custom pages to collect singing data.</a>
     </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/sebsilas/SAA/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
@@ -69,57 +72,59 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aSAA</span><span class="op">(</span>
-  <span class="va">app_name</span>,
-  num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">6L</span>, arrhythmic <span class="op">=</span> <span class="fl">10L</span>, rhythmic <span class="op">=</span> <span class="fl">10L</span><span class="op">)</span>,
-  demographics <span class="op">=</span> <span class="cn">TRUE</span>,
-  demo <span class="op">=</span> <span class="cn">FALSE</span>,
-  feedback <span class="op">=</span> <span class="cn">FALSE</span>,
-  admin_password <span class="op">=</span> <span class="st">"demo"</span>,
-  SNR_test <span class="op">=</span> <span class="cn">TRUE</span>,
-  get_range <span class="op">=</span> <span class="cn">TRUE</span>,
-  absolute_url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
-  examples <span class="op">=</span> <span class="fl">2</span>,
-  final_results <span class="op">=</span> <span class="cn">TRUE</span>,
-  musicassessr_aws <span class="op">=</span> <span class="cn">FALSE</span>,
-  store_results_in_db <span class="op">=</span> <span class="cn">FALSE</span>,
-  test_username <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
-  gold_msi <span class="op">=</span> <span class="cn">TRUE</span>,
-  with_final_page <span class="op">=</span> <span class="cn">TRUE</span>,
-  item_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">15</span><span class="op">)</span>,
-  melody_sound <span class="op">=</span> <span class="st">"piano"</span>,
-  adjust_range <span class="op">=</span> <span class="cn">TRUE</span>,
-  test_name <span class="op">=</span> <span class="st">"Singing Ability Assessment"</span>,
-  show_socials <span class="op">=</span> <span class="cn">FALSE</span>,
-  headphones_test <span class="op">=</span> <span class="cn">TRUE</span>,
-  get_user_info <span class="op">=</span> <span class="cn">TRUE</span>,
-  microphone_test <span class="op">=</span> <span class="cn">TRUE</span>,
-  allow_repeat_SNR_tests <span class="op">=</span> <span class="cn">TRUE</span>,
-  append_trial_block_before <span class="op">=</span> <span class="fu">psychTestR</span><span class="fu">::</span><span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/module.html" class="external-link">module</a></span><span class="op">(</span><span class="st">"before"</span><span class="op">)</span>,
-  append_trial_block_after <span class="op">=</span> <span class="fu">psychTestR</span><span class="fu">::</span><span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/module.html" class="external-link">module</a></span><span class="op">(</span><span class="st">"after"</span><span class="op">)</span>,
-  stop_recording_after <span class="op">=</span> <span class="fl">30</span>,
-  max_goes <span class="op">=</span> <span class="fl">3L</span>,
-  max_goes_forced <span class="op">=</span> <span class="cn">FALSE</span>,
-  long_tone_trials_as_screening <span class="op">=</span> <span class="cn">FALSE</span>,
-  long_tone_trials_as_screening_failure_page <span class="op">=</span> <span class="st">"http://www.google.com"</span>,
-  success_on_completion_page <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
-  concise_wording <span class="op">=</span> <span class="cn">TRUE</span>,
-  skip_setup <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aSAA</span><span class="op">(</span></span>
+<span>  <span class="va">app_name</span>,</span>
+<span>  num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">6L</span>, arrhythmic <span class="op">=</span> <span class="fl">10L</span>, rhythmic <span class="op">=</span> <span class="fl">10L</span><span class="op">)</span>,</span>
+<span>  item_bank <span class="op">=</span> <span class="fu">Berkowitz</span><span class="fu">::</span><span class="va">Berkowitz_IRT_arrhythmic_scaled</span>,</span>
+<span>  irt_model <span class="op">=</span> <span class="fu">Berkowitz</span><span class="fu">::</span><span class="va">lm2.2_scaled</span>,</span>
+<span>  demographics <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  demo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  feedback <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  admin_password <span class="op">=</span> <span class="st">"demo"</span>,</span>
+<span>  SNR_test <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  get_range <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  absolute_url <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  examples <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  final_results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  test_username <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  gold_msi <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  with_final_page <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  item_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">15</span><span class="op">)</span>,</span>
+<span>  melody_sound <span class="op">=</span> <span class="st">"piano"</span>,</span>
+<span>  adjust_range <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  test_name <span class="op">=</span> <span class="st">"Singing Ability Assessment"</span>,</span>
+<span>  show_socials <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  headphones_test <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  get_user_info <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  microphone_test <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  allow_repeat_SNR_tests <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  append_trial_block_before <span class="op">=</span> <span class="fu">psychTestR</span><span class="fu">::</span><span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/module.html" class="external-link">module</a></span><span class="op">(</span><span class="st">"before"</span><span class="op">)</span>,</span>
+<span>  append_trial_block_after <span class="op">=</span> <span class="fu">psychTestR</span><span class="fu">::</span><span class="fu"><a href="https://pmcharrison.github.io/psychTestR/reference/module.html" class="external-link">module</a></span><span class="op">(</span><span class="st">"after"</span><span class="op">)</span>,</span>
+<span>  stop_recording_after <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  max_goes <span class="op">=</span> <span class="fl">3L</span>,</span>
+<span>  max_goes_forced <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  long_tone_trials_as_screening <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  long_tone_trials_as_screening_failure_page <span class="op">=</span> <span class="st">"http://www.google.com"</span>,</span>
+<span>  success_on_completion_page <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  concise_wording <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  skip_setup <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>skip_setup</dt>
+    <dl><dt>item_bank</dt>
+<dd><p>The (IRT) item bank that will be used for selecting items.</p></dd>
+
+
+<dt>irt_model</dt>
+<dd><p>The IRT model that will be used for selecting items.</p></dd>
+
+
+<dt>skip_setup</dt>
 <dd></dd>
 
 </dl></div>
-    <div id="value">
-    <h2>Value</h2>
-    
-
-
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -133,7 +138,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

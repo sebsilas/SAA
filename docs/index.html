@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SAA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -63,6 +63,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -86,7 +89,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="singing-ability-assessment-saa">Singing Ability Assessment (SAA)<a class="anchor" aria-label="anchor" href="#singing-ability-assessment-saa"></a>
 </h1></div>
-<p>The <code>SAA</code> is a test of singing ability which can be launched in R/Shiny via the <a href="https://github.com/pmcharrison/psychTestR" class="external-link"><code>psychTestR</code></a> package.</p>
+<p>The <em>Singing Ability Assessment</em> (<code>SAA</code>; Silas, Müllensiefen, &amp; Kopiez, 2023) is a test of singing ability which can be launched in R/Shiny via the <a href="https://github.com/pmcharrison/psychTestR" class="external-link"><code>psychTestR</code></a> package.</p>
 <div class="section level2">
 <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a>
 </h2>
@@ -123,20 +126,19 @@
 <li><p>In the folder, create an <em>R</em> file called <code>app.R</code>. In this file, paste your code to run the <code>SAA</code> there, like below:</p></li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># Load the SAA package</span>
-
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span>
-
-<span class="co"># Run a short test with feedback:</span>
-
-<span class="fu"><a href="reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>app_name <span class="op">=</span> <span class="st">"my_SAA_app"</span>,
-               num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">2L</span>, arrhythmic <span class="op">=</span> <span class="fl">2L</span>, rhythmic <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span>,
-               feedback <span class="op">=</span> <span class="cn">TRUE</span>,
-               SNR_test <span class="op">=</span> <span class="cn">FALSE</span>,
-               get_range <span class="op">=</span> <span class="cn">FALSE</span>,
-               musicassessr_aws <span class="op">=</span> <span class="cn">FALSE</span>,
-               examples <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Load the SAA package</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Run a short test with feedback:</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/SAA_standalone.html">SAA_standalone</a></span><span class="op">(</span>app_name <span class="op">=</span> <span class="st">"my_SAA_app"</span>,</span>
+<span>               num_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>long_tones <span class="op">=</span> <span class="fl">2L</span>, arrhythmic <span class="op">=</span> <span class="fl">2L</span>, rhythmic <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span>,</span>
+<span>               feedback <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>               SNR_test <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>               get_range <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>               examples <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p>Remember that the <code>app_name</code> argument should match the name of your folder.</p>
 <ol start="3" style="list-style-type: decimal">
 <li><p>Make sure that your current directory is the app folder you created. You can check the current directory by using <code><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd()</a></code>. You may need to set the app directory by placing <code>setwd('/Users/musicassessr/my_project/my_SAA_app')</code> at the beginning of your app file.</p></li>
@@ -149,7 +151,7 @@
 <h2 id="usage-notes">Usage notes<a class="anchor" aria-label="anchor" href="#usage-notes"></a>
 </h2>
 <ul>
-<li><p>This has not yet been tested on Windows. We will be doing this very soon.</p></li>
+<li><p>This has not yet been comprehensively tested on Windows. Please get in touch if you have any issues.</p></li>
 <li><p>The test requires internet connectivity.</p></li>
 <li><p>The <em>SAA</em> runs in your web browser. It is only recommended to run the test in <a href="https://www.google.com/chrome/" class="external-link">Google Chrome</a> or <a href="https://www.opera.com/download" class="external-link">Opera</a>. You will need to set one of these to be your default browser for <em>RStudio</em> to launch the test there (restart <em>RStudio</em> after doing this).</p></li>
 </ul>
@@ -159,17 +161,17 @@
 </h2>
 <p>We advise mentioning the software versions you used, in particular the versions of the <code>SAA</code>, <code>musicassessr</code>, <code>psychTestR</code>, and <code>psychTestRCAT</code> packages. You can find these version numbers from R by running the following commands:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestR" class="external-link">psychTestR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestRCAT" class="external-link">psychTestRCAT</a></span><span class="op">)</span>
-<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/session_info.html" class="external-link">session_info</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="va">packages</span><span class="op">[</span><span class="va">x</span><span class="op">$</span><span class="va">packages</span><span class="op">$</span><span class="va">package</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAA"</span>, <span class="st">"psychTestR"</span>, <span class="st">"psychTestRCAT"</span><span class="op">)</span>, <span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sebsilas/SAA" class="external-link">SAA</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestR" class="external-link">psychTestR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pmcharrison/psychTestRCAT" class="external-link">psychTestRCAT</a></span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/session_info.html" class="external-link">session_info</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">packages</span><span class="op">[</span><span class="va">x</span><span class="op">$</span><span class="va">packages</span><span class="op">$</span><span class="va">package</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAA"</span>, <span class="st">"psychTestR"</span>, <span class="st">"psychTestRCAT"</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Silas, S., Müllensiefen, D., &amp; Kopiez, R. (2022). Singing Ability Assessment: Development and validation of an open-source testing environment for singing data. In prep.</p>
+<p>Silas, S., Müllensiefen, D., &amp; Kopiez, R. (2023). Singing Ability Assessment: Development and validation of a singing test based on item response theory and a general open-source software environment for singing data. Behaviour Research Methods. <a href="https://doi.org/10.3758/s13428-023-02188-0" class="external-link uri">https://doi.org/10.3758/s13428-023-02188-0</a></p>
 </div>
 </div>
   </div>
@@ -219,7 +221,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

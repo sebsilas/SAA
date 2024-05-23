@@ -31,6 +31,12 @@
     <loc>https://musicassessr.com/SAA/index.html</loc>
   </url>
   <url>
+    <loc>https://musicassessr.com/SAA/news/index.html</loc>
+  </url>
+  <url>
+    <loc>https://musicassessr.com/SAA/reference/Berkowitz_item_bank_subset.html</loc>
+  </url>
+  <url>
     <loc>https://musicassessr.com/SAA/reference/SAA.html</loc>
   </url>
   <url>
@@ -46,6 +52,12 @@
     <loc>https://musicassessr.com/SAA/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://musicassessr.com/SAA/reference/is.null.or.html</loc>
+  </url>
+  <url>
     <loc>https://musicassessr.com/SAA/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://musicassessr.com/SAA/reference/run_saa_admin_app.html</loc>
   </url>
 </urlset>

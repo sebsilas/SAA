@@ -18,8 +18,6 @@ aSAA(
   absolute_url = "",
   examples = 2,
   final_results = TRUE,
-  musicassessr_aws = FALSE,
-  store_results_in_db = FALSE,
   test_username = "",
   gold_msi = TRUE,
   with_final_page = TRUE,
