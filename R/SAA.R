@@ -217,7 +217,6 @@ SAA_standalone <- function(app_name,
                                      content_border = content_border
                                    ),
                                    languages = languages,
-                                   #call_api_on_start_register_results_fun = if(asynchronous_api_mode) list(name = "session_id", fun = call_api_on_start_fun) else NULL,
                                    on_session_ended_fun = musicassessr::end_session(asynchronous_api_mode),
                                    additional_scripts = musicassessr::musicassessr_js(app_name = app_name,
                                                                                       visual_notation = feedback), ...))
