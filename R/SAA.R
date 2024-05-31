@@ -140,7 +140,13 @@ SAA_standalone <- function(app_name,
                                                    "rhythmic" = 0L), ...) {
 
 
-  timeline <- SAA(app_name,
+  timeline <- psychTestR::join(
+
+        psychTestR::code_block(function(state, ...) {
+          psychTestR::set_global("standalone", TRUE)
+        }),
+
+        SAA(app_name,
                   num_items,
                   num_examples,
                   arrhythmic_item_bank,
@@ -197,6 +203,7 @@ SAA_standalone <- function(app_name,
                   show_intro_text,
                   show_microphone_type_page,
                   num_items_review)
+      )
 
   # if(asynchronous_api_mode) {
   #   call_api_on_start_fun <- musicassessr::call_api_on_start(experiment_id = experiment_id, user_id = user_id)
@@ -577,8 +584,14 @@ SAA <- function(app_name,
                            # Arbitrary and optional trial block to go after other trial blocks
                            append_trial_block_after,
 
-                           # Add final session information to DB (if asynchronous_api_mode)
-                           if(asynchronous_api_mode) musicassessrdb::elt_add_final_session_info_to_db(asynchronous_api_mode),
+                           # Add final session information to DB (if asynchronous_api_mode and not standalone)
+                           if(asynchronous_api_mode) {
+
+                             psychTestR::conditional(function(state, ...) {
+                                ! is.null(psychTestR::get_global("standalone", state))
+                             }, logic = musicassessrdb::elt_add_final_session_info_to_db(asynchronous_api_mode))
+
+                            },
 
                            if(!asynchronous_api_mode) psychTestR::elt_save_results_to_disk(complete = TRUE),
 
