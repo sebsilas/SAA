@@ -143,7 +143,7 @@ SAA_standalone <- function(app_name,
   timeline <- psychTestR::join(
 
         psychTestR::code_block(function(state, ...) {
-          psychTestR::set_global("standalone", TRUE)
+          psychTestR::set_global("standalone", TRUE, state)
         }),
 
         SAA(app_name,
