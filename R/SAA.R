@@ -455,6 +455,16 @@ SAA <- function(app_name,
 
         if(get_p_id) psychTestR::get_p_id(prompt = psychTestR::i18n("enter_id"), button_text = psychTestR::i18n("Next")),
 
+        # In case there was a previous test in the same timeline which used an instrument,
+        # we store the instrument and the reset it at the end of the test.
+
+        psychTestR::code_block(function(state, ...) {
+          previous_inst <- psychTestR::get_global("inst", state)
+          if(!is.null(previous_inst)) {
+            psychTestR::set_global("previous_inst", previous_inst, state)
+          }
+        }),
+
         # Init musicassessr
         musicassessr::musicassessr_init(app_name = app_name,
                                         experiment_id = experiment_id,
@@ -604,6 +614,15 @@ SAA <- function(app_name,
     ),
     if(gold_msi) psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),
+
+    # Reset instrument if there was one previously in the timline
+    psychTestR::code_block(function(state, ...) {
+      previous_inst <- psychTestR::get_global("previous_inst", state)
+      if(!is.null(previous_inst)) {
+        psychTestR::set_global("previous_inst", previous_inst, state)
+      }
+    }),
+
     if(!asynchronous_api_mode) psychTestR::elt_save_results_to_disk(complete = TRUE),
     psychTestR::new_timeline(
                     musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name, img = 'https://adaptiveeartraining.com/assets/img/bird.png', redirect_url = success_on_completion_page),
