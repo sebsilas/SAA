@@ -619,7 +619,7 @@ SAA <- function(app_name,
     psychTestR::code_block(function(state, ...) {
       previous_inst <- psychTestR::get_global("previous_inst", state)
       if(!is.null(previous_inst)) {
-        psychTestR::set_global("previous_inst", previous_inst, state)
+        psychTestR::set_global("inst", previous_inst, state)
       }
     }),
 
