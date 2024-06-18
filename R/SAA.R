@@ -477,7 +477,10 @@ SAA <- function(app_name,
         # Set Test
         if(asynchronous_api_mode) musicassessr::set_test(test_name = "SAA", test_id = 1L),
 
-        # Set default range
+        # Set instrument to Voice
+        musicassessr::set_instrument(instrument_id = 1L),
+
+        # Set default range (which will overwrite the range set by set_instrument)
         if(!is.null(default_range)) musicassessr::set_instrument_range(bottom_range = default_range$bottom_range, top_range = default_range$top_range),
 
         psychTestR::module("SAA",
