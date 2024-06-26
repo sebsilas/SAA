@@ -42,7 +42,6 @@ SAA_standalone(
   concise_wording = TRUE,
   skip_setup = FALSE,
   full_screen = FALSE,
-  validate_user_entry_into_test = FALSE,
   additional_scoring_measures = NULL,
   default_range = NULL,
   long_tone_paradigm = c("simultaneous_recall", "call_and_response"),
@@ -145,8 +144,6 @@ SAA_standalone(
 \item{skip_setup}{TRUE to skip setup steps.}
 
 \item{full_screen}{Should app be full screen?}
-
-\item{validate_user_entry_into_test}{Should the user be validated against a session token?}
 
 \item{additional_scoring_measures}{A function or list of functions with additional measures for scoring pYIN data.}
 

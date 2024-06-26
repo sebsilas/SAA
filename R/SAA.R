@@ -39,7 +39,6 @@
 #' @param concise_wording TRUE for more detailed (but longer) instructions.
 #' @param skip_setup TRUE to skip setup steps.
 #' @param full_screen Should app be full screen?
-#' @param validate_user_entry_into_test Should the user be validated against a session token?
 #' @param additional_scoring_measures A function or list of functions with additional measures for scoring pYIN data.
 #' @param default_range A list of the range that stimuli should be presented in, if not collected at test time.
 #' @param long_tone_paradigm Can be simultaneous_recall or call_and_response.
@@ -112,7 +111,6 @@ SAA_standalone <- function(app_name,
                            concise_wording = TRUE,
                            skip_setup = FALSE,
                            full_screen = FALSE,
-                           validate_user_entry_into_test = FALSE,
                            additional_scoring_measures = NULL,
                            default_range = NULL,
                            long_tone_paradigm = c("simultaneous_recall", "call_and_response"),
@@ -209,7 +207,6 @@ SAA_standalone <- function(app_name,
 
   # Run the test
   timeline %>%
-    musicassessrdb::validate_user_entry_into_test(validate_user_entry_into_test, .) %>%
   psychTestR::make_test(
     opt = psychTestR::test_options(title = test_name,
                                    admin_password = admin_password,
