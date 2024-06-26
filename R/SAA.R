@@ -220,6 +220,7 @@ SAA_standalone <- function(app_name,
                                      css = css,
                                      content_border = content_border
                                    ),
+                                   logo_url = logo_url,
                                    languages = languages,
                                    on_session_ended_fun = musicassessr::end_session(asynchronous_api_mode),
                                    additional_scripts = musicassessr::musicassessr_js(app_name = app_name,
