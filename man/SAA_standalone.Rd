@@ -67,6 +67,7 @@ SAA_standalone(
   show_microphone_type_page = TRUE,
   num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L),
   logo_url = NULL,
+  dict = SAA_dict,
   ...
 )
 }
@@ -194,6 +195,8 @@ SAA_standalone(
 \item{num_items_review}{Number of review items.}
 
 \item{logo_url}{A URL for the psychTestR logo image.}
+
+\item{dict}{Which dictionary to use for internationalisation.}
 
 \item{...}{}
 }
