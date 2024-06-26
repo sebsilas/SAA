@@ -538,7 +538,7 @@ SAA <- function(app_name,
                                                                   page_text = shiny::tags$div(
                                                                     shiny::tags$img(src = "https://musicassessr.com/assets/img/singing.png", height = 100, width = 100),
                                                                     shiny::tags$br(),
-                                                                    psychTestR::i18n("sing_melody_page_text")
+                                                                    shiny::tags$p(psychTestR::i18n("sing_melody_page_text"))
                                                                   ),
                                                                   page_title = psychTestR::i18n("Sing_the_Melody"),
                                                                   instruction_text = psychTestR::i18n("sing_melody_instruction_text"),
@@ -561,7 +561,7 @@ SAA <- function(app_name,
                                                                 page_text = shiny::tags$div(
                                                                   shiny::tags$img(src = "https://musicassessr.com/assets/img/singing.png", height = 100, width = 100),
                                                                   shiny::tags$br(),
-                                                                  psychTestR::i18n("sing_rhythmic_melodies_page_text")
+                                                                  shiny::tags$p(psychTestR::i18n("sing_rhythmic_melodies_page_text"))
                                                                 ),
                                                                 page_title = psychTestR::i18n("sing_rhythmic_melodies_page_title"),
                                                                 instruction_text = psychTestR::i18n("sing_rhythmic_melodies_instruction_text"),
