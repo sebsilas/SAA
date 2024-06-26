@@ -58,12 +58,13 @@
 #' @param user_id Manually give a user ID when using musicassessrdb.
 #' @param get_answer_melodic The get_answer function for melodic trials.
 #' @param content_border The psychTestR border style.
-#' @param css Path to css stylesheet.
+#' @param css Path to css stylesheet(s).
 #' @param sample_item_bank_via_api Is the item bank being sampled via an API?
 #' @param pass_items_through_url_parameter Are items being passed through a URL parameter?
 #' @param show_intro_text Should intro text be shown?
 #' @param show_microphone_type_page Should you ask the participant what kind of microphone they are using?
 #' @param num_items_review Number of review items.
+#' @param logo_url A URL for the psychTestR logo image.
 #' @param ...
 #'
 #' @return
@@ -137,7 +138,8 @@ SAA_standalone <- function(app_name,
                            show_microphone_type_page = TRUE,
                            num_items_review = list("long_tones" = 0L,
                                                    "arrhythmic" = 0L,
-                                                   "rhythmic" = 0L), ...) {
+                                                   "rhythmic" = 0L),
+                           logo_url = NULL, ...) {
 
 
   timeline <- psychTestR::join(
@@ -216,7 +218,8 @@ SAA_standalone <- function(app_name,
                                      left_margin = 1L,
                                      right_margin = 1L,
                                      css = css,
-                                     content_border = content_border
+                                     content_border = content_border,
+                                     logo_url = logo_url
                                    ),
                                    languages = languages,
                                    on_session_ended_fun = musicassessr::end_session(asynchronous_api_mode),

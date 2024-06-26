@@ -1,3 +1,5 @@
+# SAA 2.4.0
+
 # SAA 2.3.0
 
 - Add new images to trial pages.
