@@ -205,11 +205,6 @@ SAA_standalone <- function(app_name,
                   num_items_review)
       )
 
-  # if(asynchronous_api_mode) {
-  #   call_api_on_start_fun <- musicassessr::call_api_on_start(experiment_id = experiment_id, user_id = user_id)
-  # }
-
-
   # Run the test
   timeline %>%
     musicassessrdb::validate_user_entry_into_test(validate_user_entry_into_test, .) %>%
@@ -643,6 +638,8 @@ SAA <- function(app_name,
                     musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name, img = 'https://adaptiveeartraining.com/assets/img/bird.png', redirect_url = success_on_completion_page),
                     dict = musicassessr::musicassessr_dict)
   )
+
+  return(timeline)
 
 }
 
