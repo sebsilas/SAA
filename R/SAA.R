@@ -588,7 +588,7 @@ SAA <- function(app_name,
                                                                   feedback = feedback,
                                                                   sound = melody_sound,
                                                                   page_text = shiny::tags$div(
-                                                                    shiny::tags$img(src = "https://musicassessr.com/assets/img/singing.png", height = 100, width = 100),
+                                                                    shiny::tags$img(id = "singImage", src = "https://musicassessr.com/assets/img/singing.png", height = 100, width = 100),
                                                                     shiny::tags$br(),
                                                                     psychTestR::i18n("sing_rhythmic_melodies_page_text")
                                                                   ),
