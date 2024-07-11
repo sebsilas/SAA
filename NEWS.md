@@ -1,5 +1,7 @@
 # SAA 2.5.0
 
+- Add redirect_on_failure_url feature
+
 # SAA 2.4.1
 
 # SAA 2.4.0

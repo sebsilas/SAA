@@ -62,7 +62,8 @@ SAA(
   show_intro_text = TRUE,
   show_microphone_type_page = TRUE,
   num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L),
-  dict = SAA_dict
+  dict = SAA_dict,
+  redirect_on_failure_url = "https://google.com"
 )
 }
 \arguments{
@@ -181,6 +182,8 @@ SAA(
 \item{num_items_review}{Number of review items.}
 
 \item{dict}{What dictionary to use for internationalisation.}
+
+\item{redirect_on_failure_url}{A page to redirect users to if an API check fails more than three times.}
 }
 \description{
 Deploy the SAA

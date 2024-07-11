@@ -68,6 +68,7 @@ SAA_standalone(
   num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L),
   logo_url = NULL,
   dict = SAA_dict,
+  redirect_on_failure_url = "https://google.com",
   ...
 )
 }
@@ -197,6 +198,8 @@ SAA_standalone(
 \item{logo_url}{A URL for the psychTestR logo image.}
 
 \item{dict}{Which dictionary to use for internationalisation.}
+
+\item{redirect_on_failure_url}{A URL to redirect users to if an API check fails more than three times.}
 
 \item{...}{}
 }

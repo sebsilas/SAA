@@ -65,6 +65,7 @@
 #' @param num_items_review Number of review items.
 #' @param logo_url A URL for the psychTestR logo image.
 #' @param dict Which dictionary to use for internationalisation.
+#' @param redirect_on_failure_url A URL to redirect users to if an API check fails more than three times.
 #' @param ...
 #'
 #' @return
@@ -139,7 +140,8 @@ SAA_standalone <- function(app_name,
                                                    "arrhythmic" = 0L,
                                                    "rhythmic" = 0L),
                            logo_url = NULL,
-                           dict = SAA_dict, ...) {
+                           dict = SAA_dict,
+                           redirect_on_failure_url = "https://google.com", ...) {
 
 
   timeline <- psychTestR::join(
@@ -205,7 +207,8 @@ SAA_standalone <- function(app_name,
                   show_intro_text,
                   show_microphone_type_page,
                   num_items_review,
-                  dict)
+                  dict,
+                  redirect_on_failure_url)
       )
 
   # Run the test
@@ -294,6 +297,7 @@ SAA_standalone <- function(app_name,
 #' @param show_microphone_type_page Should you ask the participant what kind of microphone they are using?
 #' @param num_items_review Number of review items.
 #' @param dict What dictionary to use for internationalisation.
+#' @param redirect_on_failure_url A page to redirect users to if an API check fails more than three times.
 #' @return
 #' @export
 #'
@@ -359,7 +363,8 @@ SAA <- function(app_name,
                 show_intro_text = TRUE,
                 show_microphone_type_page = TRUE,
                 num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L),
-                dict = SAA_dict
+                dict = SAA_dict,
+                redirect_on_failure_url = "https://google.com"
                 ) {
 
   long_tone_paradigm <- match.arg(long_tone_paradigm)
@@ -424,7 +429,8 @@ SAA <- function(app_name,
     is.scalar.logical(show_intro_text),
     is.scalar.logical(show_microphone_type_page),
     is.list(num_items_review) && length(num_items_review) == 3L && setequal(names(num_items_review), c("long_tones", "arrhythmic", "rhythmic")),
-    is(dict, "i18n_dict")
+    is(dict, "i18n_dict"),
+    is.scalar.character(redirect_on_failure_url)
     )
 
   shiny::addResourcePath(
@@ -472,7 +478,8 @@ SAA <- function(app_name,
                                         user_id = user_id,
                                         asynchronous_api_mode = asynchronous_api_mode,
                                         instrument_id = 1,
-                                        inst = "Voice"),
+                                        inst = "Voice",
+                                        redirect_on_failure_url = redirect_on_failure_url),
 
 
         # Set Test
