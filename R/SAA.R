@@ -650,7 +650,7 @@ SAA <- function(app_name,
     if(!asynchronous_api_mode) psychTestR::elt_save_results_to_disk(complete = TRUE),
     psychTestR::new_timeline(
                     musicassessr::final_page_or_continue_to_new_test(final = with_final_page, task_name = test_name, img = 'https://adaptiveeartraining.com/assets/img/bird.png', redirect_url = success_on_completion_page),
-                    dict = musicassessr::musicassessr_dict)
+                    dict = dict)
   )
 
   return(timeline)
