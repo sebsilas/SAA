@@ -98,7 +98,9 @@ Berkowitz_item_bank_subset <- itembankr::subset_item_bank(Berkowitz::ngram_item_
 
 
 usethis::use_data(SAA_dict_df, SAA_dict,
-                  get_arrhythmic_score_percentile, get_rhythmic_score_percentile, get_long_note_score_percentile,
+                  get_arrhythmic_score_percentile,
+                  get_rhythmic_score_percentile,
+                  get_long_note_score_percentile,
                   Final_SAA_Score_m, Final_SAA_Score_sd,
                   overwrite = TRUE, internal = TRUE)
 
