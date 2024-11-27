@@ -843,7 +843,7 @@ SAA_instructions <- function(max_goes_forced, max_goes) {
     SAA_instructions_5.1 <- "SAA_instructions_5.1"
   }
 
-  if(max_goes_forced > 1) {
+  if(max_goes > 1) {
     SAA_instructions_5.2 <- "SAA_instructions_5.2.multiple"
   } else {
     SAA_instructions_5.2 <- "SAA_instructions_5.2.singular"

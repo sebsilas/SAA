@@ -1,3 +1,7 @@
+# SAA 2.5.2
+
+- Correct typo with max_goes.
+
 # SAA 2.5.1
 
 # SAA 2.5.0
