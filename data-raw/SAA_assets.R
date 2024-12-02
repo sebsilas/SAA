@@ -96,13 +96,22 @@ Berkowitz_item_bank_subset <- itembankr::subset_item_bank(Berkowitz::ngram_item_
   itembankr::set_item_bank_class()
 
 
+usethis::use_data(SAA_dict)
 
-usethis::use_data(SAA_dict_df, SAA_dict,
+usethis::use_data(SAA_dict_df,
                   get_arrhythmic_score_percentile,
                   get_rhythmic_score_percentile,
                   get_long_note_score_percentile,
                   Final_SAA_Score_m, Final_SAA_Score_sd,
                   overwrite = TRUE, internal = TRUE)
 
+
+
 usethis::use_data(Berkowitz_item_bank_subset, overwrite = TRUE)
 
+
+document()
+
+credentials::set_github_pat()
+
+install()

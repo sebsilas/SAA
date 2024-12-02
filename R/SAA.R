@@ -140,7 +140,7 @@ SAA_standalone <- function(app_name,
                                                    "arrhythmic" = 0L,
                                                    "rhythmic" = 0L),
                            logo_url = NULL,
-                           dict = SAA_dict,
+                           dict = SAA::SAA_dict,
                            redirect_on_failure_url = "https://google.com", ...) {
 
 
@@ -363,7 +363,7 @@ SAA <- function(app_name,
                 show_intro_text = TRUE,
                 show_microphone_type_page = TRUE,
                 num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L),
-                dict = SAA_dict,
+                dict = SAA::SAA_dict,
                 redirect_on_failure_url = "https://google.com"
                 ) {
 
@@ -844,7 +844,7 @@ SAA_instructions <- function(max_goes_forced, max_goes) {
   }
 
   if(max_goes > 1) {
-    SAA_instructions_5.2 <- "SAA_instructions_5.2.multiple"
+    SAA_instructions_5.2 <- "SAA_instructions_5.2"
   } else {
     SAA_instructions_5.2 <- "SAA_instructions_5.2.singular"
   }
