@@ -1,3 +1,7 @@
+# SAA 2.6.0
+
+- Centralise dicts in musicassessr
+
 # SAA 2.5.3
 
 - Update dicts

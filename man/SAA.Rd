@@ -62,7 +62,7 @@ SAA(
   show_intro_text = TRUE,
   show_microphone_type_page = TRUE,
   num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L),
-  dict = SAA_dict,
+  dict = musicassessr::musicassessr_dict,
   redirect_on_failure_url = "https://google.com"
 )
 }

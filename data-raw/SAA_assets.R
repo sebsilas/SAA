@@ -4,18 +4,6 @@ library(musicassessr)
 library(tidyverse)
 library(lme4)
 
-SAA_dict_df <- readxl::read_excel("data-raw/SAA.xlsx")
-
-SAA_dict_df <- SAA_dict_df %>%
-  mutate(de = case_when(is.na(de) ~ en, TRUE ~ de))
-
-SAA_dict <- musicassessr::dict(additional_dict = SAA_dict_df)
-
-
-da <- SAA_dict$as.data.frame()
-anyNA(da)
-
-
 # Percentile functions
 
 get_arrhythmic_score_percentile <- predict(musicassessr::lm2.2) %>%
@@ -96,10 +84,7 @@ Berkowitz_item_bank_subset <- itembankr::subset_item_bank(Berkowitz::ngram_item_
   itembankr::set_item_bank_class()
 
 
-usethis::use_data(SAA_dict)
-
-usethis::use_data(SAA_dict_df,
-                  get_arrhythmic_score_percentile,
+usethis::use_data(get_arrhythmic_score_percentile,
                   get_rhythmic_score_percentile,
                   get_long_note_score_percentile,
                   Final_SAA_Score_m, Final_SAA_Score_sd,
@@ -115,3 +100,4 @@ document()
 credentials::set_github_pat()
 
 install()
+

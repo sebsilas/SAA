@@ -329,7 +329,7 @@ aSAA <- function(app_name,
 
         )
       ),
-      dict = SAA::SAA_dict
+      dict = musicassessr::musicassessr_dict
     ),
     if(gold_msi) psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),

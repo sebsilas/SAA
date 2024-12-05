@@ -140,7 +140,7 @@ SAA_standalone <- function(app_name,
                                                    "arrhythmic" = 0L,
                                                    "rhythmic" = 0L),
                            logo_url = NULL,
-                           dict = SAA::SAA_dict,
+                           dict = musicassessr::musicassessr_dict,
                            redirect_on_failure_url = "https://google.com", ...) {
 
 
@@ -363,7 +363,7 @@ SAA <- function(app_name,
                 show_intro_text = TRUE,
                 show_microphone_type_page = TRUE,
                 num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L),
-                dict = SAA::SAA_dict,
+                dict = musicassessr::musicassessr_dict,
                 redirect_on_failure_url = "https://google.com"
                 ) {
 
