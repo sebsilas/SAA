@@ -8,8 +8,8 @@ SAA(
   app_name,
   num_items = list(long_tones = 6L, arrhythmic = 10L, rhythmic = 10L),
   num_examples = list(long_tones = 2L, arrhythmic = 2L, rhythmic = 0L),
-  arrhythmic_item_bank = SAA::Berkowitz_item_bank_subset,
-  rhythmic_item_bank = SAA::Berkowitz_item_bank_subset,
+  arrhythmic_item_bank = Berkowitz::Berkowitz_subset \%>\% dplyr::filter(!rhythmic),
+  rhythmic_item_bank = Berkowitz::Berkowitz_subset \%>\% dplyr::filter(rhythmic),
   demographics = TRUE,
   demo = FALSE,
   feedback = FALSE,
@@ -63,7 +63,9 @@ SAA(
   show_microphone_type_page = TRUE,
   num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L),
   dict = musicassessr::musicassessr_dict,
-  redirect_on_failure_url = "https://google.com"
+  redirect_on_failure_url = "https://google.com",
+  sampler_function_arrhythmic = musicassessr::sample_arrhythmic,
+  sampler_function_rhythmic = musicassessr::sample_rhythmic
 )
 }
 \arguments{
@@ -184,6 +186,10 @@ SAA(
 \item{dict}{What dictionary to use for internationalisation.}
 
 \item{redirect_on_failure_url}{A page to redirect users to if an API check fails more than three times.}
+
+\item{sampler_function_arrhythmic}{A psychTestR::code_block to determine how to sample from the arrhythmic item bank.}
+
+\item{sampler_function_rhythmic}{A psychTestR::code_block to determine how to sample from the rhythmic item bank.}
 }
 \description{
 Deploy the SAA

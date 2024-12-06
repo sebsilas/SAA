@@ -66,6 +66,8 @@
 #' @param logo_url A URL for the psychTestR logo image.
 #' @param dict Which dictionary to use for internationalisation.
 #' @param redirect_on_failure_url A URL to redirect users to if an API check fails more than three times.
+#' @param sampler_function_arrhythmic A psychTestR::code_block to determine how to sample from the arrhythmic item bank.
+#' @param sampler_function_rhythmic A psychTestR::code_block to determine how to sample from the rhythmic item bank.
 #' @param ...
 #'
 #' @return
@@ -79,8 +81,8 @@ SAA_standalone <- function(app_name,
                            num_examples = list("long_tones" = 2L,
                                                "arrhythmic" = 2L,
                                                "rhythmic" = 0L),
-                           arrhythmic_item_bank = SAA::Berkowitz_item_bank_subset, # N.B. this has a log_freq column, which is required. No other itembankr columns do
-                           rhythmic_item_bank = SAA::Berkowitz_item_bank_subset,
+                           arrhythmic_item_bank = Berkowitz::Berkowitz_subset, # N.B. this has a log_freq column, which is required. No other itembankr columns do
+                           rhythmic_item_bank = Berkowitz::Berkowitz_subset,
                            demographics = TRUE,
                            demo = FALSE,
                            feedback = FALSE,
@@ -141,7 +143,9 @@ SAA_standalone <- function(app_name,
                                                    "rhythmic" = 0L),
                            logo_url = NULL,
                            dict = musicassessr::musicassessr_dict,
-                           redirect_on_failure_url = "https://google.com", ...) {
+                           redirect_on_failure_url = "https://google.com",
+                           sampler_function_arrhythmic = musicassessr::sample_arrhythmic,
+                           sampler_function_rhythmic = musicassessr::sample_rhythmic, ...) {
 
 
   timeline <- psychTestR::join(
@@ -298,6 +302,8 @@ SAA_standalone <- function(app_name,
 #' @param num_items_review Number of review items.
 #' @param dict What dictionary to use for internationalisation.
 #' @param redirect_on_failure_url A page to redirect users to if an API check fails more than three times.
+#' @param sampler_function_arrhythmic A psychTestR::code_block to determine how to sample from the arrhythmic item bank.
+#' @param sampler_function_rhythmic A psychTestR::code_block to determine how to sample from the rhythmic item bank.
 #' @return
 #' @export
 #'
@@ -309,8 +315,8 @@ SAA <- function(app_name,
                 num_examples = list("long_tones" = 2L,
                                     "arrhythmic" = 2L,
                                     "rhythmic" = 0L),
-                arrhythmic_item_bank = SAA::Berkowitz_item_bank_subset, # N.B. this has a log_freq column, which is required. No other itembankr columns do
-                rhythmic_item_bank = SAA::Berkowitz_item_bank_subset,
+                arrhythmic_item_bank = Berkowitz::Berkowitz_subset %>% dplyr::filter(!rhythmic), # N.B. this has a log_freq column, which is required. No other itembankr columns do
+                rhythmic_item_bank = Berkowitz::Berkowitz_subset %>% dplyr::filter(rhythmic),
                 demographics = TRUE,
                 demo = FALSE,
                 feedback = FALSE,
@@ -364,7 +370,9 @@ SAA <- function(app_name,
                 show_microphone_type_page = TRUE,
                 num_items_review = list(long_tones = 0L, arrhythmic = 0L, rhythmic = 0L),
                 dict = musicassessr::musicassessr_dict,
-                redirect_on_failure_url = "https://google.com"
+                redirect_on_failure_url = "https://google.com",
+                sampler_function_arrhythmic = musicassessr::sample_arrhythmic,
+                sampler_function_rhythmic = musicassessr::sample_rhythmic
                 ) {
 
   long_tone_paradigm <- match.arg(long_tone_paradigm)
@@ -430,7 +438,9 @@ SAA <- function(app_name,
     is.scalar.logical(show_microphone_type_page),
     is.list(num_items_review) && length(num_items_review) == 3L && setequal(names(num_items_review), c("long_tones", "arrhythmic", "rhythmic")),
     is(dict, "i18n_dict"),
-    is.scalar.character(redirect_on_failure_url)
+    is.scalar.character(redirect_on_failure_url),
+    is.function(sampler_function_arrhythmic),
+    is.function(sampler_function_rhythmic)
     )
 
   shiny::addResourcePath(
@@ -559,7 +569,8 @@ SAA <- function(app_name,
                                                                   sample_item_bank_via_api = sample_item_bank_via_api,
                                                                   presampled = sample_item_bank_via_api,
                                                                   pass_items_through_url_parameter = pass_items_through_url_parameter,
-                                                                  asynchronous_api_mode = asynchronous_api_mode),
+                                                                  asynchronous_api_mode = asynchronous_api_mode,
+                                                                  sampler_function = sampler_function_arrhythmic),
 
                            # Rhythmic melody trials
                            musicassessr::rhythmic_melody_trials(item_bank = rhythmic_item_bank,
@@ -583,7 +594,8 @@ SAA <- function(app_name,
                                                                 presampled = sample_item_bank_via_api,
                                                                 start_from_sampled_trial_no = num_items$rhythmic + num_examples$rhythmic,
                                                                 pass_items_through_url_parameter = pass_items_through_url_parameter,
-                                                                asynchronous_api_mode = asynchronous_api_mode),
+                                                                asynchronous_api_mode = asynchronous_api_mode,
+                                                                sampler_function = sampler_function_rhythmic),
 
 
 
@@ -639,12 +651,20 @@ SAA <- function(app_name,
     if(gold_msi) psyquest::GMS(subscales = c("Musical Training", "Singing Abilities")),
     musicassessr::deploy_demographics(demographics),
 
-    # Reset instrument if there was one previously in the timline
+    # Reset instrument if there was one previously in the timeline
+    # Also reset response type
     psychTestR::code_block(function(state, ...) {
+
       previous_inst <- psychTestR::get_global("previous_inst", state)
       if(!is.null(previous_inst)) {
         psychTestR::set_global("inst", previous_inst, state)
       }
+
+      previous_response_type <- psychTestR::get_global("previous_response_type", state)
+      if(!is.null(previous_response_type)) {
+        psychTestR::set_global("response_type", previous_response_type, state)
+      }
+
     }),
 
     if(!asynchronous_api_mode) psychTestR::elt_save_results_to_disk(complete = TRUE),

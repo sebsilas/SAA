@@ -80,19 +80,12 @@ Final_SAA_Score_m <- mean(percentile_dist$Final_SAA_Score, na.rm = TRUE)
 Final_SAA_Score_sd <- sd(percentile_dist$Final_SAA_Score, na.rm = TRUE)
 
 
-Berkowitz_item_bank_subset <- itembankr::subset_item_bank(Berkowitz::ngram_item_bank, item_length = c(4,20), return_as_item_bank_class = TRUE) %>%
-  itembankr::set_item_bank_class()
-
 
 usethis::use_data(get_arrhythmic_score_percentile,
                   get_rhythmic_score_percentile,
                   get_long_note_score_percentile,
                   Final_SAA_Score_m, Final_SAA_Score_sd,
                   overwrite = TRUE, internal = TRUE)
-
-
-
-usethis::use_data(Berkowitz_item_bank_subset, overwrite = TRUE)
 
 
 document()
