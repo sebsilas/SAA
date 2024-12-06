@@ -1,3 +1,8 @@
+# SAA 2.6.1
+
+- Remove references to `SAA:Berkowitz_item_bank_subset`
+- Add `arrhythmic_sampler_function` and `rhythmic_sampler_function` parameters to test
+
 # SAA 2.6.0
 
 - Centralise dicts in `musicassessr`
