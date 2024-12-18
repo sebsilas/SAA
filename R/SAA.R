@@ -741,62 +741,6 @@ SAA_intro <- function(demo = FALSE,
                               show_microphone_type_page = show_microphone_type_page,
                               asynchronous_api_mode = asynchronous_api_mode),
 
-
-    # Sample from item bank now we have range
-    #if(asynchronous_api_mode && sample_item_bank_via_api) musicassessrdb::sample_from_item_bank_elts(item_bank_name = "Berkowitz_ngram", num_items, melody_length),
-
-
-    #if(asynchronous_api_mode && sample_item_bank_via_api) sample_from_item_bank_elts_saa(item_bank_name = "Berkowitz_ngram", num_items, melody_length),
-
-
-    # psychTestR::code_block(function(state, ...) {
-    #
-    #   span <- psychTestR::get_global('span', state)
-    #
-    #   span <- 10
-    #   item_bank_name <- "Berkowitz_ngram"
-    #   num_items <- 4
-    #   melody_length <- "5,15"
-    #
-    #   logging::logwarn("Forcing span of 10 for now..")
-    #
-    #   logging::loginfo("Sampling %s items from %s item bank via API", num_items, item_bank_name)
-    #   logging::loginfo("Melody length: %s", melody_length)
-    #   logging::loginfo("Span: %s", span)
-    #
-    #   # Make sure in correct future mode...
-    #   future::plan(future::multisession)
-    #
-    #   item_bank_sample <- future::future({
-    #
-    #     musicassessrdb::sample_from_item_bank_api(item_bank_name, num_items, span, melody_length)
-    #
-    #     # store_db_session_api(condition_id = NA,
-    #     #                      user_id = 1L,
-    #     #                      psychTestR_session_id = "00",
-    #     #                      time_started = Sys.time(),
-    #     #                      experiment_id = NA)
-    #
-    #   }) %...>% (function(result) {
-    #
-    #     logging::loginfo("Returning promise message: %s", result$message)
-    #
-    #     if(result$status == 200) {
-    #       sample <- result
-    #       #sample <- dplyr::bind_rows(result$sample)
-    #       logging::loginfo("Returning promise result: %s", sample)
-    #
-    #       return(sample)
-    #     } else {
-    #       return(NA)
-    #     }
-    #   })
-    #
-    #   psychTestR::set_global('sampled_item_bank_from_api', item_bank_sample, state)
-    #
-    #
-    # }),
-
     # Instructions
     if(show_instructions) SAA_instructions(max_goes_forced, max_goes)
 
