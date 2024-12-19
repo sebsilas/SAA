@@ -215,6 +215,8 @@ SAA_standalone <- function(app_name,
                   num_items_review,
                   dict,
                   redirect_on_failure_url,
+                  sampler_function_arrhythmic,
+                  sampler_function_rhythmic,
                   use_presigned_url)
       )
 
