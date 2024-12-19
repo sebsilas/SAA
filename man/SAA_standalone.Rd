@@ -71,6 +71,7 @@ SAA_standalone(
   redirect_on_failure_url = "https://google.com",
   sampler_function_arrhythmic = musicassessr::sample_arrhythmic,
   sampler_function_rhythmic = musicassessr::sample_rhythmic,
+  use_presigned_url = TRUE,
   ...
 )
 }
@@ -206,6 +207,8 @@ SAA_standalone(
 \item{sampler_function_arrhythmic}{A psychTestR::code_block to determine how to sample from the arrhythmic item bank.}
 
 \item{sampler_function_rhythmic}{A psychTestR::code_block to determine how to sample from the rhythmic item bank.}
+
+\item{use_presigned_url}{For audio storing, should a presigned URL be used?}
 
 \item{...}{}
 }
