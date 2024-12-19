@@ -1,3 +1,5 @@
+# SAA 2.6.2
+
 # SAA 2.6.1
 
 - Remove references to `SAA:Berkowitz_item_bank_subset`

@@ -68,6 +68,7 @@
 #' @param redirect_on_failure_url A URL to redirect users to if an API check fails more than three times.
 #' @param sampler_function_arrhythmic A psychTestR::code_block to determine how to sample from the arrhythmic item bank.
 #' @param sampler_function_rhythmic A psychTestR::code_block to determine how to sample from the rhythmic item bank.
+#' @param use_presigned_url For audio storing, should a presigned URL be used?
 #' @param ...
 #'
 #' @return
@@ -145,7 +146,8 @@ SAA_standalone <- function(app_name,
                            dict = musicassessr::musicassessr_dict,
                            redirect_on_failure_url = "https://google.com",
                            sampler_function_arrhythmic = musicassessr::sample_arrhythmic,
-                           sampler_function_rhythmic = musicassessr::sample_rhythmic, ...) {
+                           sampler_function_rhythmic = musicassessr::sample_rhythmic,
+                           use_presigned_url = TRUE, ...) {
 
 
   timeline <- psychTestR::join(
@@ -212,7 +214,8 @@ SAA_standalone <- function(app_name,
                   show_microphone_type_page,
                   num_items_review,
                   dict,
-                  redirect_on_failure_url)
+                  redirect_on_failure_url,
+                  use_presigned_url)
       )
 
   # Run the test
@@ -304,6 +307,7 @@ SAA_standalone <- function(app_name,
 #' @param redirect_on_failure_url A page to redirect users to if an API check fails more than three times.
 #' @param sampler_function_arrhythmic A psychTestR::code_block to determine how to sample from the arrhythmic item bank.
 #' @param sampler_function_rhythmic A psychTestR::code_block to determine how to sample from the rhythmic item bank.
+#' @param use_presigned_url Should a presigned URL be used for audio storing?
 #' @return
 #' @export
 #'
@@ -372,8 +376,8 @@ SAA <- function(app_name,
                 dict = musicassessr::musicassessr_dict,
                 redirect_on_failure_url = "https://google.com",
                 sampler_function_arrhythmic = musicassessr::sample_arrhythmic,
-                sampler_function_rhythmic = musicassessr::sample_rhythmic
-                ) {
+                sampler_function_rhythmic = musicassessr::sample_rhythmic,
+                use_presigned_url = TRUE) {
 
   long_tone_paradigm <- match.arg(long_tone_paradigm)
 
@@ -440,7 +444,8 @@ SAA <- function(app_name,
     is(dict, "i18n_dict"),
     is.scalar.character(redirect_on_failure_url),
     is.function(sampler_function_arrhythmic),
-    is.function(sampler_function_rhythmic)
+    is.function(sampler_function_rhythmic),
+    is.scalar.logical(use_presigned_url)
     )
 
   shiny::addResourcePath(
@@ -489,7 +494,8 @@ SAA <- function(app_name,
                                         asynchronous_api_mode = asynchronous_api_mode,
                                         instrument_id = 1,
                                         inst = "Voice",
-                                        redirect_on_failure_url = redirect_on_failure_url),
+                                        redirect_on_failure_url = redirect_on_failure_url,
+                                        use_presigned_url = use_presigned_url),
 
 
         # Set Test
