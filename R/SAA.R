@@ -134,7 +134,8 @@ SAA_standalone <- function(app_name,
                            user_id = NULL,
                            get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
                            content_border = "1px solid #e8e8e8",
-                           css = system.file('www/css/musicassessr.css', package = "musicassessr"),
+                           css = c("https://musicassessr.com/assets/css/style_songbird.css",
+                                   system.file('www/css/musicassessr.css', package = "musicassessr")),
                            sample_item_bank_via_api = FALSE,
                            pass_items_through_url_parameter = FALSE,
                            show_intro_text = TRUE,
@@ -985,10 +986,11 @@ sort_long_note_scores <- function(num_items_long_note, res) {
 
 
 sort_arrhythmic_scores <- function(num_items_arrhythmic, res) {
+
   if(num_items_arrhythmic > 0) {
 
     # arrhythmic
-    arrhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.arrhythmic_melodies, use_for_production = "pyin_pitch_track")
+    arrhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.standard__arrhythmic_melodies, use_for_production = "pyin_pitch_track")
 
     if(!"proportion_of_correct_note_events" %in% names(arrhythmic_melodies)) {
       arrhythmic_melodies$proportion_of_correct_note_events <- NA
@@ -1020,7 +1022,7 @@ sort_arrhythmic_scores <- function(num_items_arrhythmic, res) {
 sort_rhythmic_scores <- function(num_items_rhythmic, res) {
   if(num_items_rhythmic > 0) {
     # rhythmic
-    rhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.rhythmic_melodies, use_for_production = "pyin_pitch_track")
+    rhythmic_melodies <- musicassessr::tidy_melodies(res$SAA.standard__rhythmic_melodies, use_for_production = "pyin_pitch_track")
 
     if(!"proportion_of_correct_note_events" %in% names(rhythmic_melodies)) {
       rhythmic_melodies$proportion_of_correct_note_events <- NA
