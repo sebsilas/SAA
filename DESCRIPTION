@@ -1,6 +1,6 @@
 Package: SAA
 Title: Singing Ability Assessment
-Version: 2.6.2
+Version: 2.6.3
 Authors@R: 
     person(given = "Sebastian",
            family = "Silas",
@@ -12,7 +12,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports: 
     assertthat,
     dplyr,

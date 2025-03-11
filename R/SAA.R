@@ -484,7 +484,11 @@ SAA <- function(app_name,
         # we store the instrument and the reset it at the end of the test.
 
         psychTestR::code_block(function(state, ...) {
+
           previous_inst <- psychTestR::get_global("inst", state)
+
+          logging::loginfo("There was a previous_inst: %s", previous_inst)
+
           if(!is.null(previous_inst)) {
             psychTestR::set_global("previous_inst", previous_inst, state)
           }
@@ -665,11 +669,15 @@ SAA <- function(app_name,
     psychTestR::code_block(function(state, ...) {
 
       previous_inst <- psychTestR::get_global("previous_inst", state)
+
       if(!is.null(previous_inst)) {
         psychTestR::set_global("inst", previous_inst, state)
+        instrument_id <- musicassessrdb::instrument_name_to_id(previous_inst)
+        musicassessr::set_instrument(instrument_id, as_code_block = FALSE, state = state)
       }
 
       previous_response_type <- psychTestR::get_global("previous_response_type", state)
+
       if(!is.null(previous_response_type)) {
         psychTestR::set_global("response_type", previous_response_type, state)
       }
