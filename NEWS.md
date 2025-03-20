@@ -1,5 +1,7 @@
 # SAA 2.7.0
 
+- Dispatch filtered item banks with package
+
 # SAA 2.6.3
 
 # SAA 2.6.2

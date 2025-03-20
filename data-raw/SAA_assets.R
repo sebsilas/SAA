@@ -81,7 +81,21 @@ Final_SAA_Score_sd <- sd(percentile_dist$Final_SAA_Score, na.rm = TRUE)
 
 
 
-usethis::use_data(get_arrhythmic_score_percentile,
+arrhythmic_item_bank <- Berkowitz::Berkowitz_subset %>%
+  dplyr::as_tibble() %>%
+  dplyr::filter(!rhythmic) %>%  # N.B. this has a log_freq column, which is required. No other itembankr columns do
+  dplyr::as_tibble() %>%
+  itembankr::set_item_bank_class()
+
+rhythmic_item_bank <- Berkowitz::Berkowitz_subset %>%
+  dplyr::as_tibble() %>%
+  dplyr::filter(rhythmic) %>%  # N.B. this has a log_freq column, which is required. No other itembankr columns do
+  itembankr::set_item_bank_class()
+
+
+usethis::use_data(rhythmic_item_bank,
+                  arrhythmic_item_bank,
+                  get_arrhythmic_score_percentile,
                   get_rhythmic_score_percentile,
                   get_long_note_score_percentile,
                   Final_SAA_Score_m, Final_SAA_Score_sd,

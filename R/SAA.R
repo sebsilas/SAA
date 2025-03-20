@@ -82,8 +82,8 @@ SAA_standalone <- function(app_name,
                            num_examples = list("long_tones" = 2L,
                                                "arrhythmic" = 2L,
                                                "rhythmic" = 0L),
-                           arrhythmic_item_bank = Berkowitz::Berkowitz_subset, # N.B. this has a log_freq column, which is required. No other itembankr columns do
-                           rhythmic_item_bank = Berkowitz::Berkowitz_subset,
+                           arrhythmic_item_bank = SAA::arrhythmic_item_bank,
+                           rhythmic_item_bank = SAA::rhythmic_item_bank,
                            demographics = TRUE,
                            demo = FALSE,
                            feedback = FALSE,
@@ -120,7 +120,7 @@ SAA_standalone <- function(app_name,
                            default_range = NULL,
                            long_tone_paradigm = c("simultaneous_recall", "call_and_response"),
                            get_p_id = FALSE,
-                           languages = c("en", "de", "it", "lv"),
+                           languages = c("en", "de", "it", "lv", "ch"),
                            volume_meter_on_melody_trials = FALSE,
                            volume_meter_on_melody_trials_type = 'default',
                            long_tone_length = 5,
@@ -322,8 +322,8 @@ SAA <- function(app_name,
                 num_examples = list("long_tones" = 2L,
                                     "arrhythmic" = 2L,
                                     "rhythmic" = 0L),
-                arrhythmic_item_bank = Berkowitz::Berkowitz_subset %>% dplyr::filter(!rhythmic), # N.B. this has a log_freq column, which is required. No other itembankr columns do
-                rhythmic_item_bank = Berkowitz::Berkowitz_subset %>% dplyr::filter(rhythmic),
+                arrhythmic_item_bank = SAA::arrhythmic_item_bank,
+                rhythmic_item_bank = SAA::rhythmic_item_bank,
                 demographics = TRUE,
                 demo = FALSE,
                 feedback = FALSE,
@@ -472,6 +472,8 @@ SAA <- function(app_name,
     arrhythmic_item_bank <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
     rhythmic_item_bank <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
   }
+
+  browser()
 
   # Start test timeline
   timeline <- psychTestR::join(
