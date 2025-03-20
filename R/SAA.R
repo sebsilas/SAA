@@ -82,8 +82,8 @@ SAA_standalone <- function(app_name,
                            num_examples = list("long_tones" = 2L,
                                                "arrhythmic" = 2L,
                                                "rhythmic" = 0L),
-                           arrhythmic_item_bank = arrhythmic_item_bank,
-                           rhythmic_item_bank = rhythmic_item_bank,
+                           arrhythmic_item_bank = SAA::arrhythmic_item_bank,
+                           rhythmic_item_bank = SAA::rhythmic_item_bank,
                            demographics = TRUE,
                            demo = FALSE,
                            feedback = FALSE,
@@ -322,8 +322,8 @@ SAA <- function(app_name,
                 num_examples = list("long_tones" = 2L,
                                     "arrhythmic" = 2L,
                                     "rhythmic" = 0L),
-                arrhythmic_item_bank = arrhythmic_item_bank,
-                rhythmic_item_bank = rhythmic_item_bank,
+                arrhythmic_item_bank = SAA::arrhythmic_item_bank,
+                rhythmic_item_bank = SAA::rhythmic_item_bank,
                 demographics = TRUE,
                 demo = FALSE,
                 feedback = FALSE,
@@ -472,8 +472,6 @@ SAA <- function(app_name,
     arrhythmic_item_bank <- itembankr::subset_item_bank(arrhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
     rhythmic_item_bank <- itembankr::subset_item_bank(rhythmic_item_bank, melody_length, return_as_item_bank_class = TRUE)
   }
-
-  browser()
 
   # Start test timeline
   timeline <- psychTestR::join(
