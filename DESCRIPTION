@@ -1,6 +1,6 @@
 Package: SAA
 Title: Singing Ability Assessment
-Version: 2.6.3
+Version: 2.7.0
 Authors@R: 
     person(given = "Sebastian",
            family = "Silas",
@@ -27,7 +27,7 @@ Imports:
     shinycssloaders,
     stringr
 Depends: 
-    R (>= 2.10),
+    R (>= 3.5),
     musicassessr (>= 0.0.0.9000),
     psych,
     stringr
