@@ -1,3 +1,5 @@
+# SAA 2.7.2
+
 # SAA 2.7.1
 
 - Tell user `gold_msi` and `demographics` arguments must be `FALSE` if language == "ch".

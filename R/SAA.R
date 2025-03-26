@@ -132,8 +132,7 @@ SAA_standalone <- function(app_name,
                            user_id = NULL,
                            get_answer_melodic = musicassessr::get_answer_pyin_melodic_production,
                            content_border = "1px solid #e8e8e8",
-                           css = c("https://musicassessr.com/assets/css/style_songbird.css",
-                                   system.file('www/css/musicassessr.css', package = "musicassessr")),
+                           css = system.file('www/css/musicassessr.css', package = 'musicassessr'),
                            sample_item_bank_via_api = FALSE,
                            pass_items_through_url_parameter = FALSE,
                            show_intro_text = TRUE,
@@ -927,12 +926,13 @@ present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, n
 
   }
 
-  list("Long_Note" = if(is_null_scalar(results_long_note$long_note_scores) | is_na_scalar(results_long_note$long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else results_long_note$long_note_pca_scores,
-       "SAA_Ability_Arrhythmic" = if(is_null_scalar(arrhythmic_melody_summary) | is_na_scalar(arrhythmic_melody_summary)) NA else results_arrhythmic$arrhythmic_melody_score,
-       "SAA_Ability_Rhythmic" = if(is_null_scalar(rhythmic_melody_summary) | is_na_scalar(rhythmic_melody_summary)) NA else results_rhythmic$rhythmic_melody_score,
+  list("Long_Note" = if(is_null_scalar(results_long_note$long_note_scores) || is_na_scalar(results_long_note$long_note_scores)) tibble::tibble(pca_long_note_randomness = NA, pca_long_note_accuracy = NA, pca_long_note_scoop = NA) else results_long_note$long_note_pca_scores,
+       "SAA_Ability_Arrhythmic" = if(is_null_scalar(arrhythmic_melody_summary)) NA else results_arrhythmic$arrhythmic_melody_score,
+       "SAA_Ability_Rhythmic" = if(is_null_scalar(rhythmic_melody_summary)) NA else results_rhythmic$rhythmic_melody_score,
        "melody_note_precision" = melody_note_precision,
        "melody_interval_precision" = melody_interval_precision,
-       "pca_melodic_singing_accuracy" = pca_melodic_singing_accuracy)
+       "pca_melodic_singing_accuracy" = pca_melodic_singing_accuracy
+       )
 
 }
 
