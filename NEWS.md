@@ -1,6 +1,7 @@
 # SAA 2.7.1
 
 - Tell user `gold_msi` and `demographics` arguments must be `FALSE` if language == "ch".
+- Remove redundant `examples` arg (use `num_examples` instead).
 
 # SAA 2.7.0
 

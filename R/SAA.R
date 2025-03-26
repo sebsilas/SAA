@@ -14,7 +14,6 @@
 #' @param SNR_test Deploy signal-to-noise ratio test?
 #' @param get_range Deploy a test to get the users range at test time and present stimuli accordingly?
 #' @param absolute_url If using online, absolute URL?
-#' @param examples No of examples.
 #' @param final_results Display final results?
 #' @param test_username Is there a username for the user? This is different from a p_id.
 #' @param gold_msi Deploy Gold-MSI form?
@@ -91,7 +90,6 @@ SAA_standalone <- function(app_name,
                            SNR_test = TRUE,
                            get_range = TRUE,
                            absolute_url = character(),
-                           examples = 2L,
                            final_results = TRUE,
                            test_username = character(),
                            gold_msi = TRUE,
@@ -174,7 +172,6 @@ SAA_standalone <- function(app_name,
                   SNR_test,
                   get_range,
                   absolute_url,
-                  examples,
                   final_results,
                   test_username,
                   gold_msi,
@@ -265,7 +262,6 @@ SAA_standalone <- function(app_name,
 #' @param SNR_test Deploy signal-to-noise ratio test?
 #' @param get_range Deploy a test to get the users range at test time and present stimuli accordingly?
 #' @param absolute_url If using online, absolute URL?
-#' @param examples No of examples.
 #' @param final_results Display final results?
 #' @param test_username Is there a username for the user? This is different from a p_id.
 #' @param gold_msi Deploy Gold-MSI form?
@@ -336,7 +332,6 @@ SAA <- function(app_name,
                 SNR_test = TRUE,
                 get_range = TRUE,
                 absolute_url = character(),
-                examples = 2L,
                 final_results = TRUE,
                 test_username = character(),
                 gold_msi = TRUE,
@@ -403,7 +398,6 @@ SAA <- function(app_name,
     is.logical(SNR_test),
     is.logical(get_range) | is.character(get_range) & length(get_range) == 1,
     is.character(absolute_url),
-    is.scalar.numeric(examples),
     is.logical(final_results),
     is.character(test_username),
     is.logical(gold_msi),

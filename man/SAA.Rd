@@ -17,7 +17,6 @@ SAA(
   SNR_test = TRUE,
   get_range = TRUE,
   absolute_url = character(),
-  examples = 2L,
   final_results = TRUE,
   test_username = character(),
   gold_msi = TRUE,
@@ -93,8 +92,6 @@ SAA(
 \item{get_range}{Deploy a test to get the users range at test time and present stimuli accordingly?}
 
 \item{absolute_url}{If using online, absolute URL?}
-
-\item{examples}{No of examples.}
 
 \item{final_results}{Display final results?}
 
