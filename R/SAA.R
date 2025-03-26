@@ -149,7 +149,7 @@ SAA_standalone <- function(app_name,
                            use_presigned_url = TRUE, ...) {
 
 
-  if(languages == "ch" && demographics || gold_msi) {
+  if(languages == "ch" && (demographics || gold_msi) {
     stop('If languages == "ch" then demographics and gold_msi must be FALSE')
   }
 
