@@ -151,6 +151,11 @@ SAA_standalone <- function(app_name,
                            use_presigned_url = TRUE, ...) {
 
 
+  if(languages == "ch" && demographics || gold_msi) {
+    stop('If languages == "ch" then demographics and gold_msi must be FALSE')
+  }
+
+
   timeline <- psychTestR::join(
 
         psychTestR::code_block(function(state, ...) {
@@ -223,21 +228,21 @@ SAA_standalone <- function(app_name,
 
   # Run the test
   timeline %>%
-  psychTestR::make_test(
-    opt = psychTestR::test_options(title = test_name,
-                                   admin_password = admin_password,
-                                   display = psychTestR::display_options(
-                                     full_screen = full_screen,
-                                     left_margin = 1L,
-                                     right_margin = 1L,
-                                     css = css,
-                                     content_border = content_border
-                                   ),
-                                   logo_url = logo_url,
-                                   languages = languages,
-                                   on_session_ended_fun = musicassessr::end_session(asynchronous_api_mode),
-                                   additional_scripts = musicassessr::musicassessr_js(app_name = app_name,
-                                                                                      visual_notation = feedback), ...))
+    psychTestR::make_test(
+      opt = psychTestR::test_options(title = test_name,
+                                     admin_password = admin_password,
+                                     display = psychTestR::display_options(
+                                       full_screen = full_screen,
+                                       left_margin = 1L,
+                                       right_margin = 1L,
+                                       css = css,
+                                       content_border = content_border
+                                     ),
+                                     logo_url = logo_url,
+                                     languages = languages,
+                                     on_session_ended_fun = musicassessr::end_session(asynchronous_api_mode),
+                                     additional_scripts = musicassessr::musicassessr_js(app_name = app_name,
+                                                                                        visual_notation = feedback), ...))
 }
 
 
