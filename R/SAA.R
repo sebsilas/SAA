@@ -561,7 +561,9 @@ SAA <- function(app_name,
                                                           long_tone_trials_as_screening_failure_page = long_tone_trials_as_screening_failure_page,
                                                           paradigm = long_tone_paradigm,
                                                           long_tone_length = long_tone_length,
-                                                          show_instructions = show_instructions),
+                                                          show_instructions = show_instructions,
+                                                          volume_meter = volume_meter_on_melody_trials,
+                                                          volume_meter_type = volume_meter_on_melody_trials_type),
 
                            # Arrhythmic melody trials
                            musicassessr::arrhythmic_melody_trials(item_bank = arrhythmic_item_bank,
