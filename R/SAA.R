@@ -150,10 +150,12 @@ SAA_standalone <- function(app_name,
                            sampler_function_rhythmic = musicassessr::sample_rhythmic,
                            use_presigned_url = TRUE, ...) {
 
-
-  if(languages == "ch" && (demographics || gold_msi)) {
-    stop('If languages == "ch" then demographics and gold_msi must be FALSE')
+  if(is.scalar.character(languages)) {
+    if(languages == "ch" && (demographics || gold_msi)) {
+      stop('If languages == "ch" then demographics and gold_msi must be FALSE')
+    }
   }
+
 
 
   timeline <- psychTestR::join(
@@ -853,7 +855,10 @@ SAA_instructions <- function(max_goes_forced, max_goes) {
 
 
 
-present_scores_saa <- function(res, num_items_long_note, num_items_arrhythmic, num_items_rhythmic) {
+present_scores_saa <- function(res,
+                               num_items_long_note,
+                               num_items_arrhythmic,
+                               num_items_rhythmic) {
 
   results_long_note <- sort_long_note_scores(num_items_long_note, res)
 
