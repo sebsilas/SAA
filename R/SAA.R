@@ -68,6 +68,7 @@
 #' @param sampler_function_arrhythmic A psychTestR::code_block to determine how to sample from the arrhythmic item bank.
 #' @param sampler_function_rhythmic A psychTestR::code_block to determine how to sample from the rhythmic item bank.
 #' @param use_presigned_url For audio storing, should a presigned URL be used?
+#' @param long_tone_call_and_response_end How should long tone trials end (manual or auto)?
 #' @param ...
 #'
 #' @return
@@ -148,7 +149,8 @@ SAA_standalone <- function(app_name,
                            redirect_on_failure_url = "https://google.com",
                            sampler_function_arrhythmic = musicassessr::sample_arrhythmic,
                            sampler_function_rhythmic = musicassessr::sample_rhythmic,
-                           use_presigned_url = TRUE, ...) {
+                           use_presigned_url = TRUE,
+                           long_tone_call_and_response_end = c("manual", "auto"), ...) {
 
   if(is.scalar.character(languages)) {
     if(languages == "ch" && (demographics || gold_msi)) {
@@ -224,7 +226,8 @@ SAA_standalone <- function(app_name,
                   redirect_on_failure_url,
                   sampler_function_arrhythmic,
                   sampler_function_rhythmic,
-                  use_presigned_url)
+                  use_presigned_url,
+                  long_tone_call_and_response_end)
       )
 
   # Run the test
@@ -316,6 +319,7 @@ SAA_standalone <- function(app_name,
 #' @param sampler_function_arrhythmic A psychTestR::code_block to determine how to sample from the arrhythmic item bank.
 #' @param sampler_function_rhythmic A psychTestR::code_block to determine how to sample from the rhythmic item bank.
 #' @param use_presigned_url Should a presigned URL be used for audio storing?
+#' @param long_tone_call_and_response_end How should long tone trials end for call and response type (manual or auto)?
 #' @return
 #' @export
 #'
@@ -384,7 +388,8 @@ SAA <- function(app_name,
                 redirect_on_failure_url = "https://google.com",
                 sampler_function_arrhythmic = musicassessr::sample_arrhythmic,
                 sampler_function_rhythmic = musicassessr::sample_rhythmic,
-                use_presigned_url = TRUE) {
+                use_presigned_url = TRUE,
+                long_tone_call_and_response_end = "manual") {
 
   long_tone_paradigm <- match.arg(long_tone_paradigm)
 
@@ -451,7 +456,8 @@ SAA <- function(app_name,
     is.scalar.character(redirect_on_failure_url),
     is.function(sampler_function_arrhythmic),
     is.function(sampler_function_rhythmic),
-    is.scalar.logical(use_presigned_url)
+    is.scalar.logical(use_presigned_url),
+    long_tone_call_and_response_end %in% c("manual", "auto")
     )
 
   shiny::addResourcePath(
@@ -563,7 +569,9 @@ SAA <- function(app_name,
                                                           long_tone_length = long_tone_length,
                                                           show_instructions = show_instructions,
                                                           volume_meter = volume_meter_on_melody_trials,
-                                                          volume_meter_type = volume_meter_on_melody_trials_type),
+                                                          volume_meter_type = volume_meter_on_melody_trials_type,
+                                                          call_and_response_end = long_tone_call_and_response_end
+                                                          ),
 
                            # Arrhythmic melody trials
                            musicassessr::arrhythmic_melody_trials(item_bank = arrhythmic_item_bank,

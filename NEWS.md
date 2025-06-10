@@ -1,3 +1,7 @@
+# SAA 2.8.1
+
+- Add long tone trials `call_and_response_end` parameter.
+
 # SAA 2.8.0
 
 # SAA 2.7.2
