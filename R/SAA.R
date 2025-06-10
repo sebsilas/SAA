@@ -570,8 +570,7 @@ SAA <- function(app_name,
                                                           show_instructions = show_instructions,
                                                           volume_meter = volume_meter_on_melody_trials,
                                                           volume_meter_type = volume_meter_on_melody_trials_type,
-                                                          call_and_response_end = long_tone_call_and_response_end
-                                                          ),
+                                                          call_and_response_end = long_tone_call_and_response_end),
 
                            # Arrhythmic melody trials
                            musicassessr::arrhythmic_melody_trials(item_bank = arrhythmic_item_bank,
